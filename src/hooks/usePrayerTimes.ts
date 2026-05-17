@@ -45,13 +45,6 @@ function parseTime(timeStr: string): Date {
   return d;
 }
 
-function formatTime12(timeStr: string): string {
-  const [h, m] = timeStr.split(":").map(Number);
-  const ampm = h < 12 ? "AM" : "PM";
-  const h12 = h % 12 || 12;
-  return `${h12}:${String(m).padStart(2, "0")} ${ampm}`;
-}
-
 function addMinutes(timeStr: string, minutes: number): string {
   const d = parseTime(timeStr);
   d.setMinutes(d.getMinutes() + minutes);
@@ -90,29 +83,13 @@ function buildStatusMessage(
   if (activePrayerIndex !== null) {
     const active = prayers[activePrayerIndex];
     if (active.iqamah) {
-      const parts = active.iqamah.trim().split(" ");
-      const [h, m] = parts[0].split(":").map(Number);
-      const ampm = parts[1];
-      const h24 =
-        ampm === "PM" && h !== 12 ? h + 12 : ampm === "AM" && h === 12 ? 0 : h;
-      const iqDate = new Date();
-      iqDate.setHours(h24, m, 0, 0);
+      const iqDate = parseTime(active.iqamah.trim());
       if (
         now >=
           (function () {
             // determine adhan date for active
             if (active.adhan) {
-              const aParts = active.adhan.trim().split(" ");
-              const [ah, am] = aParts[0].split(":").map(Number);
-              const aAmpm = aParts[1];
-              const aH24 =
-                aAmpm === "PM" && ah !== 12
-                  ? ah + 12
-                  : aAmpm === "AM" && ah === 12
-                    ? 0
-                    : ah;
-              const adhanDate = new Date();
-              adhanDate.setHours(aH24, am, 0, 0);
+              const adhanDate = parseTime(active.adhan.trim());
               return adhanDate;
             }
             // if no adhan (like shuruq), return epoch to avoid triggering
@@ -130,14 +107,7 @@ function buildStatusMessage(
     const next = prayers[nextPrayerIndex];
     const nextAdhan = next.adhan ?? next.time ?? null;
     if (nextAdhan) {
-      const raw = nextAdhan.trim();
-      const parts = raw.split(" ");
-      const [h, m] = parts[0].split(":").map(Number);
-      const ampm = parts[1];
-      const h24 =
-        ampm === "PM" && h !== 12 ? h + 12 : ampm === "AM" && h === 12 ? 0 : h;
-      const nextDate = new Date();
-      nextDate.setHours(h24, m, 0, 0);
+      const nextDate = parseTime(nextAdhan.trim());
       if (nextDate.getTime() <= now.getTime()) {
         // next is tomorrow's first prayer
         nextDate.setDate(nextDate.getDate() + 1);
@@ -154,7 +124,10 @@ interface CachedData {
   hijriDate: string;
 }
 
-export function usePrayerTimes(config: MosqueConfig, language: Language = "en"): PrayerTimesState {
+export function usePrayerTimes(
+  config: MosqueConfig,
+  language: Language = "en",
+): PrayerTimesState {
   const [state, setState] = useState<PrayerTimesState>({
     prayers: [],
     hijriDate: "",
@@ -165,89 +138,66 @@ export function usePrayerTimes(config: MosqueConfig, language: Language = "en"):
     error: null,
   });
 
-  const deriveDynamic = useCallback((prayers: PrayerTime[]) => {
-    const now = new Date();
-    let currentIndex: number | null = null;
-    let nextIndex: number | null = null;
+  const deriveDynamic = useCallback(
+    (prayers: PrayerTime[]) => {
+      const now = new Date();
+      let currentIndex: number | null = null;
+      let nextIndex: number | null = null;
 
-    // Find current (last prayer whose adhan has passed) and next
-    for (let i = 0; i < prayers.length; i++) {
-      const prayer = prayers[i];
-      const adhanStr = prayer.adhan ?? prayer.time ?? null;
-      if (!adhanStr) continue;
-      const raw = adhanStr.trim().split(" ");
-      const [h, m] = raw[0].split(":").map(Number);
-      const ampm = raw[1];
-      const h24 =
-        ampm === "PM" && h !== 12 ? h + 12 : ampm === "AM" && h === 12 ? 0 : h;
-      const prayerDate = new Date();
-      prayerDate.setHours(h24, m, 0, 0);
+      // Find current (last prayer whose adhan has passed) and next
+      for (let i = 0; i < prayers.length; i++) {
+        const prayer = prayers[i];
+        const adhanStr = prayer.adhan ?? prayer.time ?? null;
+        if (!adhanStr) continue;
+        const prayerDate = parseTime(adhanStr.trim());
 
-      if (prayerDate <= now) {
-        currentIndex = i;
-      } else if (nextIndex === null) {
-        nextIndex = i;
-      }
-    }
-
-    // if there is no next (all prayers passed), wrap to first
-    if (nextIndex === null && prayers.length) nextIndex = 0;
-
-    // Determine whether we're before iqamah of the current prayer
-    let beforeIqamah = false;
-    if (currentIndex !== null) {
-      const current = prayers[currentIndex];
-      if (current.iqamah) {
-        const parts = current.iqamah.trim().split(" ");
-        const [h, m] = parts[0].split(":").map(Number);
-        const ampm = parts[1];
-        const h24 =
-          ampm === "PM" && h !== 12
-            ? h + 12
-            : ampm === "AM" && h === 12
-              ? 0
-              : h;
-        const iqDate = new Date();
-        iqDate.setHours(h24, m, 0, 0);
-
-        // determine adhan date/time
-        let adhanDate = new Date(0);
-        if (current.adhan) {
-          const aParts = current.adhan.trim().split(" ");
-          const [ah, am] = aParts[0].split(":").map(Number);
-          const aAmpm = aParts[1];
-          const aH24 =
-            aAmpm === "PM" && ah !== 12
-              ? ah + 12
-              : aAmpm === "AM" && ah === 12
-                ? 0
-                : ah;
-          adhanDate = new Date();
-          adhanDate.setHours(aH24, am, 0, 0);
+        if (prayerDate <= now) {
+          currentIndex = i;
+        } else if (nextIndex === null) {
+          nextIndex = i;
         }
-
-        if (now >= adhanDate && now < iqDate) beforeIqamah = true;
       }
-    }
 
-    // Highlight next by default, but if we're before iqamah highlight current
-    const highlightedIndex = beforeIqamah ? currentIndex : nextIndex;
+      // if there is no next (all prayers passed), wrap to first
+      if (nextIndex === null && prayers.length) nextIndex = 0;
 
-    const statusMessage = buildStatusMessage(
-      prayers,
-      currentIndex,
-      nextIndex,
-      now,
-      language,
-    );
+      // Determine whether we're before iqamah of the current prayer
+      let beforeIqamah = false;
+      if (currentIndex !== null) {
+        const current = prayers[currentIndex];
+        if (current.iqamah) {
+          const iqDate = parseTime(current.iqamah.trim());
 
-    setState((prev) => ({
-      ...prev,
-      activePrayerIndex: highlightedIndex,
-      nextPrayerIndex: nextIndex,
-      statusMessage,
-    }));
-  }, [language]);
+          // determine adhan date/time
+          let adhanDate = new Date(0);
+          if (current.adhan) {
+            adhanDate = parseTime(current.adhan.trim());
+          }
+
+          if (now >= adhanDate && now < iqDate) beforeIqamah = true;
+        }
+      }
+
+      // Highlight next by default, but if we're before iqamah highlight current
+      const highlightedIndex = beforeIqamah ? currentIndex : nextIndex;
+
+      const statusMessage = buildStatusMessage(
+        prayers,
+        currentIndex,
+        nextIndex,
+        now,
+        language,
+      );
+
+      setState((prev) => ({
+        ...prev,
+        activePrayerIndex: highlightedIndex,
+        nextPrayerIndex: nextIndex,
+        statusMessage,
+      }));
+    },
+    [language],
+  );
 
   useEffect(() => {
     const cacheKey = `prayer-times-${todayKey()}`;
@@ -258,13 +208,16 @@ export function usePrayerTimes(config: MosqueConfig, language: Language = "en"):
         const data: CachedData = JSON.parse(cached);
         if (data.key === todayKey()) {
           const prayers = buildPrayers(data.timings, config);
-          setState((prev) => ({
-            ...prev,
-            prayers,
-            hijriDate: data.hijriDate,
-            loading: false,
-          }));
-          deriveDynamic(prayers);
+          // Defer state update slightly to avoid synchronous setState inside effect
+          setTimeout(() => {
+            setState((prev) => ({
+              ...prev,
+              prayers,
+              hijriDate: data.hijriDate,
+              loading: false,
+            }));
+            deriveDynamic(prayers);
+          }, 0);
           return;
         }
       } catch {
@@ -337,20 +290,22 @@ function buildPrayers(
         icon: meta.icon,
         adhan: null,
         iqamah: null,
-        time: formatTime12(raw),
+        // Keep raw 24-hour HH:MM for centralized formatting in UI
+        time: raw,
       };
     }
 
-    const adhanFormatted = formatTime12(raw);
+    const adhanRaw = raw;
     const offset = config.iqamahOffsets[name] ?? 0;
-    const iqamahFormatted = formatTime12(addMinutes(raw, offset));
+    const iqamahRaw = addMinutes(raw, offset);
 
     return {
       name: name as PrayerTime["name"],
       arabicName: meta.arabicName,
       icon: meta.icon,
-      adhan: adhanFormatted,
-      iqamah: iqamahFormatted,
+      // Store raw 24-hour HH:MM strings
+      adhan: adhanRaw,
+      iqamah: iqamahRaw,
     };
   });
 }

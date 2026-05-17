@@ -1,22 +1,42 @@
 import type { PrayerTime } from "../types";
+import { useT } from "../i18n";
+import { useSettings } from "../context/SettingsContext";
 
 interface PrayerCardProps {
   prayer: PrayerTime;
   isActive: boolean;
 }
 
-function splitTime(timeStr: string): { time: string; ampm: string } {
-  const parts = timeStr.trim().split(" ");
-  return { time: parts[0], ampm: parts[1] ?? "" };
+function formatDisplayTime(timeStr: string, timeFormat: "12h" | "24h") {
+  // Expect timeStr in 24-hour "HH:MM" format (from data layer)
+  const [hRaw, mRaw] = timeStr.trim().split(":");
+  const h = Number(hRaw);
+  const m = Number(mRaw);
+  if (Number.isNaN(h) || Number.isNaN(m)) return { time: timeStr, ampm: "" };
+
+  if (timeFormat === "24h") {
+    return {
+      time: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
+      ampm: "",
+    };
+  }
+
+  const ampm = h < 12 ? "AM" : "PM";
+  const h12 = h % 12 || 12;
+  return { time: `${h12}:${String(m).padStart(2, "0")}`, ampm };
 }
 
 export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
+  const { settings } = useSettings();
+  const t = useT(settings.language);
   const isShuruq = !prayer.adhan && !prayer.iqamah;
 
   return (
     <div
       role="listitem"
-      aria-label={`${prayer.name}${isActive ? ", currently active" : ""}`}
+      // import { useT } from "../i18n";
+      // ...
+      aria-label={`${prayer.name}${isActive ? t.currentlyActive : ""}`}
       className={[
         "rounded-xl flex flex-col items-center py-3 md:py-4 px-2 relative",
         isActive
@@ -67,7 +87,11 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       <div className="w-full px-1 md:px-3 font-tabular-nums">
         {isShuruq && prayer.time ? (
           <div className="flex justify-center">
-            <TimeBlock label="TIME" timeStr={prayer.time} isActive={isActive} />
+            <TimeBlock
+              label={t.time || "TIME"}
+              timeStr={prayer.time}
+              isActive={isActive}
+            />
           </div>
         ) : (
           <div className="flex justify-around">
@@ -101,7 +125,8 @@ function TimeBlock({
   timeStr: string;
   isActive: boolean;
 }) {
-  const { time, ampm } = splitTime(timeStr);
+  const { settings } = useSettings();
+  const { time, ampm } = formatDisplayTime(timeStr, settings.timeFormat);
   return (
     <div className="flex flex-col items-center">
       <span

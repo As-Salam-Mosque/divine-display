@@ -2,7 +2,12 @@ interface AnnouncementTickerProps {
   announcements: string[];
 }
 
+import { useT } from "../i18n";
+import { useSettings } from "../context/SettingsContext";
+
 export function AnnouncementTicker({ announcements }: AnnouncementTickerProps) {
+  const { settings } = useSettings();
+  const t = useT(settings.language);
   // Duplicate items so the marquee loops seamlessly
   const items = [...announcements, ...announcements];
 
@@ -14,7 +19,7 @@ export function AnnouncementTicker({ announcements }: AnnouncementTickerProps) {
           view_list
         </span>
         <span className="font-label-caps text-label-caps text-primary whitespace-nowrap">
-          MASJID ANNOUNCEMENTS
+          {t.masjidAnnouncements}
         </span>
       </div>
 
@@ -22,7 +27,10 @@ export function AnnouncementTicker({ announcements }: AnnouncementTickerProps) {
       <div className="flex-1 overflow-hidden ml-4">
         <div className="flex gap-12 font-body-md text-body-md text-text-muted whitespace-nowrap animate-marquee">
           {items.map((text, i) => (
-            <p key={i} dangerouslySetInnerHTML={{ __html: formatAnnouncement(text) }} />
+            <p
+              key={i}
+              dangerouslySetInnerHTML={{ __html: formatAnnouncement(text) }}
+            />
           ))}
         </div>
       </div>

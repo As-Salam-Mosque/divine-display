@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
@@ -6,25 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import type { AppSettings } from "../types";
-
-const STORAGE_KEY = "divine-display-settings";
-
-function loadSettings(defaults: AppSettings): AppSettings {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const stored = JSON.parse(raw) as Partial<AppSettings>;
-      return {
-        ...defaults,
-        ...stored,
-        mosque: { ...defaults.mosque, ...(stored.mosque ?? {}) },
-      };
-    }
-  } catch {
-    // ignore corrupt cache
-  }
-  return defaults;
-}
+import { DEFAULT_APP_SETTINGS } from "../types";
 
 interface SettingsContextValue {
   settings: AppSettings;
@@ -38,10 +21,11 @@ export function SettingsProvider({
   defaults,
 }: {
   children: ReactNode;
-  defaults: AppSettings;
+  // allow optional override, but fall back to hardcoded defaults
+  defaults?: AppSettings;
 }) {
-  const [settings, setSettings] = useState<AppSettings>(() =>
-    loadSettings(defaults)
+  const [settings, setSettings] = useState<AppSettings>(
+    () => defaults ?? DEFAULT_APP_SETTINGS,
   );
 
   const updateSettings = useCallback((patch: Partial<AppSettings>) => {
@@ -51,7 +35,7 @@ export function SettingsProvider({
         ...patch,
         mosque: { ...prev.mosque, ...(patch.mosque ?? {}) },
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      // Intentionally do not persist settings to localStorage.
       return next;
     });
   }, []);

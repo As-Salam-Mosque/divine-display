@@ -16,22 +16,19 @@ function buildClockState(now: Date, language: Language): ClockState {
       day: "numeric",
       year: "numeric",
     }),
-    dayName: now
-      .toLocaleDateString(locale, { weekday: "long" })
-      .toUpperCase(),
+    dayName: now.toLocaleDateString(locale, { weekday: "long" }).toUpperCase(),
   };
 }
 
 export function useClock(language: Language = "en"): ClockState {
   const [state, setState] = useState<ClockState>(() =>
-    buildClockState(new Date(), language)
+    buildClockState(new Date(), language),
   );
 
   useEffect(() => {
-    setState(buildClockState(new Date(), language));
     const id = setInterval(
       () => setState(buildClockState(new Date(), language)),
-      1000
+      1000,
     );
     return () => clearInterval(id);
   }, [language]);

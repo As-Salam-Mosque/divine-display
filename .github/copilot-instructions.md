@@ -2,61 +2,97 @@
 
 ## Project Overview
 
-**Divine Display** is a single-file mosque prayer times display screen (`code.html`) designed for large-format 16:9 displays (TVs/monitors) in mosques. It is a static HTML prototype — there is no build system, bundler, package manager, or test suite.
+**Divine Display** is a mosque prayer times display screen built with **React 19 + TypeScript + Vite**, designed for large-format 16:9 displays (TVs/monitors). There is no test suite.
+
+## Commands
+
+```bash
+npm run dev       # Start dev server (HMR)
+npm run build     # Type-check + Vite build → dist/
+npm run lint      # ESLint
+npm run preview   # Preview production build
+```
 
 ## Architecture
 
-The entire UI lives in `code.html`:
-- **Tailwind CSS** is loaded via CDN (`https://cdn.tailwindcss.com?plugins=forms,container-queries`)
-- The Tailwind theme is configured inline in `<script id="tailwind-config">` — this is the source of truth for design tokens in code
-- **`DESIGN.md`** is the human-readable design spec (YAML frontmatter + prose). When adding new tokens or components, keep `DESIGN.md` and the Tailwind config in sync
+### Configuration entry point
 
-## Layout Structure
+**`mosque.config.ts`** (repo root) is the primary file a mosque administrator edits. It exports a `MosqueConfig` object containing coordinates, calculation method, iqamah offsets, ad slots, and announcement strings. All runtime data flows from this file.
 
-The page uses a **12-column CSS grid**:
-- **Left stage (col-span-9):** Clock panel (top) + Prayer Table (bottom)
-- **Right ad rail (col-span-3):** Stacked sponsor/ad slots
-- **Footer:** Full-width marquee announcement ticker
+### Data flow
 
-On mobile/tablet the ad rail drops below the prayer table; the clock scales to 50%.
+```
+mosque.config.ts
+  └─ usePrayerTimes(config)   — fetches AlAdhan API, caches in localStorage (one entry per day)
+       └─ derives activePrayerIndex / nextPrayerIndex / statusMessage every second
+  └─ useClock(language)       — 1s interval, locale-aware date/time strings
+```
+
+`SettingsContext` (`src/context/SettingsContext.tsx`) holds user-adjustable preferences (`language`, `timeFormat`, `showSponsors`, `mosque` info) persisted to `localStorage` under the key `"divine-display-settings"`.
+
+### Component tree
+
+```
+App
+  SettingsProvider
+    Display
+      ClockPanel       — hijri date, live countdown status message, settings gear
+      PrayerTable      — renders 6 PrayerCards
+        PrayerCard     — active/inactive state, Shuruq special case
+      AdRail           — conditional on settings.showSponsors
+      AnnouncementTicker — marquee footer (hidden on mobile)
+      SettingsPanel    — modal overlay
+```
+
+### Layout
+
+12-column CSS grid:
+- **Left stage** (`col-span-9`): ClockPanel (top) + PrayerTable (bottom)
+- **Right ad rail** (`col-span-3`): stacked AdSlots — hidden when `showSponsors` is false (stage expands to `col-span-12`)
+- **Footer**: full-width marquee ticker, hidden on mobile
+
+### Prayer timing logic (`usePrayerTimes`)
+
+- Times fetched from `https://api.aladhan.com/v1/timings/{date}` using coordinates and `calculationMethod` from config.
+- Iqamah = Adhan + `iqamahOffsets[prayerName]` minutes.
+- `activePrayerIndex`: normally the *next* prayer; switches to the *current* prayer while the window between Adhan and Iqamah is open (i.e., the Iqamah countdown is live).
+- **Shuruq** is a special case: `adhan` and `iqamah` are `null`; only `time` is set. `PrayerCard` renders a single time row instead of the Adhan/Iqamah split layout.
 
 ## Design System
 
-All colors, typography, and spacing come from the design tokens defined in both `DESIGN.md` and the inline Tailwind config.
+All tokens are defined in **`tailwind.config.ts`** (source of truth). `references/DESIGN.md` mirrors them. Keep both in sync when adding tokens.
 
-**Colors** follow Material Design 3 naming (`surface`, `on-surface`, `primary`, `secondary`, `surface-panel`, etc.):
-- `primary` (#e9c176) — gold, used for active prayer state, clock, and emphasis
-- `surface-panel` (#111A35) — card/panel background
-- `background-deep` (#060A1A) — deepest background layer
+**Colors** follow Material Design 3 naming:
+- `primary` (`#e9c176`) — gold; active prayer, clock, emphasis
+- `surface-panel` (`#111A35`) — card/panel background
+- `background-deep` (`#060A1A`) — page background
 
-**Typography** uses a dual-font strategy:
-- `font-clock-display` / `font-headline-lg` / `font-headline-md` → **Playfair Display** (serif, for clock and prayer headers)
-- `font-body-md` / `font-body-lg` / `font-label-caps` / `font-tabular-nums` → **Montserrat** (sans-serif, for data and labels)
+**Typography** — dual-font strategy:
+- `font-clock-display` / `font-headline-lg` / `font-headline-md` → **Playfair Display** (serif)
+- `font-body-md` / `font-body-lg` / `font-label-caps` / `font-tabular-nums` → **Montserrat** (sans-serif)
 
-Use `font-tabular-nums` for Adhan/Iqamah times to ensure column alignment.
+Always use `font-tabular-nums` for Adhan/Iqamah time values to keep columns aligned.
 
-**Spacing tokens** (not standard Tailwind values): `p-panel-padding`, `p-margin-page`, `gap-gutter-grid`, `gap-stage-gap`.
+**Spacing tokens** (non-standard Tailwind values): `p-panel-padding`, `p-margin-page`, `gap-gutter-grid`, `gap-stage-gap`.
 
-## Custom CSS Classes
-
-Defined in a `<style>` block in `<head>`:
-- `.ghost-border` — 1px border at `rgba(197, 160, 89, 0.2)`, used on all inactive cards/panels
-- `.active-glow` — inset gold box-shadow + solid `#c5a059` border, used on the current/next prayer card and the clock panel
+**Custom CSS classes** (defined in `src/index.css`):
+- `.ghost-border` — 1px semi-transparent gold border; used on all inactive cards/panels
+- `.active-glow` — inset gold box-shadow + solid `#c5a059` border; used on active prayer card and clock panel
 
 ## Prayer Card States
 
-- **Default (inactive):** `bg-surface-panel ghost-border rounded-xl`
-- **Active/Next prayer:** `bg-primary/10 border-2 border-primary rounded-xl shadow-[0_0_15px_rgba(197,160,89,0.3)]` with a pulsing dot indicator (`w-3 h-3 bg-primary rounded-full shadow-[0_0_5px_#c5a059]`) and all text in `text-primary`
-- **Shuruq** (sunrise, no Iqamah): displays a single TIME row, not Adhan/Iqamah split
+- **Inactive:** `bg-surface-panel ghost-border rounded-xl`
+- **Active/Next:** `bg-primary/10 border-2 border-primary rounded-xl shadow-[0_0_15px_rgba(197,160,89,0.3)]` — includes a pulsing dot (`w-3 h-3 bg-primary rounded-full`) and all text in `text-primary`
+- **Shuruq:** single TIME row (no Adhan/Iqamah split)
 
 ## Icons
 
-Uses **Material Symbols Outlined** (`<span class="material-symbols-outlined">icon_name</span>`). Icon name goes as text content. Variable font settings: `font-variation-settings: 'FILL' 1` for filled style.
+Uses **Material Symbols Outlined** via Google Fonts. Render as `<span className="material-symbols-outlined">icon_name</span>`. Icon names are text content, not imports. Use `font-variation-settings: 'FILL' 1` for the filled style.
+
+## i18n
+
+Languages: `"en"` and `"fr"`. Translation objects live in `src/translations/{en,fr}.ts` and are re-exported from `src/i18n.ts`. Status message strings are functions: `statusIqamah(name, remaining)` and `statusNext(name, remaining)`. Add keys to both locale files when extending.
 
 ## Footer Marquee
 
-Animation defined via `@keyframes marquee` (translateX 100% → -100%, 20s linear infinite) applied with Tailwind's arbitrary `animate-[marquee_20s_linear_infinite]`.
-
-## Arabic Text
-
-Arabic prayer name translations are displayed in `font-body-md text-sm text-text-muted` (or `text-primary/80` when active). Use a Naskh-style typeface if adding dedicated Arabic font support.
+Defined via `@keyframes marquee` (translateX 100% → −100%, 20 s linear infinite), applied with Tailwind arbitrary value `animate-[marquee_20s_linear_infinite]`.

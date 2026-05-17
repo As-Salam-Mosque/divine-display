@@ -1,8 +1,14 @@
 import type { MosqueConfig } from "./src/types";
 
 const config: MosqueConfig = {
-  mosqueName: "MASJID AL-NOOR",
+  name: "MASJID AL-NOOR",
   city: "TORONTO",
+  location: "123 Example St",
+  website: "https://www.masjidalnoor.example",
+  capacity: "500",
+  openingHours: "See website",
+  email: "info@masjidalnoor.example",
+  phone: "+1-416-555-0123",
   latitude: 43.7,
   longitude: -79.42,
   calculationMethod: 2, // ISNA
@@ -22,7 +28,7 @@ const config: MosqueConfig = {
     "Friday Khutbah — Sheikh Yusuf will lead the khutbah this Friday on the virtues of patience.",
     "Quran Halaqah — Weekly Quran circle every Wednesday after Maghrib in the main hall.",
     "Parking Notice — East lot closed for repaving. Please use the side entrance.",
-    "Visit our website at assalam.info",
+    "Visit our website at masjidalnoor.example",
   ],
 };
 

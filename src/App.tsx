@@ -14,16 +14,7 @@ const defaultSettings: AppSettings = {
   language: "en",
   timeFormat: "12h",
   showSponsors: true,
-  mosque: {
-    name: config.mosqueName,
-    city: config.city,
-    location: "",
-    website: "www.assalam.info",
-    capacity: "",
-    openingHours: "",
-    email: "",
-    phone: "",
-  },
+  mosque: config,
 };
 
 function Display() {

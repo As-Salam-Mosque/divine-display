@@ -29,8 +29,17 @@ const en = {
   // status messages
   statusIqamah: (name: string, remaining: string) =>
     `${name} Iqamah in ${remaining}`,
-  statusNext: (name: string, remaining: string) =>
-    `${name} in ${remaining}`,
+  statusNext: (name: string, remaining: string) => `${name} in ${remaining}`,
+  communitySponsors: "COMMUNITY SPONSORS",
+  paidAds: "PAID ADS",
+  available: "Available",
+  masjidAnnouncements: "MASJID ANNOUNCEMENTS",
+  currentlyActive: ", currently active",
+  notAvailable: "Not available",
+  // time labels
+  time: "TIME",
+  adhan: "ADHAN",
+  iqamah: "IQAMAH",
 };
 
 export default en;

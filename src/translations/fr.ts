@@ -23,8 +23,17 @@ const fr = {
   hijri: "HÉGIRE",
   statusIqamah: (name: string, remaining: string) =>
     `Iqama de ${name} dans ${remaining}`,
-  statusNext: (name: string, remaining: string) =>
-    `${name} dans ${remaining}`,
+  statusNext: (name: string, remaining: string) => `${name} dans ${remaining}`,
+  communitySponsors: "SPONSORS COMMUNAUTAIRES",
+  paidAds: "PUBLICITÉS PAYANTES",
+  available: "Disponible",
+  masjidAnnouncements: "ANONNCES DE LA MOSQUÉE",
+  currentlyActive: ", actuellement en cours",
+  notAvailable: "Non disponible",
+  // time labels
+  time: "HEURE",
+  adhan: "ADHAN",
+  iqamah: "IQAMAH",
 };
 
 export default fr;

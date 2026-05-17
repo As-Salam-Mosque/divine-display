@@ -1,10 +1,14 @@
 import type { AdSlot } from "../types";
+import { useT } from "../i18n";
+import { useSettings } from "../context/SettingsContext";
 
 interface AdSlotProps {
   slot: AdSlot;
 }
 
 function AdSlotCard({ slot }: AdSlotProps) {
+  const { settings } = useSettings();
+  const t = useT(settings.language);
   return (
     <div className="flex-1 bg-surface-panel ghost-border rounded-xl flex flex-col items-center justify-center p-6 text-center">
       {slot.image ? (
@@ -22,8 +26,8 @@ function AdSlotCard({ slot }: AdSlotProps) {
             {slot.label}
           </p>
           <p className="font-body-md text-sm text-text-muted/70 italic">
-            Available
-          </p>
+            {t.available}
+          </p>{" "}
         </>
       )}
     </div>
@@ -35,14 +39,16 @@ interface AdRailProps {
 }
 
 export function AdRail({ slots }: AdRailProps) {
+  const { settings } = useSettings();
+  const t = useT(settings.language);
   return (
     <div className="hidden md:flex col-span-3 flex-col gap-4 h-full">
       <div className="flex justify-between items-center px-2">
         <span className="font-label-caps text-[10px] tracking-widest text-primary">
-          COMMUNITY SPONSORS
+          {t.communitySponsors}
         </span>
         <span className="font-label-caps text-[9px] tracking-widest text-text-muted bg-surface-panel px-2 py-1 rounded">
-          PAID ADS
+          {t.paidAds}
         </span>
       </div>
       {slots.map((slot) => (

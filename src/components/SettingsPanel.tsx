@@ -102,9 +102,8 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const { settings, updateSettings } = useSettings();
   const t = useT(settings.language);
 
-  const updateMosque = (patch: Partial<typeof settings.mosque>) => {
-    updateSettings({ mosque: { ...settings.mosque, ...patch } });
-  };
+  // updateMosque helper removed — SettingsPanel currently displays info only
+  // and uses `updateSettings` directly for display toggles.
 
   return (
     <>
@@ -200,42 +199,42 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label={t.mosqueName}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.name || "Not available"}
+                  {settings.mosque.name || t.notAvailable}
                 </span>
               </Field>
               <Field label={t.city}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.city || "Not available"}
+                  {settings.mosque.city || t.notAvailable}
                 </span>
               </Field>
               <Field label={t.location}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.location || "Not available"}
+                  {settings.mosque.location || t.notAvailable}
                 </span>
               </Field>
               <Field label={t.website}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.website || "Not available"}
+                  {settings.mosque.website || t.notAvailable}
                 </span>
               </Field>
               <Field label={t.capacity}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.capacity || "Not available"}
+                  {settings.mosque.capacity || t.notAvailable}
                 </span>
               </Field>
               <Field label={t.openingHours}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.openingHours || "Not available"}
+                  {settings.mosque.openingHours || t.notAvailable}
                 </span>
               </Field>
               <Field label={t.email}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.email || "Not available"}
+                  {settings.mosque.email || t.notAvailable}
                 </span>
               </Field>
               <Field label={t.phone}>
                 <span className="text-sm text-on-surface">
-                  {settings.mosque.phone || "Not available"}
+                  {settings.mosque.phone || t.notAvailable}
                 </span>
               </Field>
             </div>
