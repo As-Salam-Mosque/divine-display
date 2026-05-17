@@ -1,0 +1,30 @@
+const fr = {
+  settings: "Paramètres",
+  close: "Fermer",
+  sectionDisplay: "Affichage",
+  sectionVisibility: "Visibilité",
+  sectionMosqueInfo: "Informations sur la mosquée",
+  language: "Langue",
+  langEn: "Anglais",
+  langFr: "Français",
+  timeFormat: "Format de l'heure",
+  format12h: "12 heures (AM/PM)",
+  format24h: "24 heures",
+  showSponsors: "Afficher les sponsors",
+  mosqueName: "Nom de la mosquée",
+  city: "Ville",
+  location: "Adresse",
+  website: "Site web",
+  capacity: "Capacité",
+  openingHours: "Heures d'ouverture",
+  email: "Adresse courriel",
+  phone: "Numéro de téléphone",
+  currentTime: "HEURE ACTUELLE",
+  hijri: "HÉGIRE",
+  statusIqamah: (name: string, remaining: string) =>
+    `Iqama de ${name} dans ${remaining}`,
+  statusNext: (name: string, remaining: string) =>
+    `${name} dans ${remaining}`,
+};
+
+export default fr;
