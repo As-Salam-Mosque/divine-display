@@ -32,7 +32,7 @@ export function ClockPanel({
   const displayHours = is24h ? clock.hours24 : clock.hours;
 
   return (
-    <div className="bg-surface-panel ghost-border rounded-xl p-5 md:p-panel-padding md:flex-1 flex flex-col items-center justify-center relative overflow-hidden active-glow">
+    <div className="bg-surface-panel ghost-border rounded-xl p-4 md:p-6 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden active-glow">
       <MosqueSilhouette />
 
       {/* Gear icon */}
@@ -50,8 +50,8 @@ export function ClockPanel({
       </button>
 
       {/* Mosque Identity */}
-      <div className="z-10 flex flex-col items-center w-full mb-4 md:mb-8">
-        <div className="flex flex-col items-center mb-3 md:mb-6">
+      <div className="z-10 flex flex-col items-center w-full mb-3 md:mb-6">
+        <div className="flex flex-col items-center mb-2 md:mb-4">
           <span
             className="material-symbols-outlined filled text-primary text-2xl md:text-3xl mb-1"
             aria-hidden="true"
@@ -67,7 +67,7 @@ export function ClockPanel({
         </div>
 
         {/* Dates */}
-        <div className="flex items-center gap-6 md:gap-12">
+        <div className="flex items-center gap-5 md:gap-10">
           <div className="flex flex-col items-center">
             <span className="font-body-md text-sm md:text-base text-on-surface">
               {clock.gregorianDate}
@@ -92,7 +92,7 @@ export function ClockPanel({
       </div>
 
       {/* Clock */}
-      <h2 className="font-label-caps text-[11px] md:text-label-caps text-primary tracking-widest z-10 mb-1 md:mb-2">
+      <h2 className="font-label-caps text-[11px] md:text-label-caps text-primary tracking-widest z-10 mb-1 md:mb-1">
         {t.currentTime}
       </h2>
       <div
@@ -117,7 +117,7 @@ export function ClockPanel({
 
       {/* Status Pill */}
       {statusMessage && (
-        <div className="mt-4 md:mt-8 flex items-center gap-2 md:gap-3 bg-surface/50 rounded-full px-4 md:px-6 py-2 md:py-3 border border-primary/20 z-10">
+        <div className="mt-3 md:mt-6 flex items-center gap-2 md:gap-3 bg-surface/50 rounded-full px-4 md:px-5 py-2 md:py-2 border border-primary/20 z-10">
           <span
             className="material-symbols-outlined text-primary text-base md:text-[24px]"
             aria-hidden="true"

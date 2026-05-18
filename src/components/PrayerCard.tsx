@@ -38,7 +38,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       // ...
       aria-label={`${prayer.name}${isActive ? t.currentlyActive : ""}`}
       className={[
-        "rounded-xl flex flex-col items-center py-3 md:py-4 px-2 relative",
+        "rounded-xl flex flex-col items-center py-3 md:py-5 px-2 md:px-3 relative",
         isActive
           ? "bg-primary/10 border-2 border-primary shadow-[0_0_15px_rgba(197,160,89,0.3)] z-30 overflow-visible"
           : isShuruq
@@ -56,7 +56,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Icon */}
       <span
-        className={`material-symbols-outlined text-[22px] md:text-[28px] mb-1 ${isActive ? "text-primary" : "text-text-muted"}`}
+        className={`material-symbols-outlined text-[22px] md:text-[32px] mb-1 ${isActive ? "text-primary" : "text-text-muted"}`}
         aria-hidden="true"
       >
         {prayer.icon}
@@ -64,14 +64,14 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Prayer name */}
       <h3
-        className={`font-label-caps text-sm md:text-lg lg:text-xl tracking-wider md:tracking-widest font-bold text-center truncate ${isActive ? "text-primary" : "text-on-surface"}`}
+        className={`font-label-caps text-sm md:text-xl lg:text-2xl tracking-wider md:tracking-widest font-bold text-center truncate ${isActive ? "text-primary" : "text-on-surface"}`}
       >
         {prayer.name.toUpperCase()}
       </h3>
 
       {/* Arabic name */}
       <span
-        className={`font-body-md text-sm md:text-base mb-1 md:mb-auto ${isActive ? "text-primary/80" : "text-text-muted"}`}
+        className={`font-body-md text-sm md:text-lg mb-1 md:mb-auto ${isActive ? "text-primary/80" : "text-text-muted"}`}
         lang="ar"
       >
         {prayer.arabicName}
@@ -79,12 +79,12 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Divider */}
       <div
-        className={`w-full h-[1px] my-1.5 ${isActive ? "bg-primary/30" : "bg-outline-variant/50"}`}
+        className={`w-full h-[1px] my-2 ${isActive ? "bg-primary/30" : "bg-outline-variant/50"}`}
         aria-hidden="true"
       />
 
       {/* Times */}
-      <div className="w-full px-1 md:px-3 font-tabular-nums">
+      <div className="w-full px-1 md:px-4 font-tabular-nums">
         {isShuruq && prayer.time ? (
           <div className="flex justify-center">
             <TimeBlock
@@ -130,17 +130,17 @@ function TimeBlock({
   return (
     <div className="flex flex-col items-center">
       <span
-        className={`text-xs md:text-sm font-label-caps tracking-wider ${isActive ? "text-primary/70" : "text-text-muted"}`}
+        className={`text-xs md:text-base font-label-caps tracking-wider ${isActive ? "text-primary/70" : "text-text-muted"}`}
       >
         {label}
       </span>
       <span
-        className={`text-lg md:text-2xl lg:text-3xl font-semibold leading-tight ${isActive ? "text-primary" : "text-on-surface-variant"}`}
+        className={`text-lg md:text-3xl lg:text-4xl font-semibold leading-tight ${isActive ? "text-primary" : "text-on-surface-variant"}`}
       >
         {time}
       </span>
       <span
-        className={`text-xs md:text-sm ${isActive ? "text-primary/80" : "text-text-muted"}`}
+        className={`text-xs md:text-base ${isActive ? "text-primary/80" : "text-text-muted"}`}
       >
         {ampm}
       </span>
