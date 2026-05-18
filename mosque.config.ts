@@ -19,6 +19,7 @@ const config: MosqueConfig = {
     Maghrib: 5,
     Isha: 20,
   },
+  // extraPrayers: [{ name: "Khutbah 1", time: "13:00", isKhutbah: true }],
   adSlots: [
     { id: 1, label: "SPONSOR SPACE", image: null },
     { id: 2, label: "SPONSOR SPACE", image: null },

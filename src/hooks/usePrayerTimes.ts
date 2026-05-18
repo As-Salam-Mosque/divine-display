@@ -326,7 +326,7 @@ function buildPrayers(
   // isKhutbah is intentionally left false here by default. Upstream data
   // providers or configuration should explicitly set `isKhutbah: true` for
   // khutbah entries. This removes any name-based heuristic from the codebase.
-  return PRAYER_ORDER.map((name) => {
+  const basePrayers: PrayerTime[] = PRAYER_ORDER.map((name) => {
     const meta = PRAYER_META[name];
     const aladhanKey = ALADHAN_KEYS[name];
     const raw = timings[aladhanKey];
@@ -358,4 +358,21 @@ function buildPrayers(
       isKhutbah: false,
     };
   });
+
+  // Append any admin-supplied extraPrayers from config. Convert ExtraPrayer -> PrayerTime
+  const extras = (config.extraPrayers ?? []).map((e, idx) => {
+    const adhan = e.adhan ?? e.time ?? null;
+    // const iqamah = e.iqamah ?? e.time ?? null;
+    return {
+      name: e.name as PrayerTime["name"] as PrayerTime["name"],
+      arabicName: e.arabicName ?? e.name,
+      icon: e.icon ?? "campaign",
+      adhan,
+      // iqamah,
+      time: e.time,
+      isKhutbah: !!e.isKhutbah,
+    } as PrayerTime;
+  });
+
+  return [...basePrayers, ...extras];
 }

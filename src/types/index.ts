@@ -6,8 +6,11 @@ export type PrayerName =
   | "Maghrib"
   | "Isha";
 
+// Relaxed PrayerTime: allow arbitrary names (string) so extra/admin prayers
+// can reuse the same type as canonical prayers without a separate ExtraPrayer.
 export interface PrayerTime {
-  name: PrayerName;
+  // Previously a narrow union; now any string (e.g., "Khutbah 1")
+  name: string;
   arabicName: string;
   icon: string;
   adhan: string | null;
@@ -46,6 +49,11 @@ export interface MosqueConfig {
   // UI content
   adSlots: AdSlot[];
   announcements: string[];
+
+  // Optional admin-supplied additional prayers (e.g. khutbah times).
+  // These are typed as PrayerTime so their shape matches runtime objects and
+  // can be merged without a separate ExtraPrayer interface.
+  extraPrayers?: PrayerTime[];
 }
 
 export interface ClockState {
@@ -103,5 +111,6 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     iqamahOffsets: {},
     adSlots: [],
     announcements: [],
+    extraPrayers: [],
   },
 };
