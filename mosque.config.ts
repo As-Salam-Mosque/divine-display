@@ -21,9 +21,9 @@ const config: MosqueConfig = {
   },
   // extraPrayers: [{ name: "Khutbah 1", time: "13:00", isKhutbah: true }],
   adSlots: [
-    { id: 1, label: "SPONSOR SPACE", image: null },
-    { id: 2, label: "SPONSOR SPACE", image: null },
-    { id: 3, label: "SPONSOR SPACE", image: null },
+    { id: 1, label: "SPONSOR SPACE", image: "https://picsum.photos/1000" },
+    { id: 2, label: "SPONSOR SPACE", image: "https://picsum.photos/1200" },
+    { id: 3, label: "SPONSOR SPACE", image: "https://picsum.photos/1500" },
   ],
   announcements: [
     "Friday Khutbah — Sheikh Yusuf will lead the khutbah this Friday on the virtues of patience.",
