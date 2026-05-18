@@ -33,7 +33,7 @@ const en = {
   communitySponsors: "COMMUNITY SPONSORS",
   paidAds: "PAID ADS",
   available: "Available",
-  masjidAnnouncements: "MASJID ANNOUNCEMENTS",
+  masjidAnnouncements: "ANNOUNCEMENTS",
   currentlyActive: ", currently active",
   notAvailable: "Not available",
   // time labels

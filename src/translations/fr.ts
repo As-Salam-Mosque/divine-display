@@ -27,7 +27,7 @@ const fr = {
   communitySponsors: "SPONSORS COMMUNAUTAIRES",
   paidAds: "PUBLICITÉS PAYANTES",
   available: "Disponible",
-  masjidAnnouncements: "ANONNCES DE LA MOSQUÉE",
+  masjidAnnouncements: "ANONNCES",
   currentlyActive: ", actuellement en cours",
   notAvailable: "Non disponible",
   // time labels
