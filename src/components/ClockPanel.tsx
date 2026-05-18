@@ -41,7 +41,10 @@ export function ClockPanel({
         aria-label={t.settings}
         className="absolute top-3 right-3 md:top-4 md:right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
       >
-        <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+        <span
+          className="material-symbols-outlined text-[20px]"
+          aria-hidden="true"
+        >
           settings
         </span>
       </button>
@@ -49,7 +52,10 @@ export function ClockPanel({
       {/* Mosque Identity */}
       <div className="z-10 flex flex-col items-center w-full mb-4 md:mb-8">
         <div className="flex flex-col items-center mb-3 md:mb-6">
-          <span className="material-symbols-outlined filled text-primary text-2xl md:text-3xl mb-1" aria-hidden="true">
+          <span
+            className="material-symbols-outlined filled text-primary text-2xl md:text-3xl mb-1"
+            aria-hidden="true"
+          >
             mosque
           </span>
           <h1 className="font-headline-md text-lg md:text-2xl font-semibold tracking-[0.2em] md:tracking-[0.25em] text-primary">
@@ -70,7 +76,10 @@ export function ClockPanel({
               {clock.dayName}
             </span>
           </div>
-          <div className="w-[1px] h-6 md:h-8 bg-primary/20" aria-hidden="true" />
+          <div
+            className="w-[1px] h-6 md:h-8 bg-primary/20"
+            aria-hidden="true"
+          />
           <div className="flex flex-col items-center">
             <span className="font-body-md text-sm md:text-base text-on-surface">
               {hijriDate || "—"}
@@ -109,7 +118,10 @@ export function ClockPanel({
       {/* Status Pill */}
       {statusMessage && (
         <div className="mt-4 md:mt-8 flex items-center gap-2 md:gap-3 bg-surface/50 rounded-full px-4 md:px-6 py-2 md:py-3 border border-primary/20 z-10">
-          <span className="material-symbols-outlined text-primary text-base md:text-[24px]" aria-hidden="true">
+          <span
+            className="material-symbols-outlined text-primary text-base md:text-[24px]"
+            aria-hidden="true"
+          >
             campaign
           </span>
           <span className="font-body-md text-sm md:text-body-lg text-on-surface">

@@ -56,7 +56,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Icon */}
       <span
-        className={`material-symbols-outlined text-[20px] md:text-[24px] mb-1 ${isActive ? "text-primary" : "text-text-muted"}`}
+        className={`material-symbols-outlined text-[22px] md:text-[28px] mb-1 ${isActive ? "text-primary" : "text-text-muted"}`}
         aria-hidden="true"
       >
         {prayer.icon}
@@ -64,14 +64,14 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Prayer name */}
       <h3
-        className={`font-label-caps text-[11px] md:text-[13px] tracking-wider md:tracking-widest font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
+        className={`font-label-caps text-sm md:text-lg lg:text-xl tracking-wider md:tracking-widest font-bold text-center truncate ${isActive ? "text-primary" : "text-on-surface"}`}
       >
         {prayer.name.toUpperCase()}
       </h3>
 
       {/* Arabic name */}
       <span
-        className={`font-body-md text-xs md:text-sm mb-1 md:mb-auto ${isActive ? "text-primary/80" : "text-text-muted"}`}
+        className={`font-body-md text-sm md:text-base mb-1 md:mb-auto ${isActive ? "text-primary/80" : "text-text-muted"}`}
         lang="ar"
       >
         {prayer.arabicName}
@@ -130,17 +130,17 @@ function TimeBlock({
   return (
     <div className="flex flex-col items-center">
       <span
-        className={`text-[9px] md:text-[11px] font-label-caps tracking-wider ${isActive ? "text-primary/70" : "text-text-muted"}`}
+        className={`text-xs md:text-sm font-label-caps tracking-wider ${isActive ? "text-primary/70" : "text-text-muted"}`}
       >
         {label}
       </span>
       <span
-        className={`text-base md:text-xl font-semibold leading-tight ${isActive ? "text-primary" : "text-on-surface-variant"}`}
+        className={`text-lg md:text-2xl lg:text-3xl font-semibold leading-tight ${isActive ? "text-primary" : "text-on-surface-variant"}`}
       >
         {time}
       </span>
       <span
-        className={`text-[9px] md:text-[11px] ${isActive ? "text-primary/80" : "text-text-muted"}`}
+        className={`text-xs md:text-sm ${isActive ? "text-primary/80" : "text-text-muted"}`}
       >
         {ampm}
       </span>
