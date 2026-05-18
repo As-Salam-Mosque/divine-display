@@ -12,20 +12,20 @@ export function AnnouncementTicker({ announcements }: AnnouncementTickerProps) {
   const items = [...announcements, ...announcements];
 
   return (
-    <footer className="w-full flex items-center px-margin-page h-16 border-t border-primary/20 bg-surface-panel overflow-hidden shrink-0">
+    <footer className="w-full flex items-center px-4 lg:px-margin-page tv:px-[64px] h-12 sm:h-14 lg:h-16 tv:h-20 border-t border-primary/20 bg-surface-panel overflow-hidden shrink-0">
       {/* Label */}
-      <div className="flex items-center gap-4 bg-surface-panel z-10 pr-4 border-r border-primary/20 h-full shrink-0">
-        <span className="material-symbols-outlined text-primary">
+      <div className="flex items-center gap-3 lg:gap-4 bg-surface-panel z-10 pr-3 lg:pr-4 border-r border-primary/20 h-full shrink-0">
+        <span className="material-symbols-outlined text-primary text-lg lg:text-xl tv:text-2xl">
           view_list
         </span>
-        <span className="font-label-caps text-label-caps text-primary whitespace-nowrap">
+        <span className="font-label-caps text-[10px] lg:text-label-caps tv:text-base text-primary whitespace-nowrap">
           {t.masjidAnnouncements}
         </span>
       </div>
 
       {/* Scrolling text */}
       <div className="flex-1 overflow-hidden ml-4">
-        <div className="flex gap-12 font-body-md text-body-md text-text-muted whitespace-nowrap animate-marquee">
+        <div className="flex gap-8 lg:gap-12 font-body-md text-sm lg:text-body-md tv:text-[28px] text-text-muted whitespace-nowrap animate-marquee">
           {items.map((text, i) => (
             <p
               key={i}

@@ -11,7 +11,7 @@ interface ClockPanelProps {
 
 const MosqueSilhouette = () => (
   <div
-    className="absolute bottom-0 w-full h-24 md:h-48 opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
+    className="absolute bottom-0 w-full h-20 sm:h-24 md:h-40 lg:h-56 tv:h-72 opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
     style={{
       backgroundImage: `url("data:image/svg+xml;utf8,<svg viewBox='0 0 1000 300' xmlns='http://www.w3.org/2000/svg' fill='%23c5a059'><path d='M500 50 C450 150 400 200 400 300 L600 300 C600 200 550 150 500 50 Z M200 150 C180 200 150 250 150 300 L250 300 C250 250 220 200 200 150 Z M800 150 C780 200 750 250 750 300 L850 300 C850 250 820 200 800 150 Z M50 200 L70 300 L30 300 Z M950 200 L970 300 L930 300 Z'/></svg>")`,
     }}
@@ -32,17 +32,17 @@ export function ClockPanel({
   const displayHours = is24h ? clock.hours24 : clock.hours;
 
   return (
-    <div className="bg-surface-panel ghost-border rounded-xl p-2 md:p-6 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden active-glow">
+    <div className="bg-surface-panel ghost-border rounded-xl p-2 sm:p-4 md:p-6 lg:p-8 tv:p-10 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden active-glow">
       <MosqueSilhouette />
 
       {/* Gear icon */}
       <button
         onClick={onOpenSettings}
         aria-label={t.settings}
-        className="absolute top-2 right-2 md:top-4 md:right-4 z-10 w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
+        className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 z-10 w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 tv:w-12 tv:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
       >
         <span
-          className="material-symbols-outlined text-[18px] md:text-[20px]"
+          className="material-symbols-outlined text-[18px] sm:text-[20px] lg:text-[24px] tv:text-[28px]"
           aria-hidden="true"
         >
           settings
@@ -50,41 +50,41 @@ export function ClockPanel({
       </button>
 
       {/* Mosque Identity */}
-      <div className="z-10 flex flex-col items-center w-full mb-2 md:mb-6">
-        <div className="flex flex-col items-center mb-1 md:mb-4">
+      <div className="z-10 flex flex-col items-center w-full mb-2 sm:mb-4 md:mb-6">
+        <div className="flex flex-col items-center mb-1 sm:mb-2 md:mb-4">
           <span
-            className="material-symbols-outlined filled text-primary text-xl md:text-3xl mb-1"
+            className="material-symbols-outlined filled text-primary text-xl sm:text-2xl md:text-3xl lg:text-4xl tv:text-5xl mb-1"
             aria-hidden="true"
           >
             mosque
           </span>
-          <h1 className="font-headline-md text-base md:text-2xl font-semibold tracking-[0.2em] md:tracking-[0.25em] text-primary">
+          <h1 className="font-headline-md text-base sm:text-lg md:text-2xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.2em] md:tracking-[0.25em] lg:tracking-[0.3em] tv:tracking-[0.35em] text-primary">
             {settings.mosque.name}
           </h1>
-          <p className="font-label-caps text-[9px] md:text-xs text-text-muted">
+          <p className="font-label-caps text-[9px] sm:text-[10px] md:text-xs lg:text-sm tv:text-base text-text-muted">
             {settings.mosque.city}
           </p>
         </div>
 
         {/* Dates */}
-        <div className="flex items-center gap-4 md:gap-10">
+        <div className="flex items-center gap-4 sm:gap-6 md:gap-10">
           <div className="flex flex-col items-center">
-            <span className="font-body-md text-sm md:text-base text-on-surface">
+            <span className="font-body-md text-[11px] sm:text-sm md:text-base lg:text-lg tv:text-xl text-on-surface">
               {clock.gregorianDate}
             </span>
-            <span className="font-label-caps text-[10px] text-text-muted">
+            <span className="font-label-caps text-[10px] sm:text-[11px] md:text-xs lg:text-sm tv:text-base text-text-muted">
               {clock.dayName}
             </span>
           </div>
           <div
-            className="w-[1px] h-6 md:h-8 bg-primary/20"
+            className="w-[1px] h-6 sm:h-7 md:h-8 lg:h-10 tv:h-12 bg-primary/20"
             aria-hidden="true"
           />
           <div className="flex flex-col items-center">
-            <span className="font-body-md text-sm md:text-base text-on-surface">
+            <span className="font-body-md text-[11px] sm:text-sm md:text-base lg:text-lg tv:text-xl text-on-surface">
               {hijriDate || "—"}
             </span>
-            <span className="font-label-caps text-[10px] text-text-muted">
+            <span className="font-label-caps text-[10px] sm:text-[11px] md:text-xs lg:text-sm tv:text-base text-text-muted">
               {t.hijri}
             </span>
           </div>
@@ -92,7 +92,7 @@ export function ClockPanel({
       </div>
 
       {/* Clock */}
-      <h2 className="font-label-caps text-[10px] md:text-label-caps text-primary tracking-widest z-10 mb-1 md:mb-1">
+      <h2 className="font-label-caps text-[10px] sm:text-[11px] md:text-label-caps lg:text-base tv:text-lg text-primary tracking-widest z-10 mb-1 md:mb-1">
         {t.currentTime}
       </h2>
       <div
@@ -100,15 +100,15 @@ export function ClockPanel({
         aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
         role="timer"
       >
-        <span className="font-clock-display text-[48px] md:text-clock-display leading-none">
+        <span className="font-clock-display text-[44px] sm:text-[56px] md:text-[96px] lg:text-[140px] xl:text-[180px] tv:text-[220px] leading-none">
           {displayHours}:{clock.minutes}
         </span>
         <div className="flex flex-col items-start">
-          <span className="text-lg md:text-headline-md text-primary font-bold leading-tight">
+          <span className="text-[16px] sm:text-[18px] md:text-[24px] lg:text-[32px] xl:text-[40px] tv:text-[48px] text-primary font-bold leading-tight">
             :{clock.seconds}
           </span>
           {!is24h && (
-            <span className="text-lg md:text-headline-md text-primary font-bold leading-tight">
+            <span className="text-[16px] sm:text-[18px] md:text-[24px] lg:text-[32px] xl:text-[40px] tv:text-[48px] text-primary font-bold leading-tight">
               {clock.ampm}
             </span>
           )}
@@ -117,14 +117,14 @@ export function ClockPanel({
 
       {/* Status Pill */}
       {statusMessage && (
-        <div className="mt-2 md:mt-6 flex items-center gap-2 md:gap-3 status-pill rounded-full px-3 md:px-5 py-1 md:py-2 z-10">
+        <div className="mt-2 sm:mt-4 md:mt-6 lg:mt-8 tv:mt-10 flex items-center gap-2 md:gap-3 status-pill rounded-full px-3 sm:px-4 md:px-5 lg:px-6 tv:px-7 py-1 md:py-2 lg:py-2.5 z-10">
           <span
-            className="material-symbols-outlined text-primary text-base md:text-[24px]"
+            className="material-symbols-outlined text-primary text-base sm:text-lg md:text-[22px] lg:text-[26px] tv:text-[30px]"
             aria-hidden="true"
           >
             campaign
           </span>
-          <span className="font-body-md text-sm md:text-body-lg text-on-surface">
+          <span className="font-body-md text-sm sm:text-base md:text-body-lg lg:text-[26px] tv:text-[30px] text-on-surface">
             {statusMessage}
           </span>
         </div>

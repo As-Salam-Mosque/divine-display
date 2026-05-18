@@ -5,6 +5,9 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      screens: {
+        tv: "1920px",
+      },
       colors: {
         surface: "#16130e",
         "surface-dim": "#16130e",
