@@ -34,10 +34,10 @@ function Display() {
     <div
       className={`${themeClasses} min-h-screen md:h-screen flex flex-col font-body-md overflow-y-auto md:overflow-hidden`}
     >
-      <main className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-gutter-grid p-4 md:p-margin-page md:overflow-hidden">
+      <main className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-gutter-grid p-2 md:p-margin-page md:overflow-hidden">
         {/* Left Stage */}
         <div
-          className={`col-span-1 flex flex-col gap-4 md:gap-gutter-grid md:h-full ${
+          className={`col-span-1 flex-1 flex flex-col gap-2 md:gap-gutter-grid md:h-full ${
             settings.showSponsors ? "md:col-span-9" : "md:col-span-12"
           }`}
         >
