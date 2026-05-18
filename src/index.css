@@ -5,33 +5,143 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme variables and light/dark palettes */
+:root {
+    /* Default (light) palette */
+    /* Use a slightly darker gold for better contrast on light backgrounds */
+    --primary: #c5a059;
+    --primary-rgb: 197, 160, 89;
+
+    --background-deep: #ffffff;
+    --surface-panel: #f5f6f7;
+    --surface: #ffffff;
+    --surface-container: #f3f4f6;
+    --surface-container-low: #f7f7f8;
+    --surface-container-highest: #ffffff;
+
+    --on-surface: #0b1220; /* primary text on light */
+    --on-surface-rgb: 11, 18, 32;
+    --on-surface-variant: #1f2937;
+    --text-muted: rgba(11, 18, 32, 0.6);
+    --outline-variant: rgba(15, 23, 42, 0.08);
+}
+
+/* Dark theme overrides */
+.dark {
+    --primary: #e9c176;
+    --primary-rgb: 233, 193, 118;
+
+    --background-deep: #060a1a;
+    --surface-panel: #111a35;
+    --surface: #0b1220;
+    --surface-container: #081028;
+    --surface-container-low: #071022;
+    --surface-container-highest: #081028;
+
+    --on-surface: #ffffff;
+    --on-surface-rgb: 255, 255, 255;
+    --on-surface-variant: #dfe6ff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --outline-variant: rgba(233, 193, 118, 0.08);
+}
+
+/* Light theme explicit (mirrors :root for clarity) */
+.light {
+    /* Match :root — darker gold for readability */
+    --primary: #c5a059;
+    --primary-rgb: 197, 160, 89;
+
+    --background-deep: #ffffff;
+    --surface-panel: #f5f6f7;
+    --surface: #ffffff;
+    --surface-container: #f3f4f6;
+    --surface-container-low: #f7f7f8;
+    --surface-container-highest: #ffffff;
+
+    --on-surface: #0b1220;
+    --on-surface-rgb: 11, 18, 32;
+    --on-surface-variant: #1f2937;
+    --text-muted: rgba(11, 18, 32, 0.6);
+    --outline-variant: rgba(15, 23, 42, 0.08);
+}
+
 @layer components {
     .ghost-border {
         border: 1px solid rgba(197, 160, 89, 0.2);
     }
     .active-glow {
-        box-shadow: inset 0 0 20px rgba(197, 160, 89, 0.1);
-        border-color: #c5a059;
+        /* Use theme-aware variables for glow and border */
+        box-shadow: inset 0 0 20px rgba(var(--primary-rgb), 0.12);
+        border-color: var(--primary);
     }
 
+    /* small primary shadow helper (theme-aware) */
+    .shadow-primary-sm {
+        box-shadow: 0 0 5px rgba(var(--primary-rgb), 0.7);
+    }
+
+    /* status pill (theme-aware, less dark) */
+    .status-pill {
+        background-color: rgba(
+            var(--on-surface-rgb),
+            0.06
+        ); /* subtle overlay of on-surface */
+        border: 1px solid rgba(var(--on-surface-rgb), 0.12);
+    }
+
+    /* Map semantic token classes to CSS variables so light/dark themes work */
     /* active card glow (no layout shift) */
     .active-pulse {
         animation: active-glow 2s ease-in-out infinite;
     }
 
-    @keyframes active-glow {
-        0% {
-            box-shadow: 0 0 8px rgba(197, 160, 89, 0.12);
-            border-color: rgba(197, 160, 89, 0.15);
-        }
-        50% {
-            box-shadow: 0 0 28px rgba(197, 160, 89, 0.22);
-            border-color: rgba(197, 160, 89, 0.25);
-        }
-        100% {
-            box-shadow: 0 0 8px rgba(197, 160, 89, 0.12);
-            border-color: rgba(197, 160, 89, 0.15);
-        }
+    /* Map semantic token classes to CSS variables so light/dark themes work */
+    .bg-background-deep {
+        background-color: var(--background-deep) !important;
+    }
+    .bg-surface-panel {
+        background-color: var(--surface-panel) !important;
+    }
+    .bg-surface {
+        background-color: var(--surface) !important;
+    }
+    .bg-surface-container {
+        background-color: var(--surface-container) !important;
+    }
+    .bg-surface-container-low {
+        background-color: var(--surface-container-low) !important;
+    }
+    .bg-surface-container-highest {
+        background-color: var(--surface-container-highest) !important;
+    }
+
+    .text-on-surface {
+        color: var(--on-surface) !important;
+    }
+    .text-on-surface-variant {
+        color: var(--on-surface-variant) !important;
+    }
+    .text-text-muted {
+        color: var(--text-muted) !important;
+    }
+
+    .border-outline-variant {
+        border-color: var(--outline-variant) !important;
+    }
+
+    .text-primary {
+        color: var(--primary) !important;
+    }
+    .bg-primary {
+        background-color: var(--primary) !important;
+    }
+    .border-primary {
+        border-color: var(--primary) !important;
+    }
+
+    /* opacity helper for primary (10%) — used as bg-primary/10 in design */
+    .bg-primary-10 {
+        background-color: rgba(var(--primary-rgb), 0.1) !important;
     }
 }
 

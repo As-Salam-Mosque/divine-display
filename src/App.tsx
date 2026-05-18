@@ -14,6 +14,7 @@ const defaultSettings: AppSettings = {
   language: "en",
   timeFormat: "12h",
   showSponsors: true,
+  theme: "dark",
   mosque: config,
 };
 
@@ -24,8 +25,15 @@ function Display() {
   const clock = useClock(settings.language);
   const prayerTimes = usePrayerTimes(config, settings.language);
 
+  const themeClasses =
+    settings.theme === "dark"
+      ? "dark bg-background-deep text-on-surface"
+      : "bg-white text-black";
+
   return (
-    <div className="dark bg-background-deep text-on-surface min-h-screen md:h-screen flex flex-col font-body-md overflow-y-auto md:overflow-hidden">
+    <div
+      className={`${themeClasses} min-h-screen md:h-screen flex flex-col font-body-md overflow-y-auto md:overflow-hidden`}
+    >
       <main className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-gutter-grid p-4 md:p-margin-page md:overflow-hidden">
         {/* Left Stage */}
         <div

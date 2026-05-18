@@ -34,6 +34,8 @@ const fr = {
   time: "HEURE",
   adhan: "ADHAN",
   iqamah: "IQAMAH",
+  // theme
+  lightTheme: "Activer le thème clair",
 };
 
 export default fr;

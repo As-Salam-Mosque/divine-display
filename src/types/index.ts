@@ -66,11 +66,13 @@ export interface PrayerTimesState {
 
 export type Language = "en" | "fr";
 export type TimeFormat = "12h" | "24h";
+export type Theme = "dark" | "light";
 
 export interface AppSettings {
   language: Language;
   timeFormat: TimeFormat;
   showSponsors: boolean;
+  theme: Theme;
   mosque: MosqueConfig;
 }
 
@@ -81,6 +83,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   language: "en",
   timeFormat: "24h",
   showSponsors: true,
+  theme: "dark",
   mosque: {
     name: "Al-Masjid",
     city: "Montreal",

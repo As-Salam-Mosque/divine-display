@@ -40,6 +40,8 @@ const en = {
   time: "TIME",
   adhan: "ADHAN",
   iqamah: "IQAMAH",
+  // theme
+  lightTheme: "Use light theme",
 };
 
 export default en;

@@ -117,7 +117,7 @@ export function ClockPanel({
 
       {/* Status Pill */}
       {statusMessage && (
-        <div className="mt-3 md:mt-6 flex items-center gap-2 md:gap-3 bg-surface/50 rounded-full px-4 md:px-5 py-2 md:py-2 border border-primary/20 z-10">
+        <div className="mt-3 md:mt-6 flex items-center gap-2 md:gap-3 status-pill rounded-full px-4 md:px-5 py-2 md:py-2 z-10">
           <span
             className="material-symbols-outlined text-primary text-base md:text-[24px]"
             aria-hidden="true"

@@ -180,6 +180,14 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   ]}
                 />
               </Field>
+              {/* Theme toggle */}
+              <Toggle
+                checked={settings.theme === "light"}
+                onChange={(v) =>
+                  updateSettings({ theme: v ? "light" : "dark" })
+                }
+                label={t.lightTheme}
+              />
             </div>
           </section>
 

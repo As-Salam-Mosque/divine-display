@@ -49,7 +49,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       {/* Active indicator dot */}
       {isActive && (
         <div
-          className="absolute -top-1.5 right-2 w-3 h-3 bg-primary rounded-full shadow-[0_0_5px_#c5a059]"
+          className="absolute -top-1.5 right-2 w-3 h-3 bg-primary rounded-full shadow-primary-sm"
           aria-hidden="true"
         />
       )}
