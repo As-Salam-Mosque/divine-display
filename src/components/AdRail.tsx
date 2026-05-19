@@ -27,7 +27,7 @@ function AdSlotCard({ slot }: AdSlotProps) {
       {hasImage ? (
         // Image fills the entire slot with no padding; object-cover will crop as needed
         <img
-          src={slot.image}
+          src={slot.image ?? undefined}
           alt={slot.label}
           className="w-full h-full object-cover"
         />
