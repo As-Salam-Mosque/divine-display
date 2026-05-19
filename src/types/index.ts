@@ -80,12 +80,20 @@ export interface ClockState {
   dayName: string;
 }
 
+export type StatusType =
+  | "none"
+  | "adhan-now"
+  | "iqamah-now"
+  | "iqamah-countdown"
+  | "next-countdown";
+
 export interface PrayerTimesState {
   prayers: PrayerTime[];
   hijriDate: string;
   activePrayerIndex: number | null;
   nextPrayerIndex: number | null;
   statusMessage: string;
+  statusType: StatusType;
   loading: boolean;
   error: string | null;
 }

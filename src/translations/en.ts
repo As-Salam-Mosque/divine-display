@@ -27,6 +27,8 @@ const en = {
   currentTime: "CURRENT TIME",
   hijri: "HIJRI",
   // status messages
+  statusAdhanNow: (name: string) => `${name} Adhan now`,
+  statusIqamahNow: (name: string) => `${name} Iqamah now`,
   statusIqamah: (name: string, remaining: string) =>
     `${name} Iqamah in ${remaining}`,
   statusNext: (name: string, remaining: string) => `${name} in ${remaining}`,

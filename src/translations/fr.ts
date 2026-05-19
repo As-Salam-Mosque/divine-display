@@ -21,6 +21,8 @@ const fr = {
   phone: "Numéro de téléphone",
   currentTime: "HEURE ACTUELLE",
   hijri: "HÉGIRE",
+  statusAdhanNow: (name: string) => `Adhan de ${name} maintenant`,
+  statusIqamahNow: (name: string) => `Iqama de ${name} maintenant`,
   statusIqamah: (name: string, remaining: string) =>
     `Iqama de ${name} dans ${remaining}`,
   statusNext: (name: string, remaining: string) => `${name} dans ${remaining}`,

@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import type { Language, PrayerTime, PrayerTimesState } from "../types";
+import type {
+  Language,
+  PrayerTime,
+  PrayerTimesState,
+  StatusType,
+} from "../types";
 import type { MosqueConfig } from "../types";
 import { translations } from "../i18n";
 
@@ -71,33 +76,44 @@ function formatRemaining(targetDate: Date, now: Date) {
   return `${hours}:${mm}:${ss}`;
 }
 
-function buildStatusMessage(
+const STATUS_SIGNAL_WINDOW_MS = 60_000;
+
+function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
+  return (
+    now.getTime() >= targetDate.getTime() &&
+    now.getTime() < targetDate.getTime() + STATUS_SIGNAL_WINDOW_MS
+  );
+}
+
+function buildStatus(
   prayers: PrayerTime[],
   activePrayerIndex: number | null,
   nextPrayerIndex: number | null,
   now: Date,
   language: Language,
-): string {
+): { message: string; type: StatusType } {
   const t = translations[language];
   // If we're currently before iqamah of the active prayer, show Iqamah countdown
   if (activePrayerIndex !== null) {
     const active = prayers[activePrayerIndex];
-    if (active.iqamah) {
-      const iqDate = parseTime(active.iqamah.trim());
-      if (
-        now >=
-          (function () {
-            // determine adhan date for active
-            if (active.adhan) {
-              const adhanDate = parseTime(active.adhan.trim());
-              return adhanDate;
-            }
-            // if no adhan (like shuruq), return epoch to avoid triggering
-            return new Date(0);
-          })() &&
-        now < iqDate
-      ) {
-        return t.statusIqamah(active.name, formatRemaining(iqDate, now));
+    const adhanDate = active.adhan ? parseTime(active.adhan.trim()) : null;
+    const iqDate = active.iqamah ? parseTime(active.iqamah.trim()) : null;
+
+    if (iqDate && isWithinSignalWindow(iqDate, now)) {
+      return { message: t.statusIqamahNow(active.name), type: "iqamah-now" };
+    }
+
+    if (adhanDate && isWithinSignalWindow(adhanDate, now)) {
+      return { message: t.statusAdhanNow(active.name), type: "adhan-now" };
+    }
+
+    if (iqDate) {
+      const adhanFloor = adhanDate ?? new Date(0);
+      if (now >= adhanFloor && now < iqDate) {
+        return {
+          message: t.statusIqamah(active.name, formatRemaining(iqDate, now)),
+          type: "iqamah-countdown",
+        };
       }
     }
   }
@@ -112,10 +128,13 @@ function buildStatusMessage(
         // next is tomorrow's first prayer
         nextDate.setDate(nextDate.getDate() + 1);
       }
-      return t.statusNext(next.name, formatRemaining(nextDate, now));
+      return {
+        message: t.statusNext(next.name, formatRemaining(nextDate, now)),
+        type: "next-countdown",
+      };
     }
   }
-  return "";
+  return { message: "", type: "none" };
 }
 
 interface CachedData {
@@ -134,6 +153,7 @@ export function usePrayerTimes(
     activePrayerIndex: null,
     nextPrayerIndex: null,
     statusMessage: "",
+    statusType: "none",
     loading: true,
     error: null,
   });
@@ -226,7 +246,7 @@ export function usePrayerTimes(
         }
       }
 
-      const statusMessage = buildStatusMessage(
+      const status = buildStatus(
         prayers,
         currentIndex,
         nextIndex,
@@ -238,7 +258,8 @@ export function usePrayerTimes(
         ...prev,
         activePrayerIndex: highlightedIndex,
         nextPrayerIndex: nextIndex,
-        statusMessage,
+        statusMessage: status.message,
+        statusType: status.type,
       }));
     },
     [language],
