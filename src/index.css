@@ -89,6 +89,10 @@
         border: 1px solid rgba(var(--on-surface-rgb), 0.12);
     }
 
+    .clock-panel {
+        container-type: inline-size;
+    }
+
     /* Map semantic token classes to CSS variables so light/dark themes work */
     /* active card glow (no layout shift) */
     .active-pulse {
@@ -142,6 +146,24 @@
     /* opacity helper for primary (10%) — used as bg-primary/10 in design */
     .bg-primary-10 {
         background-color: rgba(var(--primary-rgb), 0.1) !important;
+    }
+}
+
+@container (max-width: 600px) {
+    .clock-panel .clock-panel__dates {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .clock-panel .clock-panel__time {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .clock-panel .clock-panel__status {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
     }
 }
 
