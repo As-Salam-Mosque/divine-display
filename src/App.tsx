@@ -32,13 +32,13 @@ function Display() {
 
   return (
     <div
-      className={`${themeClasses} min-h-screen md:h-screen flex flex-col font-body-md overflow-y-auto md:overflow-hidden`}
+      className={`${themeClasses} min-h-screen lg:h-screen flex flex-col font-body-md overflow-y-auto lg:overflow-hidden`}
     >
-      <main className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-gutter-grid p-4 md:p-margin-page md:overflow-hidden">
+      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 md:gap-4 lg:gap-gutter-grid tv:gap-[32px] p-2 sm:p-4 md:p-6 lg:p-margin-page tv:p-[64px] lg:overflow-hidden">
         {/* Left Stage */}
         <div
-          className={`col-span-1 flex flex-col gap-4 md:gap-gutter-grid md:h-full ${
-            settings.showSponsors ? "md:col-span-9" : "md:col-span-12"
+          className={`col-span-1 flex-1 flex flex-col gap-2 sm:gap-3 md:gap-4 lg:gap-gutter-grid tv:gap-[32px] lg:h-full ${
+            settings.showSponsors ? "lg:col-span-9" : "lg:col-span-12"
           }`}
         >
           <ClockPanel
@@ -70,7 +70,7 @@ function Display() {
       </main>
 
       {/* Footer — hidden on mobile */}
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <AnnouncementTicker announcements={config.announcements} />
       </div>
 

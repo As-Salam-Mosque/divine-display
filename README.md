@@ -1,73 +1,35 @@
-# React + TypeScript + Vite
+# Divine Display
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A large-format mosque prayer times display built with React 19, TypeScript, and Vite. Designed for 16:9 screens (TVs / monitors), the app shows the current time, Hijri date, live prayer countdowns (Adhan → Iqamah logic), a responsive prayer table, an announcement marquee, and an optional sponsor ad rail.
 
-Currently, two official plugins are available:
+This README provides a short overview. Developer-facing technical details (development, build, linting, testing, architecture) are in `CONTRIBUTING.md`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Key ideas
 
-## React Compiler
+- Configuration-first: `mosque.config.ts` is the single source of runtime configuration (coordinates, calculation method, iqamah offsets, ad slots, announcements, mosque metadata).
+- Local caching: prayer times are fetched from the AlAdhan API and cached in `localStorage` (one entry per day).
+- Large-screen UI: layout optimized for 16:9; left stage shows clock and prayer table, right rail shows ads (hidden when `showSponsors` is `false`).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Quick links
 
-## Expanding the ESLint configuration
+- Configuration: `mosque.config.ts`
+- Settings context / persistence: `src/context/SettingsContext.tsx`
+- Prayer timings hook: `src/hooks/usePrayerTimes.ts`
+- Translations: `src/translations/en.ts`, `src/translations/fr.ts` (re-exported from `src/i18n.ts`)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Node.js 18+ is recommended.
+2. Install dependencies:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm ci   # use in CI
+# or
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+For developer instructions (start dev server, build, lint, testing tips, architecture, and contribution workflow) see `CONTRIBUTING.md`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## License
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This repository does not include a license file by default. Add a `LICENSE` file if you intend to open source the project.

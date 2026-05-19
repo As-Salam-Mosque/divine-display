@@ -39,7 +39,7 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
 
   return (
     <div
-      className="grid gap-3 md:gap-5 overflow-visible py-2 -my-2 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]"
+      className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 tv:gap-8 overflow-visible py-2 -my-2 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]"
       role="list"
       aria-label="Prayer times"
     >

@@ -27,6 +27,18 @@ export interface AdSlot {
   label: string;
   image?: string | null;
   link?: string | null;
+  // Optional weight used for promo rotation. Higher weight => more likely to be chosen.
+  // Defaults to 0 when omitted so slots are opt-in for rotation.
+  weight?: number;
+}
+
+export interface PromoConfig {
+  // How long (ms) a promo is displayed
+  displayDurationMs?: number;
+  // Time between promo appearances (ms)
+  cycleMs?: number;
+  // Initial delay before the first promo appearance (ms)
+  initialDelayMs?: number;
 }
 
 export interface MosqueConfig {
@@ -49,6 +61,8 @@ export interface MosqueConfig {
   // UI content
   adSlots: AdSlot[];
   announcements: string[];
+  // Optional promo configuration to control timing of the promo rail
+  promo?: PromoConfig;
 
   // Optional admin-supplied additional prayers (e.g. khutbah times).
   // These are typed as PrayerTime so their shape matches runtime objects and

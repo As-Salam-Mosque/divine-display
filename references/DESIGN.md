@@ -147,8 +147,8 @@ The layout uses a **Fluid Grid** model optimized for large-format displays (16:9
 4.  **Footer Strip:** A narrow, full-width band at the very bottom for persistent links or ticker-style notifications.
 
 **Breakpoints:**
-- **Desktop/TV:** 12-column grid. The ad rail is fixed at a maximum of 400px; the clock stage expands to fill the remainder.
--  **Mobile/Tablet:** The ad rail drops below the prayer table. The clock scales down to 50% size but remains centered.
+- **Desktop/TV (1080p target):** 12-column grid. The ad rail is fixed at a maximum of 400px; the clock stage expands to fill the remainder. The announcements ticker is visible.
+- **Mobile/Tablet:** Single-column layout; the ad rail and announcements ticker are hidden to prioritize prayer times. The clock scales down but remains centered.
 
 ## Elevation & Depth
 
