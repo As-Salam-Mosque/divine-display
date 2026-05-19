@@ -144,7 +144,7 @@ export function ClockPanel({
   const showPromoRail =
     !isCriticalSignal && settings.showSponsors && promoImage;
   const panelClassName =
-    "clock-panel [--promo-rail-width:clamp(40%,45cqw,50%)] rounded-xl p-[clamp(0.5rem,2.2cqw,2.5rem)] md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
+    "clock-panel [--promo-rail-width:50%] rounded-xl p-[clamp(0.5rem,2.2cqw,2.5rem)] md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
     (isCriticalSignal
       ? "bg-background-deep border-2 border-primary shadow-[0_0_45px_rgba(233,193,118,0.6)]"
       : "bg-surface-panel ghost-border active-glow");
