@@ -255,10 +255,10 @@ export function ClockPanel({
           )}
         </div>
 
-        {/* Right/Promotional rail - only visible on md+ and only when showPromo is true and sponsors are allowed */}
-        {promoActive && settings.showSponsors && promoImage && (
+        {/* Right/Promotional rail - rendered out of layout flow (absolute on md+) so it won't change the panel height when it slides in. */}
+        {settings.showSponsors && promoImage && (
           <aside
-            className={`md:block hidden md:w-1/2 pl-4 h-full z-10 transform transition-transform duration-[400ms] ease-out ${promoSlideState}`}
+            className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-1/2 pl-4 h-full z-10 transform transition-transform duration-[400ms] ease-out ${promoSlideState}`}
             aria-hidden={promoAlt === ""}
           >
             <div className="w-full h-full rounded-xl overflow-hidden bg-gradient-to-tr from-primary/20 to-primary/10 flex items-center justify-center shadow-inner">
