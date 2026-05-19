@@ -360,7 +360,8 @@ function buildPrayers(
   });
 
   // Append any admin-supplied extraPrayers from config. Convert ExtraPrayer -> PrayerTime
-  const extras = (config.extraPrayers ?? []).map((e, idx) => {
+  // const extras = (config.extraPrayers ?? []).map((e, idx) => {
+  const extras = (config.extraPrayers ?? []).map((e) => {
     const adhan = e.adhan ?? e.time ?? null;
     // const iqamah = e.iqamah ?? e.time ?? null;
     return {
