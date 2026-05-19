@@ -7,8 +7,8 @@ const config: MosqueConfig = {
   website: "https://www.assalam.info",
   capacity: "500",
   openingHours: "See website",
-  email: "info@assalam.ca",
-  phone: "+1-416-555-0123",
+  email: "info@assalam.info",
+  phone: "+1-514-545-5466",
   latitude: 45.497253,
   longitude: -73.573064,
   calculationMethod: 2, // ISNA
@@ -37,10 +37,10 @@ const config: MosqueConfig = {
   ],
   promo: { displayDurationMs: 8000, cycleMs: 90000, initialDelayMs: 5000 },
   announcements: [
-    "Friday Khutbah — Sheikh Yusuf will lead the khutbah this Friday on the virtues of patience.",
-    "Quran Halaqah — Weekly Quran circle every Wednesday after Maghrib in the main hall.",
-    "Parking Notice — East lot closed for repaving. Please use the side entrance.",
-    "Visit our website at masjidalnoor.example",
+    "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2PM (English)",
+    "Quran Halaqah — Weekly Quran circle every Saturday after 3PM in the main hall.",
+    // "Parking Notice — East lot closed for repaving. Please use the side entrance.",
+    "See all out events at assalam.info/services",
   ],
 };
 

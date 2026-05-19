@@ -24,6 +24,9 @@ function Display() {
 
   const clock = useClock(settings.language);
   const prayerTimes = usePrayerTimes(config, settings.language);
+  const isCriticalSignal =
+    prayerTimes.statusType === "adhan-now" ||
+    prayerTimes.statusType === "iqamah-now";
 
   const themeClasses =
     settings.theme === "dark"
@@ -38,13 +41,16 @@ function Display() {
         {/* Left Stage */}
         <div
           className={`col-span-1 flex-1 flex flex-col gap-2 sm:gap-3 md:gap-4 lg:gap-gutter-grid tv:gap-[32px] lg:h-full ${
-            settings.showSponsors ? "lg:col-span-9" : "lg:col-span-12"
+            settings.showSponsors && !isCriticalSignal
+              ? "lg:col-span-9"
+              : "lg:col-span-12"
           }`}
         >
           <ClockPanel
             clock={clock}
             hijriDate={prayerTimes.hijriDate}
             statusMessage={prayerTimes.statusMessage}
+            statusType={prayerTimes.statusType}
             onOpenSettings={() => setSettingsOpen(true)}
           />
 
@@ -66,7 +72,9 @@ function Display() {
         </div>
 
         {/* Right Ad Rail — conditionally shown */}
-        {settings.showSponsors && <AdRail slots={config.adSlots} />}
+        {settings.showSponsors && !isCriticalSignal && (
+          <AdRail slots={config.adSlots} />
+        )}
       </main>
 
       {/* Footer — hidden on mobile */}
