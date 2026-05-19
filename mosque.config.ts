@@ -35,7 +35,7 @@ const config: MosqueConfig = {
     },
     { id: 3, label: "SPONSOR SPACE", image: "https://picsum.photos/1500" },
   ],
-  promo: { displayDurationMs: 8000, cycleMs: 9000, initialDelayMs: 5000 },
+  promo: { displayDurationMs: 8000, cycleMs: 90000, initialDelayMs: 5000 },
   announcements: [
     "Friday Khutbah — Sheikh Yusuf will lead the khutbah this Friday on the virtues of patience.",
     "Quran Halaqah — Weekly Quran circle every Wednesday after Maghrib in the main hall.",

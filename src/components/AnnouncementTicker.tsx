@@ -25,7 +25,7 @@ export function AnnouncementTicker({ announcements }: AnnouncementTickerProps) {
 
       {/* Scrolling text */}
       <div className="flex-1 overflow-hidden ml-4">
-        <div className="flex gap-8 lg:gap-12 font-body-md text-sm lg:text-body-md tv:text-[28px] text-text-muted whitespace-nowrap animate-marquee">
+        <div className="flex items-center h-full gap-8 lg:gap-12 font-body-md text-sm lg:text-[18px] tv:text-[24px] leading-tight text-text-muted whitespace-nowrap animate-marquee">
           {items.map((text, i) => (
             <p
               key={i}

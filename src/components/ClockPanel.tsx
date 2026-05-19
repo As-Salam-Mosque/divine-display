@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
-import type { ClockState } from "../types";
+import type { AdSlot, ClockState } from "../types";
 
 interface ClockPanelProps {
   clock: ClockState;
@@ -34,14 +34,29 @@ export function ClockPanel({
 
   // Promotional content toggle: show a promo panel for `promoDisplayDurationMs` every `promoCycleMs`.
   // Only enabled when sponsors are allowed in settings.
-  const [showPromo, setShowPromo] = useState(false);
-  const [currentPromoSlot, setCurrentPromoSlot] = useState<any | null>(null);
+  const promoExitDurationMs = 400;
+  const [promoPhase, setPromoPhase] = useState<
+    "hidden" | "enter" | "visible" | "exit"
+  >("hidden");
+  const [currentPromoSlot, setCurrentPromoSlot] = useState<AdSlot | null>(null);
   const promoTimerRef = useRef<number | null>(null);
   const cycleTimerRef = useRef<number | null>(null);
   const initialTimerRef = useRef<number | null>(null);
+  const exitTimerRef = useRef<number | null>(null);
+  const enterFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!settings.showSponsors) return;
+    const resetPromo = () => {
+      window.setTimeout(() => {
+        setPromoPhase("hidden");
+        setCurrentPromoSlot(null);
+      }, 0);
+    };
+
+    if (!settings.showSponsors) {
+      resetPromo();
+      return;
+    }
 
     // Read timing from mosque promo config, falling back to reasonable defaults
     const promoCfg = settings.mosque?.promo || {};
@@ -53,7 +68,10 @@ export function ClockPanel({
     const candidates = (settings.mosque?.adSlots || []).filter(
       (s) => !!s.image && (s.weight ?? 0) > 0,
     );
-    if (candidates.length === 0) return;
+    if (candidates.length === 0) {
+      resetPromo();
+      return;
+    }
 
     const pickWeightedSlot = () => {
       const total = candidates.reduce((acc, s) => acc + (s.weight ?? 0), 0);
@@ -69,16 +87,28 @@ export function ClockPanel({
 
     const showCycle = () => {
       const chosen = pickWeightedSlot();
+      if (exitTimerRef.current) {
+        window.clearTimeout(exitTimerRef.current);
+      }
       setCurrentPromoSlot(chosen);
-      setShowPromo(true);
+      setPromoPhase("enter");
+      if (enterFrameRef.current) {
+        window.cancelAnimationFrame(enterFrameRef.current);
+      }
+      enterFrameRef.current = window.requestAnimationFrame(() => {
+        setPromoPhase("visible");
+      });
 
       if (promoTimerRef.current) {
         window.clearTimeout(promoTimerRef.current);
       }
       promoTimerRef.current = window.setTimeout(() => {
-        setShowPromo(false);
-        // keep a small timeout before clearing slot to avoid layout jank
-        window.setTimeout(() => setCurrentPromoSlot(null), 400);
+        setPromoPhase("exit");
+        // keep a small timeout before clearing slot to allow slide-out
+        exitTimerRef.current = window.setTimeout(() => {
+          setPromoPhase("hidden");
+          setCurrentPromoSlot(null);
+        }, promoExitDurationMs);
       }, promoDisplayDurationMs);
     };
 
@@ -92,12 +122,20 @@ export function ClockPanel({
       if (promoTimerRef.current) window.clearTimeout(promoTimerRef.current);
       if (cycleTimerRef.current) window.clearInterval(cycleTimerRef.current);
       if (initialTimerRef.current) window.clearTimeout(initialTimerRef.current);
+      if (exitTimerRef.current) window.clearTimeout(exitTimerRef.current);
+      if (enterFrameRef.current)
+        window.cancelAnimationFrame(enterFrameRef.current);
     };
   }, [settings.showSponsors, settings.mosque]);
 
   const promoSlot = currentPromoSlot;
   const promoImage = promoSlot?.image ?? null;
   const promoAlt = promoSlot?.label ?? "";
+  const promoActive = settings.showSponsors && promoPhase !== "hidden";
+  const promoSlideState =
+    promoPhase === "visible"
+      ? "translate-x-0 opacity-100"
+      : "translate-x-full opacity-0";
 
   return (
     <div className="bg-surface-panel ghost-border rounded-xl p-2 sm:p-4 md:p-6 lg:p-8 tv:p-10 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden active-glow">
@@ -107,7 +145,7 @@ export function ClockPanel({
       <button
         onClick={onOpenSettings}
         aria-label={t.settings}
-        className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 z-20 w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 tv:w-12 tv:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
+        className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 z-30 w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 tv:w-12 tv:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
       >
         <span
           className="material-symbols-outlined text-[18px] sm:text-[20px] lg:text-[24px] tv:text-[28px]"
@@ -121,7 +159,7 @@ export function ClockPanel({
       <div
         className={
           "z-10 w-full transition-all duration-500 " +
-          (showPromo
+          (promoActive
             ? "md:flex md:flex-row md:items-stretch md:justify-between"
             : "flex flex-col items-center justify-center")
         }
@@ -130,7 +168,7 @@ export function ClockPanel({
         <div
           className={
             "flex flex-col " +
-            (showPromo
+            (promoActive
               ? "md:w-1/2 md:items-start md:pl-6"
               : "items-center w-full")
           }
@@ -218,9 +256,9 @@ export function ClockPanel({
         </div>
 
         {/* Right/Promotional rail - only visible on md+ and only when showPromo is true and sponsors are allowed */}
-        {showPromo && settings.showSponsors && promoImage && (
+        {promoActive && settings.showSponsors && promoImage && (
           <aside
-            className="md:block hidden md:w-1/2 pl-4 h-full z-10"
+            className={`md:block hidden md:w-1/2 pl-4 h-full z-10 transform transition-transform duration-[400ms] ease-out ${promoSlideState}`}
             aria-hidden={promoAlt === ""}
           >
             <div className="w-full h-full rounded-xl overflow-hidden bg-gradient-to-tr from-primary/20 to-primary/10 flex items-center justify-center shadow-inner">
