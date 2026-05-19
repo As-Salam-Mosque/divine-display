@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from "react";
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import type { ClockState } from "../types";
@@ -31,6 +32,73 @@ export function ClockPanel({
   const is24h = settings.timeFormat === "24h";
   const displayHours = is24h ? clock.hours24 : clock.hours;
 
+  // Promotional content toggle: show a promo panel for `promoDisplayDurationMs` every `promoCycleMs`.
+  // Only enabled when sponsors are allowed in settings.
+  const [showPromo, setShowPromo] = useState(false);
+  const [currentPromoSlot, setCurrentPromoSlot] = useState<any | null>(null);
+  const promoTimerRef = useRef<number | null>(null);
+  const cycleTimerRef = useRef<number | null>(null);
+  const initialTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!settings.showSponsors) return;
+
+    // Read timing from mosque promo config, falling back to reasonable defaults
+    const promoCfg = settings.mosque?.promo || {};
+    const promoDisplayDurationMs = promoCfg.displayDurationMs ?? 10_000; // default 10s
+    const promoCycleMs = promoCfg.cycleMs ?? 120_000; // default 120s
+    const initialDelayMs = promoCfg.initialDelayMs ?? 15_000; // default 15s
+
+    // build list of candidate slots (with images)
+    const candidates = (settings.mosque?.adSlots || []).filter(
+      (s) => !!s.image && (s.weight ?? 0) > 0,
+    );
+    if (candidates.length === 0) return;
+
+    const pickWeightedSlot = () => {
+      const total = candidates.reduce((acc, s) => acc + (s.weight ?? 0), 0);
+      if (total <= 0) return candidates[0];
+      let r = Math.random() * total;
+      for (const s of candidates) {
+        r -= s.weight ?? 0;
+        if (r <= 0) return s;
+      }
+      // fallback
+      return candidates[0];
+    };
+
+    const showCycle = () => {
+      const chosen = pickWeightedSlot();
+      setCurrentPromoSlot(chosen);
+      setShowPromo(true);
+
+      if (promoTimerRef.current) {
+        window.clearTimeout(promoTimerRef.current);
+      }
+      promoTimerRef.current = window.setTimeout(() => {
+        setShowPromo(false);
+        // keep a small timeout before clearing slot to avoid layout jank
+        window.setTimeout(() => setCurrentPromoSlot(null), 400);
+      }, promoDisplayDurationMs);
+    };
+
+    // Stagger the first appearance slightly so it doesn't always show immediately on load.
+    initialTimerRef.current = window.setTimeout(showCycle, initialDelayMs);
+
+    // Start recurring cycle after the stagger.
+    cycleTimerRef.current = window.setInterval(showCycle, promoCycleMs);
+
+    return () => {
+      if (promoTimerRef.current) window.clearTimeout(promoTimerRef.current);
+      if (cycleTimerRef.current) window.clearInterval(cycleTimerRef.current);
+      if (initialTimerRef.current) window.clearTimeout(initialTimerRef.current);
+    };
+  }, [settings.showSponsors, settings.mosque]);
+
+  const promoSlot = currentPromoSlot;
+  const promoImage = promoSlot?.image ?? null;
+  const promoAlt = promoSlot?.label ?? "";
+
   return (
     <div className="bg-surface-panel ghost-border rounded-xl p-2 sm:p-4 md:p-6 lg:p-8 tv:p-10 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden active-glow">
       <MosqueSilhouette />
@@ -39,7 +107,7 @@ export function ClockPanel({
       <button
         onClick={onOpenSettings}
         aria-label={t.settings}
-        className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 z-10 w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 tv:w-12 tv:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
+        className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 z-20 w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 tv:w-12 tv:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
       >
         <span
           className="material-symbols-outlined text-[18px] sm:text-[20px] lg:text-[24px] tv:text-[28px]"
@@ -49,86 +117,138 @@ export function ClockPanel({
         </span>
       </button>
 
-      {/* Mosque Identity */}
-      <div className="z-10 flex flex-col items-center w-full mb-2 sm:mb-4 md:mb-6">
-        <div className="flex flex-col items-center mb-1 sm:mb-2 md:mb-4">
-          <span
-            className="material-symbols-outlined filled text-primary text-xl sm:text-2xl md:text-3xl lg:text-4xl tv:text-5xl mb-1"
-            aria-hidden="true"
-          >
-            mosque
-          </span>
-          <h1 className="font-headline-md text-base sm:text-lg md:text-2xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.2em] md:tracking-[0.25em] lg:tracking-[0.3em] tv:tracking-[0.35em] text-primary">
-            {settings.mosque.name}
-          </h1>
-          <p className="font-label-caps text-[9px] sm:text-[10px] md:text-xs lg:text-sm tv:text-base text-text-muted">
-            {settings.mosque.city}
-          </p>
-        </div>
-
-        {/* Dates */}
-        <div className="flex items-center gap-4 sm:gap-6 md:gap-10">
-          <div className="flex flex-col items-center">
-            <span className="font-body-md text-[11px] sm:text-sm md:text-base lg:text-lg tv:text-xl text-on-surface">
-              {clock.gregorianDate}
-            </span>
-            <span className="font-label-caps text-[10px] sm:text-[11px] md:text-xs lg:text-sm tv:text-base text-text-muted">
-              {clock.dayName}
-            </span>
-          </div>
-          <div
-            className="w-[1px] h-6 sm:h-7 md:h-8 lg:h-10 tv:h-12 bg-primary/20"
-            aria-hidden="true"
-          />
-          <div className="flex flex-col items-center">
-            <span className="font-body-md text-[11px] sm:text-sm md:text-base lg:text-lg tv:text-xl text-on-surface">
-              {hijriDate || "—"}
-            </span>
-            <span className="font-label-caps text-[10px] sm:text-[11px] md:text-xs lg:text-sm tv:text-base text-text-muted">
-              {t.hijri}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Clock */}
-      <h2 className="font-label-caps text-[10px] sm:text-[11px] md:text-label-caps lg:text-base tv:text-lg text-primary tracking-widest z-10 mb-1 md:mb-1">
-        {t.currentTime}
-      </h2>
+      {/* Main content + occasional promotional rail. The z-10 group holds the interactive content so it stays above the decorative silhouette. */}
       <div
-        className="flex items-baseline gap-2 md:gap-4 text-on-surface z-10"
-        aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
-        role="timer"
+        className={
+          "z-10 w-full transition-all duration-500 " +
+          (showPromo
+            ? "md:flex md:flex-row md:items-stretch md:justify-between"
+            : "flex flex-col items-center justify-center")
+        }
       >
-        <span className="font-clock-display text-[44px] sm:text-[56px] md:text-[96px] lg:text-[140px] xl:text-[180px] tv:text-[220px] leading-none">
-          {displayHours}:{clock.minutes}
-        </span>
-        <div className="flex flex-col items-start">
-          <span className="text-[16px] sm:text-[18px] md:text-[24px] lg:text-[32px] xl:text-[40px] tv:text-[48px] text-primary font-bold leading-tight">
-            :{clock.seconds}
-          </span>
-          {!is24h && (
-            <span className="text-[16px] sm:text-[18px] md:text-[24px] lg:text-[32px] xl:text-[40px] tv:text-[48px] text-primary font-bold leading-tight">
-              {clock.ampm}
+        {/* Left/main content */}
+        <div
+          className={
+            "flex flex-col " +
+            (showPromo
+              ? "md:w-1/2 md:items-start md:pl-6"
+              : "items-center w-full")
+          }
+        >
+          {/* Mosque Identity */}
+          <div className="flex flex-col items-center mb-2 sm:mb-4 md:mb-6 md:items-start">
+            <div className="flex flex-col items-center mb-1 sm:mb-2 md:mb-4 md:items-start">
+              <span
+                className="material-symbols-outlined filled text-primary text-xl sm:text-2xl md:text-3xl lg:text-4xl tv:text-5xl mb-1"
+                aria-hidden="true"
+              >
+                mosque
+              </span>
+              <h1 className="font-headline-md text-base sm:text-lg md:text-2xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.2em] md:tracking-[0.25em] lg:tracking-[0.3em] tv:tracking-[0.35em] text-primary">
+                {settings.mosque.name}
+              </h1>
+              <p className="font-label-caps text-[9px] sm:text-[10px] md:text-xs lg:text-sm tv:text-base text-text-muted">
+                {settings.mosque.city}
+              </p>
+            </div>
+
+            {/* Dates */}
+            <div className="flex items-center gap-4 sm:gap-6 md:gap-10">
+              <div className="flex flex-col items-center md:items-start">
+                <span className="font-body-md text-[11px] sm:text-sm md:text-base lg:text-lg tv:text-xl text-on-surface">
+                  {clock.gregorianDate}
+                </span>
+                <span className="font-label-caps text-[10px] sm:text-[11px] md:text-xs lg:text-sm tv:text-base text-text-muted">
+                  {clock.dayName}
+                </span>
+              </div>
+              <div
+                className="w-[1px] h-6 sm:h-7 md:h-8 lg:h-10 tv:h-12 bg-primary/20"
+                aria-hidden="true"
+              />
+              <div className="flex flex-col items-center md:items-start">
+                <span className="font-body-md text-[11px] sm:text-sm md:text-base lg:text-lg tv:text-xl text-on-surface">
+                  {hijriDate || "—"}
+                </span>
+                <span className="font-label-caps text-[10px] sm:text-[11px] md:text-xs lg:text-sm tv:text-base text-text-muted">
+                  {t.hijri}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Clock */}
+          <h2 className="font-label-caps text-[10px] sm:text-[11px] md:text-label-caps lg:text-base tv:text-lg text-primary tracking-widest z-10 mb-1 md:mb-1">
+            {t.currentTime}
+          </h2>
+          <div
+            className="flex items-baseline gap-2 md:gap-4 text-on-surface z-10"
+            aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
+            role="timer"
+          >
+            <span className="font-clock-display text-[44px] sm:text-[56px] md:text-[96px] lg:text-[140px] xl:text-[180px] tv:text-[220px] leading-none">
+              {displayHours}:{clock.minutes}
             </span>
+            <div className="flex flex-col items-start">
+              <span className="text-[16px] sm:text-[18px] md:text-[24px] lg:text-[32px] xl:text-[40px] tv:text-[48px] text-primary font-bold leading-tight">
+                :{clock.seconds}
+              </span>
+              {!is24h && (
+                <span className="text-[16px] sm:text-[18px] md:text-[24px] lg:text-[32px] xl:text-[40px] tv:text-[48px] text-primary font-bold leading-tight">
+                  {clock.ampm}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Status Pill */}
+          {statusMessage && (
+            <div className="mt-2 sm:mt-4 md:mt-6 lg:mt-8 tv:mt-10 flex items-center gap-2 md:gap-3 status-pill rounded-full px-3 sm:px-4 md:px-5 lg:px-6 tv:px-7 py-1 md:py-2 lg:py-2.5 z-10">
+              <span
+                className="material-symbols-outlined text-primary text-base sm:text-lg md:text-[22px] lg:text-[26px] tv:text-[30px]"
+                aria-hidden="true"
+              >
+                campaign
+              </span>
+              <span className="font-body-md text-sm sm:text-base md:text-body-lg lg:text-[26px] tv:text-[30px] text-on-surface">
+                {statusMessage}
+              </span>
+            </div>
           )}
         </div>
-      </div>
 
-      {/* Status Pill */}
-      {statusMessage && (
-        <div className="mt-2 sm:mt-4 md:mt-6 lg:mt-8 tv:mt-10 flex items-center gap-2 md:gap-3 status-pill rounded-full px-3 sm:px-4 md:px-5 lg:px-6 tv:px-7 py-1 md:py-2 lg:py-2.5 z-10">
-          <span
-            className="material-symbols-outlined text-primary text-base sm:text-lg md:text-[22px] lg:text-[26px] tv:text-[30px]"
-            aria-hidden="true"
+        {/* Right/Promotional rail - only visible on md+ and only when showPromo is true and sponsors are allowed */}
+        {showPromo && settings.showSponsors && promoImage && (
+          <aside
+            className="md:block hidden md:w-1/2 pl-4 h-full z-10"
+            aria-hidden={promoAlt === ""}
           >
-            campaign
-          </span>
-          <span className="font-body-md text-sm sm:text-base md:text-body-lg lg:text-[26px] tv:text-[30px] text-on-surface">
-            {statusMessage}
-          </span>
-        </div>
-      )}
+            <div className="w-full h-full rounded-xl overflow-hidden bg-gradient-to-tr from-primary/20 to-primary/10 flex items-center justify-center shadow-inner">
+              {/* If the ad slot includes a link, make the promo clickable. Include security attributes for external links. */}
+              {promoSlot?.link ? (
+                <a
+                  href={promoSlot.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full h-full block"
+                >
+                  <img
+                    src={promoImage}
+                    alt={promoAlt}
+                    className="object-cover w-full h-full"
+                  />
+                </a>
+              ) : (
+                <img
+                  src={promoImage}
+                  alt={promoAlt}
+                  className="object-cover w-full h-full"
+                />
+              )}
+            </div>
+          </aside>
+        )}
+      </div>
     </div>
   );
 }

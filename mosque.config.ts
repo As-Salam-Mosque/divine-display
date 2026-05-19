@@ -21,8 +21,18 @@ const config: MosqueConfig = {
   },
   // extraPrayers: [{ name: "Khutbah 1", time: "13:00", isKhutbah: true }],
   adSlots: [
-    { id: 1, label: "SPONSOR SPACE", image: "https://picsum.photos/1000" },
-    { id: 2, label: "SPONSOR SPACE", image: "https://picsum.photos/1200" },
+    {
+      id: 1,
+      label: "SPONSOR SPACE",
+      image: "https://picsum.photos/1000",
+      weight: 0.5,
+    },
+    {
+      id: 2,
+      label: "SPONSOR SPACE",
+      image: "https://picsum.photos/1200",
+      weight: 0.5,
+    },
     { id: 3, label: "SPONSOR SPACE", image: "https://picsum.photos/1500" },
   ],
   announcements: [
