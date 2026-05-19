@@ -68,9 +68,9 @@ export function AdRail({ slots }: AdRailProps) {
         <span className="font-label-caps text-[10px] lg:text-xs xl:text-sm tv:text-base tracking-widest text-primary">
           {t.communitySponsors}
         </span>
-        <span className="font-label-caps text-[9px] lg:text-[10px] xl:text-xs tv:text-sm tracking-widest text-text-muted bg-surface-panel px-2 py-1 rounded">
+        {/*<span className="font-label-caps text-[9px] lg:text-[10px] xl:text-xs tv:text-sm tracking-widest text-text-muted bg-surface-panel px-2 py-1 rounded">
           {t.paidAds}
-        </span>
+        </span>*/}
       </div>
       {slots.map((slot) => (
         <AdSlotCard key={slot.id} slot={slot} />
