@@ -184,19 +184,6 @@ export function ClockPanel({
           <div className="max-w-[90%] font-headline-lg text-primary text-[clamp(1.75rem,5.2cqw,5.5rem)] leading-tight">
             {statusMessage}
           </div>
-          <div className="flex items-baseline gap-3 text-primary">
-            <span className="font-clock-display text-[clamp(2.5rem,10cqw,10rem)] leading-none">
-              {displayHours}:{clock.minutes}
-            </span>
-            <span className="font-tabular-nums text-[clamp(1rem,3.2cqw,3.25rem)] font-bold leading-tight">
-              :{clock.seconds}
-            </span>
-            {!is24h && (
-              <span className="font-tabular-nums text-[clamp(1rem,3.2cqw,3.25rem)] font-bold leading-tight">
-                {clock.ampm}
-              </span>
-            )}
-          </div>
         </div>
       ) : (
         <div
