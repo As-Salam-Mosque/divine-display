@@ -78,7 +78,7 @@ function Display() {
       </main>
 
       {/* Footer — hidden on mobile */}
-      <div className="hidden lg:block">
+      <div className="hidden md:block">
         <AnnouncementTicker announcements={config.announcements} />
       </div>
 

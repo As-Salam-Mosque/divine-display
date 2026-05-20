@@ -121,7 +121,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         role="dialog"
         aria-modal="true"
         aria-label={t.settings}
-        className={`fixed z-50 inset-x-4 top-[5vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-auto md:w-[480px] lg:w-[560px] xl:w-[640px] tv:w-[720px] max-h-[88vh] flex flex-col bg-surface-panel border border-primary/25 rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_0_1px_rgba(233,193,118,0.08)] transition-all duration-300 ${
+        className={`fixed z-50 inset-x-3 top-[4vh] sm:inset-x-4 sm:top-[5vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-auto md:w-[480px] lg:w-[560px] xl:w-[640px] tv:w-[720px] max-h-[92vh] sm:max-h-[88vh] flex flex-col bg-surface-panel border border-primary/25 rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_0_1px_rgba(233,193,118,0.08)] transition-all duration-300 ${
           isOpen
             ? "opacity-100 scale-100"
             : "opacity-0 scale-95 pointer-events-none"

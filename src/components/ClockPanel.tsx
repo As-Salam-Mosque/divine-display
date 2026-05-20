@@ -13,7 +13,7 @@ interface ClockPanelProps {
 
 const MosqueSilhouette = () => (
   <div
-    className="absolute bottom-0 w-full h-[clamp(5rem,12cqw,18rem)] opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
+    className="absolute bottom-0 w-full h-20 md:h-36 lg:h-44 opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
     style={{
       backgroundImage: `url("data:image/svg+xml;utf8,<svg viewBox='0 0 1000 300' xmlns='http://www.w3.org/2000/svg' fill='%23c5a059'><path d='M500 50 C450 150 400 200 400 300 L600 300 C600 200 550 150 500 50 Z M200 150 C180 200 150 250 150 300 L250 300 C250 250 220 200 200 150 Z M800 150 C780 200 750 250 750 300 L850 300 C850 250 820 200 800 150 Z M50 200 L70 300 L30 300 Z M950 200 L970 300 L930 300 Z'/></svg>")`,
     }}
@@ -144,7 +144,7 @@ export function ClockPanel({
   const showPromoRail =
     !isCriticalSignal && settings.showSponsors && promoImage;
   const panelClassName =
-    "clock-panel [--promo-rail-width:50%] rounded-xl p-[clamp(0.5rem,2.2cqw,2.5rem)] md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
+    "clock-panel [--promo-rail-width:50%] rounded-xl p-2 sm:p-3 md:p-4 lg:p-6 tv:p-8 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
     (isCriticalSignal
       ? "bg-background-deep border-2 border-primary shadow-[0_0_45px_rgba(233,193,118,0.6)]"
       : "bg-surface-panel ghost-border active-glow");
@@ -158,10 +158,10 @@ export function ClockPanel({
         <button
           onClick={onOpenSettings}
           aria-label={t.settings}
-          className="absolute top-[clamp(0.5rem,1.4cqw,1rem)] right-[clamp(0.5rem,1.4cqw,1rem)] z-30 w-[clamp(1.75rem,3.6cqw,3rem)] h-[clamp(1.75rem,3.6cqw,3rem)] flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
+          className="absolute top-2 md:top-3 lg:top-4 right-2 md:right-3 lg:right-4 z-30 w-7 md:w-10 lg:w-12 h-7 md:h-10 lg:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
         >
           <span
-            className="material-symbols-outlined text-[clamp(1rem,2.2cqw,1.75rem)]"
+            className="material-symbols-outlined text-base md:text-xl lg:text-2xl"
             aria-hidden="true"
           >
             settings
@@ -171,17 +171,17 @@ export function ClockPanel({
 
       {isCriticalSignal ? (
         <div
-          className="z-20 w-full h-full flex flex-col items-center justify-center text-center gap-[clamp(0.75rem,2.4cqw,2rem)]"
+          className="z-20 w-full h-full flex flex-col items-center justify-center text-center gap-3 md:gap-6 lg:gap-8"
           role="alert"
           aria-live="assertive"
         >
           <span
-            className="material-symbols-outlined filled text-primary text-[clamp(2rem,5.6cqw,5.5rem)] animate-pulse"
+            className="material-symbols-outlined filled text-primary text-4xl md:text-6xl lg:text-7xl animate-pulse"
             aria-hidden="true"
           >
             campaign
           </span>
-          <div className="max-w-[90%] font-headline-lg text-primary text-[clamp(1.75rem,5.2cqw,5.5rem)] leading-tight">
+          <div className="max-w-[90%] font-headline-lg text-primary text-xl md:text-4xl lg:text-6xl leading-tight">
             {statusMessage}
           </div>
         </div>
@@ -199,46 +199,46 @@ export function ClockPanel({
             className={
               "flex flex-col transition-all duration-500 min-w-0 " +
               (promoActive
-                ? "md:w-[calc(100%-var(--promo-rail-width))] md:items-start md:pl-[clamp(0.75rem,2cqw,1.5rem)] max-md:items-center max-md:w-full"
+                ? "md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-3 md:pl-6 max-md:items-center max-md:w-full"
                 : "items-center w-full")
             }
           >
             {/* Mosque Identity */}
-            <div className="flex flex-col items-center mb-[clamp(0.5rem,2cqw,1.5rem)] md:items-start">
-              <div className="flex flex-col items-center mb-[clamp(0.25rem,1.2cqw,1rem)] md:items-start">
+            <div className="flex flex-col items-center mb-2 md:mb-4 lg:mb-6 md:items-start">
+              <div className="flex flex-col items-center mb-1 md:mb-3 lg:mb-4 md:items-start">
                 <span
-                  className="material-symbols-outlined filled text-primary text-[clamp(1.25rem,3.4cqw,3rem)] mb-[clamp(0.25rem,0.8cqw,0.5rem)]"
+                  className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl mb-1 md:mb-2"
                   aria-hidden="true"
                 >
                   mosque
                 </span>
-                <h1 className="font-headline-md text-[clamp(0.95rem,3.2cqw,2.25rem)] font-semibold tracking-[clamp(0.12em,0.6cqw,0.35em)] text-primary">
-                  {settings.mosque.name}
-                </h1>
-                <p className="font-label-caps text-[clamp(0.55rem,1.2cqw,1rem)] text-text-muted">
+            <h1 className="font-headline-md text-sm md:text-xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
+              {settings.mosque.name}
+            </h1>
+                <p className="font-label-caps text-xs md:text-sm lg:text-base text-text-muted">
                   {settings.mosque.city}
                 </p>
               </div>
 
               {/* Dates */}
-              <div className="clock-panel__dates flex items-center gap-[clamp(0.75rem,2.6cqw,2.5rem)]">
+              <div className="clock-panel__dates flex items-center gap-3 md:gap-6 lg:gap-8">
                 <div className="flex flex-col items-center md:items-start">
-                  <span className="font-body-md text-[clamp(0.75rem,1.6cqw,1.25rem)] text-on-surface">
+                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface">
                     {clock.gregorianDate}
                   </span>
-                  <span className="font-label-caps text-[clamp(0.6rem,1.2cqw,1rem)] text-text-muted">
+                  <span className="font-label-caps text-xs md:text-sm lg:text-sm text-text-muted">
                     {clock.dayName}
                   </span>
                 </div>
                 <div
-                  className="w-[1px] h-[clamp(1.25rem,3cqw,3rem)] bg-primary/20"
+                  className="w-[1px] h-5 md:h-8 lg:h-12 bg-primary/20"
                   aria-hidden="true"
                 />
                 <div className="flex flex-col items-center md:items-start">
-                  <span className="font-body-md text-[clamp(0.75rem,1.6cqw,1.25rem)] text-on-surface">
+                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface">
                     {hijriDate || "—"}
                   </span>
-                  <span className="font-label-caps text-[clamp(0.6rem,1.2cqw,1rem)] text-text-muted">
+                  <span className="font-label-caps text-xs md:text-sm lg:text-sm text-text-muted">
                     {t.hijri}
                   </span>
                 </div>
@@ -246,23 +246,23 @@ export function ClockPanel({
             </div>
 
             {/* Clock */}
-            <h2 className="font-label-caps text-[clamp(0.6rem,1.2cqw,1.1rem)] text-primary tracking-[clamp(0.2em,0.6cqw,0.35em)] z-10 mb-[clamp(0.25rem,0.8cqw,0.5rem)]">
+            <h2 className="font-label-caps text-xs md:text-sm lg:text-sm text-primary tracking-wide md:tracking-wider z-10 mb-1 md:mb-2 lg:mb-3">
               {t.currentTime}
             </h2>
             <div
-              className="clock-panel__time flex items-baseline gap-[clamp(0.5rem,1.8cqw,1.5rem)] text-on-surface z-10"
+              className="clock-panel__time flex items-baseline gap-2 md:gap-6 lg:gap-8 text-on-surface z-10"
               aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
               role="timer"
             >
-              <span className="font-clock-display text-[clamp(3rem,15cqw,13.75rem)] leading-none">
+              <span className="font-clock-display text-5xl sm:text-6xl md:text-7xl lg:text-[9rem] tv:text-[10rem] leading-none">
                 {displayHours}:{clock.minutes}
               </span>
               <div className="flex flex-col items-start">
-                <span className="text-[clamp(1rem,3.4cqw,3rem)] text-primary font-bold leading-tight">
+                <span className="text-base sm:text-lg md:text-2xl lg:text-3xl tv:text-4xl text-primary font-bold leading-tight">
                   :{clock.seconds}
                 </span>
                 {!is24h && (
-                  <span className="text-[clamp(1rem,3.4cqw,3rem)] text-primary font-bold leading-tight">
+                  <span className="text-base sm:text-lg md:text-2xl lg:text-3xl tv:text-4xl text-primary font-bold leading-tight">
                     {clock.ampm}
                   </span>
                 )}
@@ -271,14 +271,14 @@ export function ClockPanel({
 
             {/* Status Pill */}
             {statusMessage && (
-              <div className="clock-panel__status mt-[clamp(0.5rem,2.4cqw,2.5rem)] flex items-center gap-[clamp(0.5rem,1.4cqw,0.75rem)] status-pill rounded-full px-[clamp(0.75rem,2.2cqw,1.75rem)] py-[clamp(0.25rem,0.9cqw,0.75rem)] z-10 max-w-full">
+              <div className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-2 md:gap-4 status-pill rounded-full px-3 md:px-6 lg:px-8 py-1 md:py-2 lg:py-3 z-10 max-w-full">
                 <span
-                  className="material-symbols-outlined text-primary text-[clamp(1rem,2.2cqw,1.875rem)]"
+                  className="material-symbols-outlined text-primary text-base md:text-xl lg:text-2xl"
                   aria-hidden="true"
                 >
                   campaign
                 </span>
-                <span className="font-body-md text-[clamp(0.85rem,2.2cqw,1.875rem)] text-on-surface text-center">
+                <span className="font-body-md text-sm md:text-lg lg:text-xl text-on-surface text-center">
                   {statusMessage}
                 </span>
               </div>
@@ -288,7 +288,7 @@ export function ClockPanel({
           {/* Right/Promotional rail - rendered out of layout flow (absolute on md+) so it won't change the panel height when it slides in. */}
           {showPromoRail && (
             <aside
-              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-[var(--promo-rail-width)] pl-[clamp(0.75rem,2cqw,1.5rem)] h-full z-10 transform transition-all duration-[400ms] ease-out ${promoSlideState}`}
+              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-[var(--promo-rail-width)] pl-3 md:pl-6 h-full z-10 transform transition-all duration-[400ms] ease-out ${promoSlideState}`}
               aria-hidden={promoAlt === ""}
             >
               <div className="w-full h-full rounded-xl overflow-hidden bg-gradient-to-tr from-primary/20 to-primary/10 flex items-center justify-center shadow-inner">
