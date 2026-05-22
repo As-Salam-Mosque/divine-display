@@ -1,13 +1,13 @@
-interface AnnouncementTickerProps {
-  announcements: string[];
-}
-
 import { useT } from "../i18n";
 import { useSettings } from "../context/SettingsContext";
 
-export function AnnouncementTicker({ announcements }: AnnouncementTickerProps) {
+export function AnnouncementTicker() {
   const { settings } = useSettings();
   const t = useT(settings.language);
+  const announcements =
+    settings.language === "fr"
+      ? settings.mosque.announcements_fr
+      : settings.mosque.announcements_en;
   // Duplicate items so the marquee loops seamlessly
   const items = [...announcements, ...announcements];
 

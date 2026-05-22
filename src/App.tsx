@@ -71,7 +71,7 @@ function Display() {
 
       {/* Footer — hidden on mobile */}
       <div className="hidden md:block">
-        <AnnouncementTicker announcements={settings.mosque.announcements} />
+        <AnnouncementTicker />
       </div>
 
       {/* Settings modal */}
