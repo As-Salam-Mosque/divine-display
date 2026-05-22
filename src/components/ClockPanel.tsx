@@ -12,6 +12,20 @@ interface ClockPanelProps {
   onOpenSettings: () => void;
 }
 
+// Reusable Campaign SVG with your custom path data
+const CampaignIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    className={className}
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z" />
+  </svg>
+);
+
 const MosqueSilhouette = () => (
   <div
     className="absolute bottom-0 w-full h-20 md:h-36 lg:h-44 opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
@@ -176,17 +190,13 @@ export function ClockPanel({
 
       {isCriticalSignal ? (
         <div
-          className="z-20 w-full h-full flex flex-col items-center justify-center text-center gap-4 md:gap-8 lg:gap-10"
+          className="z-20 w-full h-full flex flex-col items-center justify-center text-center gap-6 md:gap-10 lg:gap-12"
           role="alert"
           aria-live="assertive"
         >
-          {/* CRITICAL SIGNAL ICON - MAXIMIZED FOR TV/DISPLAY BOARDS */}
-          <span
-            className="material-symbols-outlined filled text-primary text-6xl sm:text-7xl md:text-8xl lg:text-9xl tv:text-[12rem] motion-safe:animate-pulse"
-            aria-hidden="true"
-          >
-            campaign
-          </span>
+          {/* CRITICAL IMMERSIVE SVG ICON - ENORMOUS SIZING FOR TV PANELS */}
+          <CampaignIcon className="text-primary motion-safe:animate-pulse w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 lg:w-64 lg:h-64 tv:w-[22rem] tv:h-[22rem]" />
+
           <div className="max-w-[90%] font-headline-lg text-primary text-xl md:text-4xl lg:text-6xl leading-tight font-bold">
             {statusMessage}
           </div>
@@ -275,7 +285,7 @@ export function ClockPanel({
               </div>
             </div>
 
-            {/* STANDARD PILL STATUS BAR - SCALED UP SLIGHTLY FOR VISIBILITY */}
+            {/* STANDARD PILL STATUS BAR - DRIVEN BY SVG SCALING */}
             {statusMessage && (
               <div
                 className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-3 md:gap-5 status-pill rounded-full px-4 md:px-8 lg:px-10 py-2 md:py-3 lg:py-4 z-10 max-w-full"
@@ -283,12 +293,7 @@ export function ClockPanel({
                 aria-live="polite"
                 aria-atomic="true"
               >
-                <span
-                  className="material-symbols-outlined text-primary text-2xl md:text-4xl lg:text-5xl"
-                  aria-hidden="true"
-                >
-                  campaign
-                </span>
+                <CampaignIcon className="text-primary w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 flex-shrink-0" />
                 <span className="font-body-md text-base md:text-xl lg:text-2xl text-on-surface text-center font-semibold">
                   {statusMessage}
                 </span>
