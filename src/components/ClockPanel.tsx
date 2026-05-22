@@ -184,7 +184,7 @@ export function ClockPanel({
           aria-live="assertive"
         >
           <span
-            className="material-symbols-outlined filled text-primary text-4xl md:text-6xl lg:text-7xl animate-pulse"
+            className="material-symbols-outlined filled text-primary text-4xl md:text-6xl lg:text-7xl motion-safe:animate-pulse"
             aria-hidden="true"
           >
             campaign
@@ -279,7 +279,12 @@ export function ClockPanel({
 
             {/* Status Pill */}
             {statusMessage && (
-              <div className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-2 md:gap-4 status-pill rounded-full px-3 md:px-6 lg:px-8 py-1 md:py-2 lg:py-3 z-10 max-w-full">
+              <div
+                className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-2 md:gap-4 status-pill rounded-full px-3 md:px-6 lg:px-8 py-1 md:py-2 lg:py-3 z-10 max-w-full"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
                 <span
                   className="material-symbols-outlined text-primary text-base md:text-xl lg:text-2xl"
                   aria-hidden="true"
@@ -308,7 +313,7 @@ export function ClockPanel({
                 style={promoBgCss ? { backgroundColor: promoBgCss } : undefined}
               >
                 {/* If the ad slot includes a link, make the promo clickable. Include security attributes for external links. */}
-                {promoSlot?.link ? (
+                {promoSlot?.link && promoAlt !== "" ? (
                   <a
                     href={promoSlot.link}
                     target="_blank"

@@ -38,9 +38,8 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
   }
 
   return (
-    <div
+    <ul
       className="grid gap-2 py-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6"
-      role="list"
       aria-label="Prayer times"
     >
       {prayers
@@ -66,6 +65,6 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
         })
         // filter out the nulls from skipped khutbah entries
         .filter(Boolean)}
-    </div>
+    </ul>
   );
 }

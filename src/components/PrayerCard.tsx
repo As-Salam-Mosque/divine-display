@@ -35,8 +35,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
     `${prayer.name} ${prayer.arabicName || ""} ${isActive ? t.currentlyActive : ""}`.trim();
 
   return (
-    <div
-      role="listitem"
+    <li
       aria-label={ariaLabel}
       className={[
         // Mobile: horizontal row layout (name | divider | times). md+: vertical card.
@@ -132,6 +131,6 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
           </>
         )}
       </div>
-    </div>
+    </li>
   );
 }
