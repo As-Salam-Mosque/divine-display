@@ -212,9 +212,9 @@ export function ClockPanel({
                 >
                   mosque
                 </span>
-            <h1 className="font-headline-md text-sm md:text-xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
-              {settings.mosque.name}
-            </h1>
+                <h1 className="font-headline-md text-sm md:text-xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
+                  {settings.mosque.name}
+                </h1>
                 <p className="font-label-caps text-xs md:text-sm lg:text-base text-text-muted">
                   {settings.mosque.city}
                 </p>
@@ -303,14 +303,14 @@ export function ClockPanel({
                     <img
                       src={promoImage}
                       alt={promoAlt}
-                      className="object-cover w-full h-full"
+                      className="object-contain w-full h-full"
                     />
                   </a>
                 ) : (
                   <img
                     src={promoImage}
                     alt={promoAlt}
-                    className="object-cover w-full h-full"
+                    className="object-contain w-full h-full"
                   />
                 )}
               </div>

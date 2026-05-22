@@ -24,16 +24,21 @@ const config: MosqueConfig = {
     {
       id: 1,
       label: "SPONSOR SPACE",
-      image: "https://picsum.photos/600/300",
+      image: "/hajj-kids.jpeg",
       weight: 0.5,
     },
     {
       id: 2,
       label: "SPONSOR SPACE",
-      image: "https://picsum.photos/600/400",
+      image: "/udhiyah.jpeg",
       weight: 0.5,
     },
-    { id: 3, label: "SPONSOR SPACE", image: "https://picsum.photos/600" },
+    {
+      id: 3,
+      label: "SPONSOR SPACE",
+      image: "/tawaf.jpeg",
+      weight: 0.5,
+    },
   ],
   promo: { displayDurationMs: 8000, cycleMs: 90000, initialDelayMs: 5000 },
   announcements: [

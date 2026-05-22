@@ -29,7 +29,7 @@ function AdSlotCard({ slot }: AdSlotProps) {
         <img
           src={slot.image ?? undefined}
           alt={slot.label}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
       ) : (
         // Placeholder content stretches to the card's full height
