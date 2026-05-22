@@ -23,7 +23,7 @@ function Display() {
   const themeClasses =
     settings.theme === "dark"
       ? "dark bg-background-deep text-on-surface"
-      : "bg-white text-black";
+      : "light bg-background-deep text-on-surface";
 
   const showAdRail = settings.showSponsors && !isCriticalSignal;
 

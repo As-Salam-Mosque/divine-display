@@ -112,7 +112,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
             {prayer.adhan && (
               <div className="flex-1 flex flex-col items-center">
                 <span
-                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps ${
+                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps font-bold ${
                     isActive ? "text-primary" : "text-text-muted"
                   }`}
                 >
@@ -136,7 +136,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
             {prayer.iqamah && (
               <div className="flex-1 flex flex-col items-center">
                 <span
-                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps ${
+                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps font-bold ${
                     isActive ? "text-primary" : "text-text-muted"
                   }`}
                 >
