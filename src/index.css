@@ -16,6 +16,10 @@ body {
     font-family: var(--font-body);
 }
 
+button {
+    cursor: pointer;
+}
+
 /* Map the design-system font utility classes to explicit font-families so
    behavior matches the legacy UI even if Tailwind utilities differ. */
 .font-clock-display,

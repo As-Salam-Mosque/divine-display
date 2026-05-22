@@ -12,7 +12,7 @@ interface SettingsPanelProps {
 
 function SectionHeader({ label }: { label: string }) {
   return (
-    <h3 className="font-label-caps text-[11px] tracking-widest text-primary border-b border-primary-20 pb-2 mb-4">
+    <h3 className="font-label-caps text-sm md:text-base tracking-widest text-primary border-b border-primary-20 pb-2 mb-4">
       {label}
     </h3>
   );
@@ -27,7 +27,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="font-label-caps text-[10px] tracking-wider text-text-muted">
+      <label className="font-label-caps text-xs md:text-sm tracking-wider text-text-muted">
         {label}
       </label>
       {children}
@@ -128,9 +128,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
       onClose();
     }
   };
-
-  // updateMosque helper removed — SettingsPanel currently displays info only
-  // and uses `updateSettings` directly for display toggles.
 
   return (
     <>
