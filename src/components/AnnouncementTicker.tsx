@@ -12,13 +12,13 @@ export function AnnouncementTicker({ announcements }: AnnouncementTickerProps) {
   const items = [...announcements, ...announcements];
 
   return (
-    <footer className="w-full flex items-center px-4 md:px-6 lg:px-margin-page tv:px-[64px] h-12 sm:h-14 md:h-16 tv:h-20 border-t border-primary/20 bg-surface-panel overflow-hidden shrink-0">
+    <footer className="w-full flex items-center px-4 md:px-6 lg:px-margin-page tv:px-[64px] h-12 sm:h-14 md:h-16 tv:h-20 border-t border-primary-20 bg-surface-panel overflow-hidden shrink-0">
       {/* Label */}
-      <div className="flex items-center gap-3 lg:gap-4 bg-surface-panel z-10 pr-3 lg:pr-4 border-r border-primary/20 h-full shrink-0">
+      <div className="flex items-center gap-3 lg:gap-4 bg-surface-panel z-10 pr-3 lg:pr-4 border-r border-primary-20 h-full shrink-0">
         <span className="material-symbols-outlined text-primary text-lg lg:text-xl tv:text-2xl">
           view_list
         </span>
-        <span className="font-label-caps text-[10px] md:text-xs lg:text-label-caps tv:text-base text-primary whitespace-nowrap">
+        <span className="font-label-caps font-bold text-[10px] md:text-xs lg:text-label-caps tv:text-base text-primary whitespace-nowrap">
           {t.masjidAnnouncements}
         </span>
       </div>

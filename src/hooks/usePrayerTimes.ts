@@ -43,6 +43,10 @@ function todayKey(): string {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
+function cacheKeyForConfig(config: MosqueConfig): string {
+  return `prayer-times-${todayKey()}-${config.latitude}-${config.longitude}-${config.calculationMethod}`;
+}
+
 function parseTime(timeStr: string): Date {
   const [h, m] = timeStr.split(":").map(Number);
   const d = new Date();
@@ -199,52 +203,7 @@ export function usePrayerTimes(
       }
 
       // Highlight next by default, but if we're before iqamah highlight current
-      let highlightedIndex = beforeIqamah ? currentIndex : nextIndex;
-
-      // Special handling for Friday khutbahs: consolidate multiple khutbah entries into one UI
-      // Representative selection logic mirrors PrayerTable: pick the next khutbah >= now, otherwise earliest.
-      const isFriday = now.getDay() === 5; // 5 === Friday
-      if (isFriday) {
-        const khutbahIndices = prayers
-          .map((p, i) => ({ p, i }))
-          .filter(({ p }) => !!p.isKhutbah)
-          .map(({ i }) => i);
-
-        if (khutbahIndices.length > 0) {
-          const nowMinutes = now.getHours() * 60 + now.getMinutes();
-          const timeToMinutes = (prayer: PrayerTime) => {
-            const timeStr = (
-              prayer.time ||
-              prayer.iqamah ||
-              prayer.adhan ||
-              ""
-            ).trim();
-            if (!timeStr) return Number.POSITIVE_INFINITY;
-            const [hRaw, mRaw] = timeStr.split(":");
-            const h = Number(hRaw);
-            const m = Number(mRaw);
-            if (Number.isNaN(h) || Number.isNaN(m))
-              return Number.POSITIVE_INFINITY;
-            return h * 60 + m;
-          };
-
-          const upcoming = khutbahIndices.find(
-            (i) => timeToMinutes(prayers[i]) >= nowMinutes,
-          );
-          const representative = upcoming ?? khutbahIndices[0];
-
-          // If the computed highlightedIndex points to any khutbah entry, map it to the representative
-          if (
-            highlightedIndex !== null &&
-            khutbahIndices.includes(highlightedIndex)
-          ) {
-            highlightedIndex = representative;
-          }
-          // Note: we intentionally do NOT remap nextIndex here. nextIndex remains the chronological next
-          // prayer (which may be another khutbah). This ensures the ClockPanel/status counts toward the
-          // actual upcoming prayer time even when the UI shows a consolidated single khutbah card.
-        }
-      }
+      const highlightedIndex = beforeIqamah ? currentIndex : nextIndex;
 
       const status = buildStatus(
         prayers,
@@ -266,13 +225,13 @@ export function usePrayerTimes(
   );
 
   useEffect(() => {
-    const cacheKey = `prayer-times-${todayKey()}`;
+    const cacheKey = cacheKeyForConfig(config);
     const cached = localStorage.getItem(cacheKey);
 
     if (cached) {
       try {
         const data: CachedData = JSON.parse(cached);
-        if (data.key === todayKey()) {
+        if (data.key === cacheKey) {
           const prayers = buildPrayers(data.timings, config);
           // Defer state update slightly to avoid synchronous setState inside effect
           setTimeout(() => {
@@ -303,7 +262,7 @@ export function usePrayerTimes(
         const hijriDate = `${hijri.month.en} ${hijri.day}, ${hijri.year} AH`;
 
         const cacheData: CachedData = {
-          key: todayKey(),
+          key: cacheKey,
           timings,
           hijriDate,
         };
@@ -344,9 +303,8 @@ function buildPrayers(
   timings: Record<string, string>,
   config: MosqueConfig,
 ): PrayerTime[] {
-  // isKhutbah is intentionally left false here by default. Upstream data
-  // providers or configuration should explicitly set `isKhutbah: true` for
-  // khutbah entries. This removes any name-based heuristic from the codebase.
+  // Build canonical daily prayers. Upstream data may append admin-defined
+  // `extraPrayers` (e.g. khutbahs) which are merged below.
   const basePrayers: PrayerTime[] = PRAYER_ORDER.map((name) => {
     const meta = PRAYER_META[name];
     const aladhanKey = ALADHAN_KEYS[name];
@@ -361,7 +319,6 @@ function buildPrayers(
         iqamah: null,
         // Keep raw 24-hour HH:MM for centralized formatting in UI
         time: raw,
-        isKhutbah: false,
       };
     }
 
@@ -376,23 +333,18 @@ function buildPrayers(
       // Store raw 24-hour HH:MM strings
       adhan: adhanRaw,
       iqamah: iqamahRaw,
-      isKhutbah: false,
     };
   });
 
   // Append any admin-supplied extraPrayers from config. Convert ExtraPrayer -> PrayerTime
-  // const extras = (config.extraPrayers ?? []).map((e, idx) => {
   const extras = (config.extraPrayers ?? []).map((e) => {
     const adhan = e.adhan ?? e.time ?? null;
-    // const iqamah = e.iqamah ?? e.time ?? null;
     return {
       name: e.name as PrayerTime["name"] as PrayerTime["name"],
       arabicName: e.arabicName ?? e.name,
       icon: e.icon ?? "campaign",
       adhan,
-      // iqamah,
       time: e.time,
-      isKhutbah: !!e.isKhutbah,
     } as PrayerTime;
   });
 

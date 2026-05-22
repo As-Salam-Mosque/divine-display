@@ -16,10 +16,6 @@ export interface PrayerTime {
   adhan: string | null;
   iqamah: string | null;
   time?: string;
-  // Explicit flag to mark khutbah (Friday sermon) entries when present in the data.
-  // Optional to remain backward-compatible; when present and true, indicates this
-  // prayer should be treated as a khutbah for consolidation/display logic.
-  isKhutbah?: boolean;
 }
 
 export interface AdSlot {
@@ -68,6 +64,15 @@ export interface MosqueConfig {
   // These are typed as PrayerTime so their shape matches runtime objects and
   // can be merged without a separate ExtraPrayer interface.
   extraPrayers?: PrayerTime[];
+}
+
+export type MosqueConfigSource = "default" | "remote";
+
+export interface MosqueConfigState {
+  config: MosqueConfig;
+  loading: boolean;
+  error: string | null;
+  source: MosqueConfigSource;
 }
 
 export interface ClockState {

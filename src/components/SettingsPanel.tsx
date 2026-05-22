@@ -1,3 +1,4 @@
+import { useEffect, useRef, type KeyboardEvent } from "react";
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import type { Language, TimeFormat } from "../types";
@@ -11,7 +12,7 @@ interface SettingsPanelProps {
 
 function SectionHeader({ label }: { label: string }) {
   return (
-    <h3 className="font-label-caps text-[11px] tracking-widest text-primary border-b border-primary/20 pb-2 mb-4">
+    <h3 className="font-label-caps text-[11px] tracking-widest text-primary border-b border-primary-20 pb-2 mb-4">
       {label}
     </h3>
   );
@@ -48,10 +49,11 @@ function PillGroup<T extends string>({
       {options.map((opt) => (
         <button
           key={opt.value}
+          type="button"
           onClick={() => onChange(opt.value)}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all focus-ring ${
             value === opt.value
-              ? "bg-primary text-on-primary shadow-[0_0_8px_rgba(233,193,118,0.4)]"
+              ? "bg-primary text-on-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]"
               : "bg-surface-container-low text-text-muted hover:text-on-surface border border-outline-variant"
           }`}
         >
@@ -73,12 +75,13 @@ function Toggle({
 }) {
   return (
     <button
+      type="button"
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex items-center justify-between w-full group"
+      className="flex items-center justify-between w-full group focus-ring"
     >
-      <span className="text-sm text-on-surface group-hover:text-primary transition-colors">
+      <span className="text-sm text-on-surface group-hover:text-primary group-focus-visible:text-primary transition-colors">
         {label}
       </span>
       <span
@@ -101,6 +104,30 @@ function Toggle({
 export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const { settings, updateSettings } = useSettings();
   const t = useT(settings.language);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement | null;
+      closeButtonRef.current?.focus();
+      return;
+    }
+
+    if (
+      previousFocusRef.current &&
+      document.contains(previousFocusRef.current)
+    ) {
+      previousFocusRef.current.focus();
+    }
+  }, [isOpen]);
+
+  const handleDialogKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      onClose();
+    }
+  };
 
   // updateMosque helper removed — SettingsPanel currently displays info only
   // and uses `updateSettings` directly for display toggles.
@@ -121,14 +148,15 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         role="dialog"
         aria-modal="true"
         aria-label={t.settings}
-        className={`fixed z-50 inset-x-3 top-[4vh] sm:inset-x-4 sm:top-[5vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-auto md:w-[480px] lg:w-[560px] xl:w-[640px] tv:w-[720px] max-h-[92vh] sm:max-h-[88vh] flex flex-col bg-surface-panel border border-primary/25 rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_0_1px_rgba(233,193,118,0.08)] transition-all duration-300 ${
+        onKeyDown={handleDialogKeyDown}
+        className={`fixed z-50 inset-x-3 top-[4vh] sm:inset-x-4 sm:top-[5vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-auto md:w-120 lg:w-140 xl:w-160 tv:w-[720px] max-h-[92vh] sm:max-h-[88vh] flex flex-col bg-surface-panel border border-primary-25 rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.8),0_0_0_1px_rgba(var(--primary-rgb),0.08)] transition-all duration-300 ${
           isOpen
             ? "opacity-100 scale-100"
             : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/50 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-primary-25 shrink-0">
           <div className="flex items-center gap-2">
             <span
               className="material-symbols-outlined text-primary text-[20px]"
@@ -141,9 +169,11 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             </h2>
           </div>
           <button
+            ref={closeButtonRef}
+            type="button"
             onClick={onClose}
             aria-label={t.close}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-[rgba(var(--primary-rgb),0.18)] focus-visible:text-primary focus-visible:bg-[rgba(var(--primary-rgb),0.18)] transition-colors focus-ring"
           >
             <span
               className="material-symbols-outlined text-[20px]"
