@@ -293,7 +293,7 @@ export function ClockPanel({
                 aria-live="polite"
                 aria-atomic="true"
               >
-                <CampaignIcon className="text-primary w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 flex-shrink-0" />
+                <CampaignIcon className="text-primary w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 shrink-0" />
                 <span className="font-body-md text-base md:text-xl lg:text-2xl text-on-surface text-center font-semibold">
                   {statusMessage}
                 </span>
