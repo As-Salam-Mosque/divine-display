@@ -13,11 +13,11 @@ const config: MosqueConfig = {
   longitude: -73.573064,
   calculationMethod: 2, // ISNA
   iqamahOffsets: {
-    Fajr: 18,
-    Dhuhr: 17,
-    Asr: 20,
-    Maghrib: 5,
-    Isha: 20,
+    Fajr: 40,
+    Dhuhr: 14,
+    Asr: 5,
+    Maghrib: 0,
+    Isha: 0,
   },
   extraPrayers: [
     // {
@@ -57,7 +57,7 @@ const config: MosqueConfig = {
       weight: 0.5,
     },
   ],
-  promo: { displayDurationMs: 8000, cycleMs: 90000, initialDelayMs: 5000 },
+  promo: { displayDurationMs: 150000, cycleMs: 90000, initialDelayMs: 5000 },
   announcements_en: [
     "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2:10PM (Anglais)",
     "Quran Halaqah — Weekly Quran circle every Saturday after 3PM in the main hall.",
