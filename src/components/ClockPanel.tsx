@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import type { AdSlot, ClockState, StatusType } from "../types";
+import { useDominantColor } from "../hooks/useDominantColor";
 
 interface ClockPanelProps {
   clock: ClockState;
@@ -143,6 +144,13 @@ export function ClockPanel({
       : "translate-x-full opacity-0";
   const showPromoRail =
     !isCriticalSignal && settings.showSponsors && promoImage;
+
+  const {
+    imgRef: promoImgRef,
+    bgCss: promoBgCss,
+    handleImageLoad: handlePromoImageLoad,
+  } = useDominantColor();
+
   const panelClassName =
     "clock-panel [--promo-rail-width:50%] rounded-xl p-2 sm:p-3 md:p-4 lg:p-6 tv:p-8 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
     (isCriticalSignal
@@ -291,7 +299,14 @@ export function ClockPanel({
               className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-[var(--promo-rail-width)] pl-3 md:pl-6 h-full z-10 transform transition-all duration-[400ms] ease-out ${promoSlideState}`}
               aria-hidden={promoAlt === ""}
             >
-              <div className="w-full h-full rounded-xl overflow-hidden bg-gradient-to-tr from-primary/20 to-primary/10 flex items-center justify-center shadow-inner">
+              <div
+                className={`${"w-full h-full rounded-xl overflow-hidden flex items-center justify-center shadow-inner"} ${
+                  promoBgCss
+                    ? ""
+                    : "bg-gradient-to-tr from-primary/20 to-primary/10"
+                }`}
+                style={promoBgCss ? { backgroundColor: promoBgCss } : undefined}
+              >
                 {/* If the ad slot includes a link, make the promo clickable. Include security attributes for external links. */}
                 {promoSlot?.link ? (
                   <a
@@ -301,16 +316,24 @@ export function ClockPanel({
                     className="w-full h-full block"
                   >
                     <img
+                      ref={promoImgRef}
                       src={promoImage}
                       alt={promoAlt}
                       className="object-contain w-full h-full"
+                      onLoad={handlePromoImageLoad}
+                      crossOrigin="anonymous"
+                      decoding="async"
                     />
                   </a>
                 ) : (
                   <img
+                    ref={promoImgRef}
                     src={promoImage}
                     alt={promoAlt}
                     className="object-contain w-full h-full"
+                    onLoad={handlePromoImageLoad}
+                    crossOrigin="anonymous"
+                    decoding="async"
                   />
                 )}
               </div>

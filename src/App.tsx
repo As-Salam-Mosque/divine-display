@@ -37,10 +37,10 @@ function Display() {
     <div
       className={`${themeClasses} min-h-screen lg:h-screen flex flex-col font-body-md overflow-y-auto lg:overflow-hidden`}
     >
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 md:gap-4 lg:gap-gutter-grid tv:gap-[32px] p-2 sm:p-4 md:p-6 lg:p-margin-page tv:p-[64px] lg:overflow-hidden">
+      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-1 sm:gap-2 md:gap-2 lg:gap-[12px] tv:gap-[20px] p-1 sm:p-2 md:p-3 lg:p-[20px] tv:p-[32px] lg:overflow-hidden">
         {/* Left Stage */}
         <div
-          className={`col-span-1 flex-1 min-h-0 flex flex-col gap-2 sm:gap-3 md:gap-4 lg:gap-gutter-grid tv:gap-[32px] lg:h-full ${
+          className={`col-span-1 flex-1 min-h-0 flex flex-col gap-1 sm:gap-2 md:gap-2 lg:gap-[12px] tv:gap-[20px] lg:h-full ${
             settings.showSponsors && !isCriticalSignal
               ? "lg:col-span-9"
               : "lg:col-span-12"
@@ -55,7 +55,7 @@ function Display() {
           />
 
           {prayerTimes.loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}

@@ -1,6 +1,7 @@
 import type { AdSlot } from "../types";
 import { useT } from "../i18n";
 import { useSettings } from "../context/SettingsContext";
+import { useDominantColor } from "../hooks/useDominantColor";
 
 interface AdSlotProps {
   slot: AdSlot;
@@ -11,6 +12,11 @@ function AdSlotCard({ slot }: AdSlotProps) {
   const t = useT(settings.language);
   const hasImage = Boolean(slot.image);
 
+  const { imgRef, bgCss, handleImageLoad } = useDominantColor();
+
+  const baseClasses =
+    "flex-1 min-h-0 max-h-full rounded-xl text-center overflow-hidden ";
+
   return (
     // `flex-1` lets the card grow to fill available vertical space; `min-h-0` allows
     // the card to shrink inside a flex container (prevents overflow caused by
@@ -18,18 +24,24 @@ function AdSlotCard({ slot }: AdSlotProps) {
     // exceeding the parent's height. `overflow-hidden` ensures content is clipped.
     <div
       className={
-        `flex-1 min-h-0 max-h-full bg-surface-panel ghost-border rounded-xl text-center overflow-hidden ` +
+        baseClasses +
         (hasImage
-          ? "" // image will fill the card
-          : `flex flex-col items-center justify-center p-5 lg:p-6 xl:p-7 tv:p-8`)
+          ? "" // remove the default panel background so we can apply the image's dominant color
+          : `bg-surface-panel ghost-border flex flex-col items-center justify-center p-5 lg:p-6 xl:p-7 tv:p-8`)
       }
+      style={hasImage && bgCss ? { backgroundColor: bgCss } : undefined}
     >
       {hasImage ? (
-        // Image fills the entire slot with no padding; object-cover will crop as needed
+        // Image fills the entire slot with no padding; object-contain will crop as needed
+        // crossOrigin is set to anonymous to allow canvas extraction for CORS-enabled images.
         <img
+          ref={imgRef}
           src={slot.image ?? undefined}
           alt={slot.label}
           className="w-full h-full object-contain"
+          onLoad={handleImageLoad}
+          crossOrigin="anonymous"
+          decoding="async"
         />
       ) : (
         // Placeholder content stretches to the card's full height
@@ -63,7 +75,7 @@ export function AdRail({ slots }: AdRailProps) {
     // The header is natural height; cards (below) are `flex-1` so they distribute
     // the remaining space equally. `overflow-hidden` prevents the rail from
     // growing beyond its allotted space.
-    <div className="hidden lg:flex col-span-3 flex-col gap-4 lg:gap-5 tv:gap-6 h-full min-h-0 w-full justify-self-stretch overflow-hidden">
+    <div className="hidden lg:flex col-span-3 flex-col gap-1 sm:gap-2 md:gap-2 lg:gap-[12px] tv:gap-[20px] h-full min-h-0 w-full justify-self-stretch overflow-hidden">
       <div className="flex justify-between items-center px-2 lg:px-3">
         <span className="font-label-caps text-[10px] lg:text-xs xl:text-sm tv:text-base tracking-widest text-primary">
           {t.communitySponsors}
