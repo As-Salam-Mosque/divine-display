@@ -66,6 +66,15 @@ export interface MosqueConfig {
   extraPrayers?: PrayerTime[];
 }
 
+export type MosqueConfigSource = "default" | "remote";
+
+export interface MosqueConfigState {
+  config: MosqueConfig;
+  loading: boolean;
+  error: string | null;
+  source: MosqueConfigSource;
+}
+
 export interface ClockState {
   hours: string; // 12-hour
   hours24: string; // 24-hour (zero-padded)

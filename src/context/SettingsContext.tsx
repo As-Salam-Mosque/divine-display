@@ -3,15 +3,20 @@ import {
   createContext,
   useCallback,
   useContext,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
-import type { AppSettings } from "../types";
+import type { AppSettings, MosqueConfig } from "../types";
 import { DEFAULT_APP_SETTINGS } from "../types";
+
+type SettingsPatch = Partial<Omit<AppSettings, "mosque">> & {
+  mosque?: Partial<MosqueConfig>;
+};
 
 interface SettingsContextValue {
   settings: AppSettings;
-  updateSettings: (patch: Partial<AppSettings>) => void;
+  updateSettings: (patch: SettingsPatch) => void;
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
@@ -24,16 +29,28 @@ export function SettingsProvider({
   // allow optional override, but fall back to hardcoded defaults
   defaults?: AppSettings;
 }) {
-  const [settings, setSettings] = useState<AppSettings>(
-    () => defaults ?? DEFAULT_APP_SETTINGS,
-  );
+  const baseSettings = defaults ?? DEFAULT_APP_SETTINGS;
+  const [overrides, setOverrides] = useState<SettingsPatch>({});
 
-  const updateSettings = useCallback((patch: Partial<AppSettings>) => {
-    setSettings((prev) => {
-      const next: AppSettings = {
+  const settings = useMemo<AppSettings>(() => {
+    const mergedMosque: MosqueConfig = {
+      ...baseSettings.mosque,
+      ...(overrides.mosque ?? {}),
+    };
+
+    return {
+      ...baseSettings,
+      ...overrides,
+      mosque: mergedMosque,
+    };
+  }, [baseSettings, overrides]);
+
+  const updateSettings = useCallback((patch: SettingsPatch) => {
+    setOverrides((prev) => {
+      const next: SettingsPatch = {
         ...prev,
         ...patch,
-        mosque: { ...prev.mosque, ...(patch.mosque ?? {}) },
+        mosque: { ...(prev.mosque ?? {}), ...(patch.mosque ?? {}) },
       };
       // Intentionally do not persist settings to localStorage.
       return next;

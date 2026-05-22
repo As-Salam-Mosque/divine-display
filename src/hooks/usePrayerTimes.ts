@@ -43,6 +43,10 @@ function todayKey(): string {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
+function cacheKeyForConfig(config: MosqueConfig): string {
+  return `prayer-times-${todayKey()}-${config.latitude}-${config.longitude}-${config.calculationMethod}`;
+}
+
 function parseTime(timeStr: string): Date {
   const [h, m] = timeStr.split(":").map(Number);
   const d = new Date();
@@ -221,13 +225,13 @@ export function usePrayerTimes(
   );
 
   useEffect(() => {
-    const cacheKey = `prayer-times-${todayKey()}`;
+    const cacheKey = cacheKeyForConfig(config);
     const cached = localStorage.getItem(cacheKey);
 
     if (cached) {
       try {
         const data: CachedData = JSON.parse(cached);
-        if (data.key === todayKey()) {
+        if (data.key === cacheKey) {
           const prayers = buildPrayers(data.timings, config);
           // Defer state update slightly to avoid synchronous setState inside effect
           setTimeout(() => {
@@ -258,7 +262,7 @@ export function usePrayerTimes(
         const hijriDate = `${hijri.month.en} ${hijri.day}, ${hijri.year} AH`;
 
         const cacheData: CachedData = {
-          key: todayKey(),
+          key: cacheKey,
           timings,
           hijriDate,
         };
