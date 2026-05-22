@@ -58,6 +58,14 @@ export function ClockPanel({
       }, 0);
     };
 
+    // Don't run promo timers/animations on small screens (mobile). Avoids layout
+    // shifts and animations that would briefly appear when the promo rail is
+    // intentionally hidden on mobile.
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      resetPromo();
+      return;
+    }
+
     if (!settings.showSponsors) {
       resetPromo();
       return;
@@ -154,7 +162,7 @@ export function ClockPanel({
   const panelClassName =
     "clock-panel [--promo-rail-width:50%] rounded-xl p-2 sm:p-3 md:p-4 lg:p-6 tv:p-8 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
     (isCriticalSignal
-      ? "bg-background-deep border-2 border-primary shadow-[0_0_45px_rgba(233,193,118,0.6)]"
+      ? "bg-background-deep border-2 border-primary shadow-[0_0_45px_rgba(var(--primary-rgb),0.6)]"
       : "bg-surface-panel ghost-border active-glow");
 
   return (
@@ -164,9 +172,10 @@ export function ClockPanel({
       {/* Gear icon */}
       {!isCriticalSignal && (
         <button
+          type="button"
           onClick={onOpenSettings}
           aria-label={t.settings}
-          className="absolute top-2 md:top-3 lg:top-4 right-2 md:right-3 lg:right-4 z-30 w-7 md:w-10 lg:w-12 h-7 md:h-10 lg:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-surface-container transition-colors"
+          className="absolute top-2 md:top-3 lg:top-4 right-2 md:right-3 lg:right-4 z-30 w-7 md:w-10 lg:w-12 h-7 md:h-10 lg:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-[rgba(var(--primary-rgb),0.18)] focus-visible:text-primary focus-visible:bg-[rgba(var(--primary-rgb),0.18)] transition-colors focus-ring"
         >
           <span
             className="material-symbols-outlined text-base md:text-xl lg:text-2xl"
@@ -239,7 +248,7 @@ export function ClockPanel({
                   </span>
                 </div>
                 <div
-                  className="w-[1px] h-5 md:h-8 lg:h-12 bg-primary/20"
+                  className="w-px h-5 md:h-8 lg:h-12 bg-primary-20"
                   aria-hidden="true"
                 />
                 <div className="flex flex-col items-center md:items-start">
@@ -301,14 +310,14 @@ export function ClockPanel({
           {/* Right/Promotional rail - rendered out of layout flow (absolute on md+) so it won't change the panel height when it slides in. */}
           {showPromoRail && (
             <aside
-              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-[var(--promo-rail-width)] pl-3 md:pl-6 h-full z-10 transform transition-all duration-[400ms] ease-out ${promoSlideState}`}
+              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-(--promo-rail-width) pl-3 md:pl-6 h-full z-10 transform transition-all duration-400 ease-out ${promoSlideState}`}
               aria-hidden={promoAlt === ""}
             >
               <div
                 className={`${"w-full h-full rounded-xl overflow-hidden flex items-center justify-center shadow-inner"} ${
                   promoBgCss
                     ? ""
-                    : "bg-gradient-to-tr from-primary/20 to-primary/10"
+                    : "bg-linear-to-tr from-[rgba(var(--primary-rgb),0.2)] to-[rgba(var(--primary-rgb),0.1)]"
                 }`}
                 style={promoBgCss ? { backgroundColor: promoBgCss } : undefined}
               >
@@ -318,7 +327,7 @@ export function ClockPanel({
                     href={promoSlot.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full h-full block"
+                    className="w-full h-full block rounded-xl focus-ring"
                   >
                     <img
                       ref={promoImgRef}

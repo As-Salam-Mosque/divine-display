@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import type { PrayerTime } from "../types";
 import { PrayerCard } from "./PrayerCard";
 
@@ -6,65 +7,65 @@ interface PrayerTableProps {
   activePrayerIndex: number | null;
 }
 
-function timeToMinutes(prayer: PrayerTime) {
-  const timeStr = (prayer.time || prayer.iqamah || prayer.adhan || "").trim();
-  if (!timeStr) return Number.POSITIVE_INFINITY;
-  const [hRaw, mRaw] = timeStr.split(":");
-  const h = Number(hRaw);
-  const m = Number(mRaw);
-  if (Number.isNaN(h) || Number.isNaN(m)) return Number.POSITIVE_INFINITY;
-  return h * 60 + m;
-}
-
 export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
-  const today = new Date();
-  const isFriday = today.getDay() === 5; // 5 === Friday (0 = Sunday)
+  // Minimum card width in pixels. When cards reach this width they'll wrap to
+  // the next row. Adjust this value to control when rows are created.
+  const CARD_MIN_PX = 220;
 
-  const khutbahIndices = prayers
-    .map((p, i) => ({ p, i }))
-    .filter(({ p }) => !!p.isKhutbah)
-    .map(({ i }) => i);
+  const containerRef = useRef<HTMLUListElement | null>(null);
+  const [cols, setCols] = useState<number>(1);
 
-  // If it's Friday and we have khutbah entries, pick a single representative to display.
-  // There can be multiple khutbah times in the source data, but the UI should show only one card.
-  let selectedKhutbahIndex: number | null = null;
-  if (isFriday && khutbahIndices.length > 0) {
-    const nowMinutes = today.getHours() * 60 + today.getMinutes();
-    // Prefer the next khutbah whose time is >= now, otherwise fall back to the earliest (wrap)
-    const upcoming = khutbahIndices.find(
-      (i) => timeToMinutes(prayers[i]) >= nowMinutes,
-    );
-    selectedKhutbahIndex = upcoming ?? khutbahIndices[0];
-  }
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const recalc = () => {
+      const width = Math.max(0, el.clientWidth - 1); // guard against zero
+      const count = Math.max(1, prayers.length);
+      // maximum number of columns that can fit at CARD_MIN_PX
+      const maxCols = Math.max(1, Math.floor(width / CARD_MIN_PX));
+      // If more columns can fit than items, cap to item count
+      const cappedMax = Math.min(maxCols || 1, count);
+      const rows = Math.ceil(count / cappedMax);
+      const calculated =
+        rows <= 1 ? Math.min(count, cappedMax) : Math.ceil(count / rows);
+      setCols(calculated || 1);
+    };
+
+    // Initial measurement
+    recalc();
+
+    // Resize observer to handle container size changes (including rail show/hide)
+    const ro = new ResizeObserver(() => recalc());
+    ro.observe(el);
+
+    // Also listen for font load/layout changes via window resize as a fallback
+    window.addEventListener("resize", recalc);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", recalc);
+    };
+  }, [prayers.length]);
 
   return (
     <ul
-      className="grid gap-2 py-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6"
+      ref={containerRef}
+      className="grid gap-2 py-1"
       aria-label="Prayer times"
+      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
     >
-      {prayers
-        .map((prayer, index) => {
-          // When we've consolidated khutbahs, only render the selected khutbah index and skip the rest
-          if (
-            selectedKhutbahIndex !== null &&
-            khutbahIndices.includes(index) &&
-            index !== selectedKhutbahIndex
-          ) {
-            return null;
-          }
+      {prayers.map((prayer, index) => {
+        const isActive = activePrayerIndex === index;
 
-          const isActive = activePrayerIndex === index;
-
-          return (
-            <PrayerCard
-              key={`${prayer.name}-${index}`}
-              prayer={prayer}
-              isActive={isActive}
-            />
-          );
-        })
-        // filter out the nulls from skipped khutbah entries
-        .filter(Boolean)}
+        return (
+          <PrayerCard
+            key={`${prayer.name}-${index}`}
+            prayer={prayer}
+            isActive={isActive}
+          />
+        );
+      })}
     </ul>
   );
 }

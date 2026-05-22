@@ -16,10 +16,6 @@ export interface PrayerTime {
   adhan: string | null;
   iqamah: string | null;
   time?: string;
-  // Explicit flag to mark khutbah (Friday sermon) entries when present in the data.
-  // Optional to remain backward-compatible; when present and true, indicates this
-  // prayer should be treated as a khutbah for consolidation/display logic.
-  isKhutbah?: boolean;
 }
 
 export interface AdSlot {

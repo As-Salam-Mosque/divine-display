@@ -41,7 +41,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
         // Mobile: horizontal row layout (name | divider | times). md+: vertical card.
         "rounded-xl bg-surface-panel ghost-border flex items-center w-full lg:flex-col lg:items-center py-1 sm:py-1.5 md:py-2 lg:py-4 xl:py-5 tv:py-6 px-2 sm:px-3 md:px-4 lg:px-5 tv:px-6 relative h-full max-h-[clamp(80px,12vh,140px)] lg:max-h-none overflow-hidden",
         isActive
-          ? "bg-primary/10 border-2 border-primary shadow-[0_0_15px_rgba(197,160,89,0.3)] z-30 overflow-visible"
+          ? "bg-primary-10 border-2 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] z-30 overflow-visible"
           : "",
       ].join(" ")}
     >
@@ -53,7 +53,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       )}
 
       {/* Left: Prayer name + Arabic (centered horizontally) */}
-      <div className="flex-shrink-0 w-1/4 lg:w-full flex flex-col items-center justify-center text-center">
+      <div className="shrink-0 w-1/4 lg:w-full flex flex-col items-center justify-center text-center">
         <div className="flex flex-col items-center">
           <span
             className={`font-label-caps text-[10px] sm:text-xs md:text-base lg:text-lg xl:text-xl tv:text-2xl font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
@@ -61,7 +61,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
             {prayer.name.toUpperCase()}
           </span>
           <span
-            className={`font-body-md block lg:inline text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg tv:text-xl mt-0 ${isActive ? "text-primary/80" : "text-text-muted"} [@media(max-height:40vh)]:hidden`}
+            className={`font-body-md block lg:inline text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg tv:text-xl mt-0 ${isActive ? "text-primary" : "text-text-muted"} [@media(max-height:40vh)]:hidden`}
             lang="ar"
           >
             {prayer.arabicName}
@@ -71,11 +71,15 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Divider */}
       <div
-        className="hidden lg:block border-t border-outline-variant/50 my-1 w-full"
+        className={`hidden lg:block border-t my-1 w-full ${
+          isActive ? "border-primary" : "border-primary-20"
+        }`}
         aria-hidden="true"
       />
       <div
-        className="lg:hidden h-7 border-l border-outline-variant/50 mx-2"
+        className={`lg:hidden h-7 border-l mx-2 ${
+          isActive ? "border-primary" : "border-primary-20"
+        }`}
         aria-hidden="true"
       />
 
@@ -83,7 +87,11 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       <div className="flex-1 flex flex-row justify-around items-center w-full">
         {isShuruq && prayer.time ? (
           <div className="flex-1 flex flex-col items-center">
-            <span className="text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps text-text-muted">
+            <span
+              className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps ${
+                isActive ? "text-primary" : "text-text-muted"
+              }`}
+            >
               {t.time || "TIME"}
             </span>
             <span
@@ -91,7 +99,11 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
             >
               {formatDisplayTime(prayer.time!, settings.timeFormat).time}
             </span>
-            <span className="text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg text-text-muted font-tabular-nums">
+            <span
+              className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-tabular-nums ${
+                isActive ? "text-primary" : "text-text-muted"
+              }`}
+            >
               {formatDisplayTime(prayer.time!, settings.timeFormat).ampm}
             </span>
           </div>
@@ -99,7 +111,11 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
           <>
             {prayer.adhan && (
               <div className="flex-1 flex flex-col items-center">
-                <span className="text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps text-text-muted">
+                <span
+                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps ${
+                    isActive ? "text-primary" : "text-text-muted"
+                  }`}
+                >
                   {t.adhan || "ADHAN"}
                 </span>
                 <span
@@ -107,7 +123,11 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
                 >
                   {formatDisplayTime(prayer.adhan!, settings.timeFormat).time}
                 </span>
-                <span className="text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg text-text-muted font-tabular-nums">
+                <span
+                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-tabular-nums ${
+                    isActive ? "text-primary" : "text-text-muted"
+                  }`}
+                >
                   {formatDisplayTime(prayer.adhan!, settings.timeFormat).ampm}
                 </span>
               </div>
@@ -115,7 +135,11 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
             {prayer.iqamah && (
               <div className="flex-1 flex flex-col items-center">
-                <span className="text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps text-text-muted">
+                <span
+                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps ${
+                    isActive ? "text-primary" : "text-text-muted"
+                  }`}
+                >
                   {t.iqamah || "IQAMAH"}
                 </span>
                 <span
@@ -123,7 +147,11 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
                 >
                   {formatDisplayTime(prayer.iqamah!, settings.timeFormat).time}
                 </span>
-                <span className="text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg text-text-muted font-tabular-nums">
+                <span
+                  className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-tabular-nums ${
+                    isActive ? "text-primary" : "text-text-muted"
+                  }`}
+                >
                   {formatDisplayTime(prayer.iqamah!, settings.timeFormat).ampm}
                 </span>
               </div>
