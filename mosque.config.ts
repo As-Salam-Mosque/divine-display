@@ -58,11 +58,17 @@ const config: MosqueConfig = {
     },
   ],
   promo: { displayDurationMs: 8000, cycleMs: 90000, initialDelayMs: 5000 },
-  announcements: [
-    "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2PM (English)",
+  announcements_en: [
+    "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2:10PM (Anglais)",
     "Quran Halaqah — Weekly Quran circle every Saturday after 3PM in the main hall.",
     // "Parking Notice — East lot closed for repaving. Please use the side entrance.",
     "See all out events at assalam.info/services",
+  ],
+  announcements_fr: [
+    "Khutbah du vendredi — Le Sheikh Ali dirigera le khutbah à 13h (Arabe) et 14h10 (Français)",
+    "Halaqah du Coran — Halaqah du Coran chaque samedi après 15h dans la salle principale.",
+    // "Avis de stationnement — Lot est fermé pour réparation. Veuillez utiliser l'entrée latérale.",
+    "Consultez tous nos événements sur assalam.info/services",
   ],
 };
 

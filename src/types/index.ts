@@ -56,7 +56,8 @@ export interface MosqueConfig {
 
   // UI content
   adSlots: AdSlot[];
-  announcements: string[];
+  announcements_en: string[];
+  announcements_fr: string[];
   // Optional promo configuration to control timing of the promo rail
   promo?: PromoConfig;
 
@@ -137,7 +138,8 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     calculationMethod: 0,
     iqamahOffsets: {},
     adSlots: [],
-    announcements: [],
+    announcements_en: [],
+    announcements_fr: [],
     extraPrayers: [],
   },
 };

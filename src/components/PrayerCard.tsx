@@ -84,7 +84,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       />
 
       {/* Right: Times (Athan / Iqamah) */}
-      <div className="flex-1 flex flex-row justify-around items-center w-full">
+      <div className="flex-1 flex flex-row justify-center items-center w-full gap-4 sm:gap-4 lg:gap-4">
         {isShuruq && prayer.time ? (
           <div className="flex-1 flex flex-col items-center">
             <span
