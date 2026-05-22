@@ -37,56 +37,62 @@ export function ClockPanel({
   const isCriticalSignal =
     statusType === "adhan-now" || statusType === "iqamah-now";
 
-  // Promotional content toggle: show a promo panel for `promoDisplayDurationMs` every `promoCycleMs`.
-  // Only enabled when sponsors are allowed in settings.
   const promoExitDurationMs = 400;
   const [promoPhase, setPromoPhase] = useState<
     "hidden" | "enter" | "visible" | "exit"
   >("hidden");
   const [currentPromoSlot, setCurrentPromoSlot] = useState<AdSlot | null>(null);
-  const promoTimerRef = useRef<number | null>(null);
-  const cycleTimerRef = useRef<number | null>(null);
-  const initialTimerRef = useRef<number | null>(null);
-  const exitTimerRef = useRef<number | null>(null);
-  const enterFrameRef = useRef<number | null>(null);
+
+  const timersRef = useRef<{
+    initial?: number;
+    cycle?: number;
+    promo?: number;
+    exit?: number;
+    enterFrame?: number;
+  }>({});
 
   useEffect(() => {
-    const resetPromo = () => {
-      window.setTimeout(() => {
-        setPromoPhase("hidden");
-        setCurrentPromoSlot(null);
-      }, 0);
+    const currentTimers = timersRef.current;
+
+    const clearAllTimers = () => {
+      if (currentTimers.initial) window.clearTimeout(currentTimers.initial);
+      if (currentTimers.cycle) window.clearTimeout(currentTimers.cycle);
+      if (currentTimers.promo) window.clearTimeout(currentTimers.promo);
+      if (currentTimers.exit) window.clearTimeout(currentTimers.exit);
+      if (currentTimers.enterFrame)
+        window.cancelAnimationFrame(currentTimers.enterFrame);
     };
 
-    // Don't run promo timers/animations on small screens (mobile). Avoids layout
-    // shifts and animations that would briefly appear when the promo rail is
-    // intentionally hidden on mobile.
+    const resetPromoState = () => {
+      clearAllTimers();
+      setPromoPhase("hidden");
+      setCurrentPromoSlot(null);
+    };
+
     if (typeof window !== "undefined" && window.innerWidth < 768) {
-      resetPromo();
+      resetPromoState();
       return;
     }
 
     if (!settings.showSponsors) {
-      resetPromo();
+      resetPromoState();
       return;
     }
 
-    // Read timing from mosque promo config, falling back to reasonable defaults
     const promoCfg = settings.mosque?.promo || {};
-    const promoDisplayDurationMs = promoCfg.displayDurationMs ?? 10_000; // default 10s
-    const promoCycleMs = promoCfg.cycleMs ?? 120_000; // default 120s
-    const initialDelayMs = promoCfg.initialDelayMs ?? 15_000; // default 15s
+    const promoDisplayDurationMs = promoCfg.displayDurationMs ?? 10_000;
+    const promoCycleMs = promoCfg.cycleMs ?? 120_000;
+    const initialDelayMs = promoCfg.initialDelayMs ?? 15_000;
 
-    // build list of candidate slots (with images)
     const candidates = (settings.mosque?.adSlots || []).filter(
       (s) => !!s.image && (s.weight ?? 0) > 0,
     );
     if (candidates.length === 0) {
-      resetPromo();
+      resetPromoState();
       return;
     }
 
-    const pickWeightedSlot = () => {
+    const pickWeightedSlot = (): AdSlot => {
       const total = candidates.reduce((acc, s) => acc + (s.weight ?? 0), 0);
       if (total <= 0) return candidates[0];
       let r = Math.random() * total;
@@ -94,51 +100,33 @@ export function ClockPanel({
         r -= s.weight ?? 0;
         if (r <= 0) return s;
       }
-      // fallback
       return candidates[0];
     };
 
-    const showCycle = () => {
+    const runPromoCycle = () => {
       const chosen = pickWeightedSlot();
-      if (exitTimerRef.current) {
-        window.clearTimeout(exitTimerRef.current);
-      }
       setCurrentPromoSlot(chosen);
       setPromoPhase("enter");
-      if (enterFrameRef.current) {
-        window.cancelAnimationFrame(enterFrameRef.current);
-      }
-      enterFrameRef.current = window.requestAnimationFrame(() => {
+
+      currentTimers.enterFrame = window.requestAnimationFrame(() => {
         setPromoPhase("visible");
       });
 
-      if (promoTimerRef.current) {
-        window.clearTimeout(promoTimerRef.current);
-      }
-      promoTimerRef.current = window.setTimeout(() => {
+      currentTimers.promo = window.setTimeout(() => {
         setPromoPhase("exit");
-        // keep a small timeout before clearing slot to allow slide-out
-        exitTimerRef.current = window.setTimeout(() => {
+
+        currentTimers.exit = window.setTimeout(() => {
           setPromoPhase("hidden");
           setCurrentPromoSlot(null);
         }, promoExitDurationMs);
       }, promoDisplayDurationMs);
+
+      currentTimers.cycle = window.setTimeout(runPromoCycle, promoCycleMs);
     };
 
-    // Stagger the first appearance slightly so it doesn't always show immediately on load.
-    initialTimerRef.current = window.setTimeout(showCycle, initialDelayMs);
+    currentTimers.initial = window.setTimeout(runPromoCycle, initialDelayMs);
 
-    // Start recurring cycle after the stagger.
-    cycleTimerRef.current = window.setInterval(showCycle, promoCycleMs);
-
-    return () => {
-      if (promoTimerRef.current) window.clearTimeout(promoTimerRef.current);
-      if (cycleTimerRef.current) window.clearInterval(cycleTimerRef.current);
-      if (initialTimerRef.current) window.clearTimeout(initialTimerRef.current);
-      if (exitTimerRef.current) window.clearTimeout(exitTimerRef.current);
-      if (enterFrameRef.current)
-        window.cancelAnimationFrame(enterFrameRef.current);
-    };
+    return () => clearAllTimers();
   }, [settings.showSponsors, settings.mosque]);
 
   const promoSlot = currentPromoSlot;
@@ -169,7 +157,7 @@ export function ClockPanel({
     <div className={panelClassName}>
       {!isCriticalSignal && <MosqueSilhouette />}
 
-      {/* Gear icon */}
+      {/* Settings Gear */}
       {!isCriticalSignal && (
         <button
           type="button"
@@ -188,17 +176,18 @@ export function ClockPanel({
 
       {isCriticalSignal ? (
         <div
-          className="z-20 w-full h-full flex flex-col items-center justify-center text-center gap-3 md:gap-6 lg:gap-8"
+          className="z-20 w-full h-full flex flex-col items-center justify-center text-center gap-4 md:gap-8 lg:gap-10"
           role="alert"
           aria-live="assertive"
         >
+          {/* CRITICAL SIGNAL ICON - MAXIMIZED FOR TV/DISPLAY BOARDS */}
           <span
-            className="material-symbols-outlined filled text-primary text-4xl md:text-6xl lg:text-7xl motion-safe:animate-pulse"
+            className="material-symbols-outlined filled text-primary text-6xl sm:text-7xl md:text-8xl lg:text-9xl tv:text-[12rem] motion-safe:animate-pulse"
             aria-hidden="true"
           >
             campaign
           </span>
-          <div className="max-w-[90%] font-headline-lg text-primary text-xl md:text-4xl lg:text-6xl leading-tight">
+          <div className="max-w-[90%] font-headline-lg text-primary text-xl md:text-4xl lg:text-6xl leading-tight font-bold">
             {statusMessage}
           </div>
         </div>
@@ -211,7 +200,7 @@ export function ClockPanel({
               : "flex flex-col items-center justify-center")
           }
         >
-          {/* Left/main content */}
+          {/* Main Display / Left Column */}
           <div
             className={
               "flex flex-col transition-all duration-500 min-w-0 " +
@@ -220,7 +209,7 @@ export function ClockPanel({
                 : "items-center w-full")
             }
           >
-            {/* Mosque Identity */}
+            {/* Mosque Branding */}
             <div className="flex flex-col items-center mb-2 md:mb-4 lg:mb-6 md:items-start">
               <div className="flex flex-col items-center mb-1 md:mb-3 lg:mb-4 md:items-start">
                 <span
@@ -230,17 +219,17 @@ export function ClockPanel({
                   mosque
                 </span>
                 <h1 className="font-headline-md text-sm md:text-xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
-                  {settings.mosque.name}
+                  {settings.mosque?.name}
                 </h1>
                 <p className="font-label-caps text-xs md:text-sm lg:text-base text-text-muted">
-                  {settings.mosque.city}
+                  {settings.mosque?.city}
                 </p>
               </div>
 
-              {/* Dates */}
+              {/* Calendar Row */}
               <div className="clock-panel__dates flex items-center gap-3 md:gap-6 lg:gap-8">
                 <div className="flex flex-col items-center md:items-start">
-                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface">
+                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface font-medium">
                     {clock.gregorianDate}
                   </span>
                   <span className="font-label-caps text-xs md:text-sm lg:text-sm text-text-muted">
@@ -250,9 +239,9 @@ export function ClockPanel({
                 <div
                   className="w-px h-5 md:h-8 lg:h-12 bg-primary-20"
                   aria-hidden="true"
-                />
+                ></div>
                 <div className="flex flex-col items-center md:items-start">
-                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface">
+                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface font-medium">
                     {hijriDate || "—"}
                   </span>
                   <span className="font-label-caps text-xs md:text-sm lg:text-sm text-text-muted">
@@ -262,7 +251,7 @@ export function ClockPanel({
               </div>
             </div>
 
-            {/* Clock */}
+            {/* Time Metrics */}
             <h2 className="font-label-caps text-xs md:text-sm lg:text-sm text-primary tracking-wide md:tracking-wider z-10 mb-1 md:mb-2 lg:mb-3">
               {t.currentTime}
             </h2>
@@ -271,57 +260,56 @@ export function ClockPanel({
               aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
               role="timer"
             >
-              <span className="font-clock-display text-5xl sm:text-6xl md:text-7xl lg:text-[9rem] tv:text-[10rem] leading-none">
+              <span className="font-clock-display text-8xl sm:text-7xl md:text-8xl lg:text-[10rem] tv:text-[11rem] leading-none">
                 {displayHours}:{clock.minutes}
               </span>
               <div className="flex flex-col items-start">
-                <span className="text-base sm:text-lg md:text-2xl lg:text-3xl tv:text-4xl text-primary font-bold leading-tight">
+                <span className="text-lg sm:text-xl md:text-3xl lg:text-4xl tv:text-5xl text-primary font-bold leading-tight">
                   :{clock.seconds}
                 </span>
                 {!is24h && (
-                  <span className="text-base sm:text-lg md:text-2xl lg:text-3xl tv:text-4xl text-primary font-bold leading-tight">
+                  <span className="text-lg sm:text-xl md:text-3xl lg:text-4xl tv:text-5xl text-primary font-bold leading-tight">
                     {clock.ampm}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Status Pill */}
+            {/* STANDARD PILL STATUS BAR - SCALED UP SLIGHTLY FOR VISIBILITY */}
             {statusMessage && (
               <div
-                className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-2 md:gap-4 status-pill rounded-full px-3 md:px-6 lg:px-8 py-1 md:py-2 lg:py-3 z-10 max-w-full"
+                className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-3 md:gap-5 status-pill rounded-full px-4 md:px-8 lg:px-10 py-2 md:py-3 lg:py-4 z-10 max-w-full"
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
               >
                 <span
-                  className="material-symbols-outlined text-primary text-base md:text-xl lg:text-2xl"
+                  className="material-symbols-outlined text-primary text-2xl md:text-4xl lg:text-5xl"
                   aria-hidden="true"
                 >
                   campaign
                 </span>
-                <span className="font-body-md text-sm md:text-lg lg:text-xl text-on-surface text-center">
+                <span className="font-body-md text-base md:text-xl lg:text-2xl text-on-surface text-center font-semibold">
                   {statusMessage}
                 </span>
               </div>
             )}
           </div>
 
-          {/* Right/Promotional rail - rendered out of layout flow (absolute on md+) so it won't change the panel height when it slides in. */}
+          {/* Dynamic Promotional Side Rail Component */}
           {showPromoRail && (
             <aside
               className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-(--promo-rail-width) pl-3 md:pl-6 h-full z-10 transform transition-all duration-400 ease-out ${promoSlideState}`}
               aria-hidden={promoAlt === ""}
             >
               <div
-                className={`${"w-full h-full rounded-xl overflow-hidden flex items-center justify-center shadow-inner"} ${
+                className={`w-full h-full rounded-xl overflow-hidden flex items-center justify-center shadow-inner ${
                   promoBgCss
                     ? ""
                     : "bg-linear-to-tr from-[rgba(var(--primary-rgb),0.2)] to-[rgba(var(--primary-rgb),0.1)]"
                 }`}
                 style={promoBgCss ? { backgroundColor: promoBgCss } : undefined}
               >
-                {/* If the ad slot includes a link, make the promo clickable. Include security attributes for external links. */}
                 {promoSlot?.link && promoAlt !== "" ? (
                   <a
                     href={promoSlot.link}

@@ -62,18 +62,18 @@ button {
     --primary: #c5a059;
     --primary-rgb: 197, 160, 89;
 
-    --background-deep: #ffffff;
-    --surface-panel: #f5f6f7;
-    --surface: #ffffff;
-    --surface-container: #f3f4f6;
-    --surface-container-low: #f7f7f8;
-    --surface-container-highest: #ffffff;
+    --background-deep: #eef0f3;
+    --surface-panel: #e3e7ec;
+    --surface: #f6f7f9;
+    --surface-container: #eceff3;
+    --surface-container-low: #f2f4f7;
+    --surface-container-highest: #f9fafb;
 
-    --on-surface: #0b1220; /* primary text on light */
-    --on-surface-rgb: 11, 18, 32;
-    --on-surface-variant: #1f2937;
-    --text-muted: rgba(11, 18, 32, 0.6);
-    --outline-variant: rgba(15, 23, 42, 0.08);
+    --on-surface: #1d2633; /* primary text on light */
+    --on-surface-rgb: 29, 38, 51;
+    --on-surface-variant: #334154;
+    --text-muted: rgba(29, 38, 51, 0.6);
+    --outline-variant: rgba(29, 38, 51, 0.14);
 }
 
 /* Dark theme overrides */
@@ -101,18 +101,18 @@ button {
     --primary: #c5a059;
     --primary-rgb: 197, 160, 89;
 
-    --background-deep: #ffffff;
-    --surface-panel: #f5f6f7;
-    --surface: #ffffff;
-    --surface-container: #f3f4f6;
-    --surface-container-low: #f7f7f8;
-    --surface-container-highest: #ffffff;
+    --background-deep: #eef0f3;
+    --surface-panel: #e3e7ec;
+    --surface: #f6f7f9;
+    --surface-container: #eceff3;
+    --surface-container-low: #f2f4f7;
+    --surface-container-highest: #f9fafb;
 
-    --on-surface: #0b1220;
-    --on-surface-rgb: 11, 18, 32;
-    --on-surface-variant: #1f2937;
-    --text-muted: rgba(11, 18, 32, 0.6);
-    --outline-variant: rgba(15, 23, 42, 0.08);
+    --on-surface: #1d2633;
+    --on-surface-rgb: 29, 38, 51;
+    --on-surface-variant: #334154;
+    --text-muted: rgba(29, 38, 51, 0.6);
+    --outline-variant: rgba(29, 38, 51, 0.14);
 }
 
 @layer components {
@@ -132,11 +132,9 @@ button {
 
     /* status pill (theme-aware, less dark) */
     .status-pill {
-        background-color: rgba(
-            var(--on-surface-rgb),
-            0.06
-        ); /* subtle overlay of on-surface */
-        border: 1px solid rgba(var(--on-surface-rgb), 0.12);
+        background-color: rgba(var(--primary-rgb), 0.12);
+        border: 1px solid rgba(var(--primary-rgb), 0.35);
+        box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.35);
     }
 
     .clock-panel {
@@ -234,7 +232,7 @@ button {
 
 @layer utilities {
     .animate-marquee {
-        animation: marquee 30s linear infinite;
+        animation: marquee 60s linear infinite;
     }
 }
 
