@@ -51,7 +51,7 @@ export function ClockPanel({
   const isCriticalSignal =
     statusType === "adhan-now" || statusType === "iqamah-now";
 
-  const promoExitDurationMs = 400;
+  const promoExitDurationMs = 900;
   const [promoPhase, setPromoPhase] = useState<
     "hidden" | "enter" | "visible" | "exit"
   >("hidden");
@@ -162,7 +162,7 @@ export function ClockPanel({
   } = useDominantColor();
 
   const panelClassName =
-    "clock-panel [--promo-rail-width:50%] rounded-xl p-2 sm:p-3 md:p-4 lg:p-6 tv:p-8 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
+    "clock-panel [--promo-rail-width:50%] rounded-xl p-4 sm:p-6 md:p-8 lg:p-10 tv:p-12 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
     (isCriticalSignal
       ? "bg-background-deep border-2 border-primary shadow-[0_0_45px_rgba(var(--primary-rgb),0.6)]"
       : "bg-surface-panel ghost-border active-glow");
@@ -204,18 +204,18 @@ export function ClockPanel({
       ) : (
         <div
           className={
-            "z-10 w-full transition-all duration-500 max-md:flex-col max-md:items-center max-md:justify-center " +
+            "z-10 w-full flex flex-col items-center justify-center max-md:flex-col max-md:items-center max-md:justify-center " +
             (promoActive
-              ? "md:flex md:flex-row md:items-stretch md:justify-between"
-              : "flex flex-col items-center justify-center")
+              ? "md:transition-all md:duration-900 md:flex-row md:items-stretch md:justify-between"
+              : "")
           }
         >
           {/* Main Display / Left Column */}
           <div
             className={
-              "flex flex-col transition-all duration-500 min-w-0 " +
+              "flex flex-col min-w-0 " +
               (promoActive
-                ? "md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-3 md:pl-6 max-md:items-center max-md:w-full"
+                ? "md:transition-all md:duration-900 md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-6 md:pl-8 max-md:items-center max-md:w-full"
                 : "items-center w-full")
             }
           >
@@ -262,23 +262,23 @@ export function ClockPanel({
             </div>
 
             {/* Time Metrics */}
-            <h2 className="font-label-caps text-xs md:text-sm lg:text-sm text-primary tracking-wide md:tracking-wider z-10 mb-1 md:mb-2 lg:mb-3">
+            <h1 className="font-label-caps text-xs md:text-sm lg:text-sm text-primary tracking-wide md:tracking-wider z-10 mb-1 md:mb-2 lg:mb-3">
               {t.currentTime}
-            </h2>
+            </h1>
             <div
-              className="clock-panel__time flex items-baseline gap-2 md:gap-6 lg:gap-8 text-on-surface z-10"
+              className="clock-panel__time flex items-baseline gap-3 md:gap-8 lg:gap-10 text-on-surface z-10"
               aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
               role="timer"
             >
-              <span className="font-clock-display text-8xl sm:text-7xl md:text-8xl lg:text-[10rem] tv:text-[11rem] leading-none">
+              <span className="font-clock-display text-6xl sm:text-[8rem] md:text-[9rem] lg:text-[12rem] tv:text-[13rem] leading-none">
                 {displayHours}:{clock.minutes}
               </span>
               <div className="flex flex-col items-start">
-                <span className="text-lg sm:text-xl md:text-3xl lg:text-4xl tv:text-5xl text-primary font-bold leading-tight">
+                <span className="text-lg sm:text-xl md:text-4xl lg:text-5xl tv:text-6xl text-primary font-bold leading-tight">
                   :{clock.seconds}
                 </span>
                 {!is24h && (
-                  <span className="text-lg sm:text-xl md:text-3xl lg:text-4xl tv:text-5xl text-primary font-bold leading-tight">
+                  <span className="text-lg sm:text-xl md:text-4xl lg:text-5xl tv:text-6xl text-primary font-bold leading-tight">
                     {clock.ampm}
                   </span>
                 )}
@@ -288,7 +288,7 @@ export function ClockPanel({
             {/* STANDARD PILL STATUS BAR - DRIVEN BY SVG SCALING */}
             {statusMessage && (
               <div
-                className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-3 md:gap-5 status-pill rounded-full px-4 md:px-8 lg:px-10 py-2 md:py-3 lg:py-4 z-10 max-w-full"
+                className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-4 md:gap-6 status-pill rounded-full px-6 md:px-10 lg:px-12 py-3 md:py-4 lg:py-5 z-10 max-w-full"
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
@@ -304,7 +304,7 @@ export function ClockPanel({
           {/* Dynamic Promotional Side Rail Component */}
           {showPromoRail && (
             <aside
-              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-(--promo-rail-width) pl-3 md:pl-6 h-full z-10 transform transition-all duration-400 ease-out ${promoSlideState}`}
+              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-(--promo-rail-width) pl-6 md:pl-8 h-full z-10 transform transition-all duration-900 ease-out ${promoSlideState}`}
               aria-hidden={promoAlt === ""}
             >
               <div
