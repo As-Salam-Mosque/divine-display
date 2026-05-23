@@ -14,6 +14,8 @@
 /* Apply default body font (matches old UI) */
 body {
     font-family: var(--font-body);
+    background-color: var(--background-deep);
+    color: var(--on-surface);
 }
 
 button {
@@ -57,23 +59,29 @@ button {
 
 /* Theme variables and light/dark palettes */
 :root {
-    /* Default (light) palette */
-    /* Use a slightly darker gold for better contrast on light backgrounds */
-    --primary: #c5a059;
-    --primary-rgb: 197, 160, 89;
+    /* Default (light) palette - high contrast with soft grey surfaces */
+    --primary: #b87a00;
+    --primary-rgb: 184, 122, 0;
 
-    --background-deep: #eef0f3;
-    --surface-panel: #e3e7ec;
-    --surface: #f6f7f9;
-    --surface-container: #eceff3;
-    --surface-container-low: #f2f4f7;
-    --surface-container-highest: #f9fafb;
+    --background-deep: #d5dce4;
+    --surface-panel: #ebeff4;
+    --surface: #f5f7fa;
+    --surface-container: #edf1f5;
+    --surface-container-low: #f3f6f9;
+    --surface-container-highest: #fafbfd;
 
-    --on-surface: #1d2633; /* primary text on light */
-    --on-surface-rgb: 29, 38, 51;
-    --on-surface-variant: #334154;
-    --text-muted: rgba(29, 38, 51, 0.6);
-    --outline-variant: rgba(29, 38, 51, 0.14);
+    --on-surface: #0f1724; /* strong text contrast on light */
+    --on-surface-rgb: 15, 23, 36;
+    --on-surface-variant: #1f2b3d;
+    --text-muted: rgba(15, 23, 36, 0.82);
+    --outline-variant: rgba(15, 23, 36, 0.3);
+
+    --ghost-border-color: rgba(15, 23, 36, 0.34);
+    --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+    --active-glow-alpha: 0.2;
+    --primary-alpha-10: 0.2;
+    --primary-alpha-20: 0.44;
+    --primary-alpha-25: 0.56;
 }
 
 /* Dark theme overrides */
@@ -93,35 +101,50 @@ button {
     --on-surface-variant: #dfe6ff;
     --text-muted: rgba(255, 255, 255, 0.6);
     --outline-variant: rgba(233, 193, 118, 0.08);
+
+    --ghost-border-color: rgba(233, 193, 118, 0.2);
+    --panel-separation-shadow: none;
+    --active-glow-alpha: 0.12;
+    --primary-alpha-10: 0.1;
+    --primary-alpha-20: 0.2;
+    --primary-alpha-25: 0.25;
 }
 
 /* Light theme explicit (mirrors :root for clarity) */
 .light {
-    /* Match :root — darker gold for readability */
-    --primary: #c5a059;
-    --primary-rgb: 197, 160, 89;
+    --primary: #b87a00;
+    --primary-rgb: 184, 122, 0;
 
-    --background-deep: #eef0f3;
-    --surface-panel: #e3e7ec;
-    --surface: #f6f7f9;
-    --surface-container: #eceff3;
-    --surface-container-low: #f2f4f7;
-    --surface-container-highest: #f9fafb;
+    --background-deep: #d5dce4;
+    --surface-panel: #ebeff4;
+    --surface: #f5f7fa;
+    --surface-container: #edf1f5;
+    --surface-container-low: #f3f6f9;
+    --surface-container-highest: #fafbfd;
 
-    --on-surface: #1d2633;
-    --on-surface-rgb: 29, 38, 51;
-    --on-surface-variant: #334154;
-    --text-muted: rgba(29, 38, 51, 0.6);
-    --outline-variant: rgba(29, 38, 51, 0.14);
+    --on-surface: #0f1724;
+    --on-surface-rgb: 15, 23, 36;
+    --on-surface-variant: #1f2b3d;
+    --text-muted: rgba(15, 23, 36, 0.82);
+    --outline-variant: rgba(15, 23, 36, 0.3);
+
+    --ghost-border-color: rgba(15, 23, 36, 0.34);
+    --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+    --active-glow-alpha: 0.2;
+    --primary-alpha-10: 0.2;
+    --primary-alpha-20: 0.44;
+    --primary-alpha-25: 0.56;
 }
 
 @layer components {
     .ghost-border {
-        border: 1px solid rgba(197, 160, 89, 0.2);
+        border: 1px solid var(--ghost-border-color);
+        box-shadow: var(--panel-separation-shadow);
     }
     .active-glow {
         /* Use theme-aware variables for glow and border */
-        box-shadow: inset 0 0 20px rgba(var(--primary-rgb), 0.12);
+        box-shadow: inset 0 0 20px
+            rgba(var(--primary-rgb), var(--active-glow-alpha));
         border-color: var(--primary);
     }
 
@@ -193,17 +216,29 @@ button {
 
     /* opacity helpers for primary (theme-aware) */
     .bg-primary-10 {
-        background-color: rgba(var(--primary-rgb), 0.1) !important;
+        background-color: rgba(
+            var(--primary-rgb),
+            var(--primary-alpha-10)
+        ) !important;
     }
     .bg-primary-20 {
-        background-color: rgba(var(--primary-rgb), 0.2) !important;
+        background-color: rgba(
+            var(--primary-rgb),
+            var(--primary-alpha-20)
+        ) !important;
     }
 
     .border-primary-20 {
-        border-color: rgba(var(--primary-rgb), 0.2) !important;
+        border-color: rgba(
+            var(--primary-rgb),
+            var(--primary-alpha-20)
+        ) !important;
     }
     .border-primary-25 {
-        border-color: rgba(var(--primary-rgb), 0.25) !important;
+        border-color: rgba(
+            var(--primary-rgb),
+            var(--primary-alpha-25)
+        ) !important;
     }
 
     .focus-ring:focus-visible {

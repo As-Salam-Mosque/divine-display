@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import type { MosqueConfig, MosqueConfigState } from "../types";
 import fallbackConfig from "../../mosque.config";
 
+const DEFAULT_CONFIG_URL = process.env.REACT_APP_MOSQUE_CONFIG_URL || "";
+
 interface InternalConfigState {
   config: MosqueConfig;
   error: string | null;
@@ -9,7 +11,9 @@ interface InternalConfigState {
   sourceUrl: string | null;
 }
 
-export function useMosqueConfig(url: string = ""): MosqueConfigState {
+export function useMosqueConfig(
+  url: string = DEFAULT_CONFIG_URL,
+): MosqueConfigState {
   const resolvedUrl = url?.trim() || undefined;
 
   const [state, setState] = useState<InternalConfigState>(() => ({

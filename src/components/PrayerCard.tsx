@@ -29,7 +29,9 @@ function formatDisplayTime(timeStr: string, timeFormat: "12h" | "24h") {
 export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
   const { settings } = useSettings();
   const t = useT(settings.language);
-  const isShuruq = !prayer.adhan && !prayer.iqamah;
+  const hasNoAdhanOrIqamah = !prayer.adhan && !prayer.iqamah;
+  const singleTime = prayer.time ?? "—";
+  const singleTimeDisplay = formatDisplayTime(singleTime, settings.timeFormat);
 
   const ariaLabel =
     `${prayer.name} ${prayer.arabicName || ""} ${isActive ? t.currentlyActive : ""}`.trim();
@@ -56,12 +58,12 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       <div className="shrink-0 w-1/4 lg:w-full flex flex-col items-center justify-center text-center">
         <div className="flex flex-col items-center">
           <span
-            className={`font-label-caps text-[10px] sm:text-xs md:text-base lg:text-lg xl:text-xl tv:text-2xl font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
+            className={`font-label-caps text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
           >
             {prayer.name.toUpperCase()}
           </span>
           <span
-            className={`font-body-md block lg:inline text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg tv:text-xl mt-0 ${isActive ? "text-primary" : "text-text-muted"} [@media(max-height:40vh)]:hidden`}
+            className={`font-body-md block lg:inline text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl mt-0 ${isActive ? "text-primary" : "text-text-muted"} [@media(max-height:40vh)]:hidden`}
             lang="ar"
           >
             {prayer.arabicName}
@@ -85,26 +87,26 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Right: Times (Athan / Iqamah) */}
       <div className="flex-1 flex flex-row justify-center items-center w-full gap-4 sm:gap-4 lg:gap-4">
-        {isShuruq && prayer.time ? (
+        {hasNoAdhanOrIqamah ? (
           <div className="flex-1 flex flex-col items-center">
             <span
               className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-label-caps ${
                 isActive ? "text-primary" : "text-text-muted"
               }`}
             >
-              {t.time || "TIME"}
+              {t.time}
             </span>
             <span
               className={`text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] tv:text-[36px] font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}
             >
-              {formatDisplayTime(prayer.time!, settings.timeFormat).time}
+              {singleTimeDisplay.time}
             </span>
             <span
               className={`text-[10px] sm:text-xs md:text-sm lg:text-base tv:text-lg font-tabular-nums ${
                 isActive ? "text-primary" : "text-text-muted"
               }`}
             >
-              {formatDisplayTime(prayer.time!, settings.timeFormat).ampm}
+              {singleTimeDisplay.ampm}
             </span>
           </div>
         ) : (
