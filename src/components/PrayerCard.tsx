@@ -58,7 +58,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       <div className="shrink-0 w-1/4 lg:w-full flex flex-col items-center justify-center text-center">
         <div className="flex flex-col items-center">
           <span
-            className={`font-label-caps text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
+            className={`font-label-caps text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
           >
             {prayer.name.toUpperCase()}
           </span>

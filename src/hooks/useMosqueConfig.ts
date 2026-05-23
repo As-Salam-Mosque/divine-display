@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { MosqueConfig, MosqueConfigState } from "../types";
 import fallbackConfig from "../../mosque.config";
 
-const DEFAULT_CONFIG_URL = process.env.REACT_APP_MOSQUE_CONFIG_URL || "";
+const DEFAULT_CONFIG_URL = import.meta.env.VITE_MOSQUE_CONFIG_URL || "";
 
 interface InternalConfigState {
   config: MosqueConfig;
