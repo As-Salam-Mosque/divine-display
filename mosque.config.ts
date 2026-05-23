@@ -1,7 +1,7 @@
 import type { MosqueConfig } from "./src/types";
 
 const config: MosqueConfig = {
-  name: "MASJID AL-SALAM",
+  name: "MASJID AS-SALAM",
   city: "MONTREAL",
   location: "1177 rue de la Montagne, Montreal QC",
   website: "https://www.assalam.info",
@@ -37,26 +37,7 @@ const config: MosqueConfig = {
     //   time: "14:00",
     // },
   ],
-  adSlots: [
-    {
-      id: 1,
-      label: "SPONSOR SPACE",
-      image: "/hajj-kids.jpeg",
-      weight: 1,
-    },
-    {
-      id: 2,
-      label: "SPONSOR SPACE",
-      image: "/udhiyah.jpeg",
-      weight: 1,
-    },
-    {
-      id: 3,
-      label: "SPONSOR SPACE",
-      image: "/tawaf.jpeg",
-      weight: 1,
-    },
-  ],
+  adSlots: [],
   promo: { displayDurationMs: 10000, cycleMs: 90000, initialDelayMs: 5000 },
   announcements_en: [
     "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2:10PM (English)",

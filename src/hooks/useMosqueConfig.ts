@@ -26,36 +26,59 @@ export function useMosqueConfig(
   useEffect(() => {
     if (!resolvedUrl) return;
 
-    const controller = new AbortController();
+    let isUnmounted = false;
+    let currentController: AbortController | null = null;
 
-    fetch(resolvedUrl, { signal: controller.signal })
-      .then(async (response) => {
+    const fetchConfig = async () => {
+      // abort any in-flight fetch to avoid overlapping requests
+      if (currentController) {
+        currentController.abort();
+      }
+      currentController = new AbortController();
+
+      try {
+        const response = await fetch(resolvedUrl, { signal: currentController.signal });
         if (!response.ok) {
           throw new Error(
             `Config request failed: ${response.status} ${response.statusText}`,
           );
         }
-        return (await response.json()) as MosqueConfig;
-      })
-      .then((config) => {
-        setState({
-          config,
-          error: null,
-          source: "remote",
-          sourceUrl: resolvedUrl,
-        });
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return;
-        setState({
-          config: fallbackConfig,
-          error: String(err),
-          source: "default",
-          sourceUrl: resolvedUrl,
-        });
-      });
+        const config = (await response.json()) as MosqueConfig;
+        if (!isUnmounted) {
+          setState({
+            config,
+            error: null,
+            source: "remote",
+            sourceUrl: resolvedUrl,
+          });
+        }
+      } catch (err: any) {
+        // If aborted, just exit silently
+        if (currentController?.signal.aborted) return;
+        if (!isUnmounted) {
+          setState({
+            config: fallbackConfig,
+            error: String(err),
+            source: "default",
+            sourceUrl: resolvedUrl,
+          });
+        }
+      } finally {
+        currentController = null;
+      }
+    };
 
-    return () => controller.abort();
+    // initial fetch
+    fetchConfig();
+
+    // poll every 30 minutes
+    const intervalId = window.setInterval(fetchConfig, 30 * 60 * 1000);
+
+    return () => {
+      isUnmounted = true;
+      if (currentController) currentController.abort();
+      clearInterval(intervalId);
+    };
   }, [resolvedUrl]);
 
   const hasUrl = Boolean(resolvedUrl);
