@@ -58,7 +58,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       <div className="shrink-0 w-1/4 lg:w-full flex flex-col items-center justify-center text-center">
         <div className="flex flex-col items-center">
           <span
-            className={`font-label-caps text-label-caps font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
+            className={`font-label-caps text-prayer-name font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
           >
             {prayer.name.toUpperCase()}
           </span>
@@ -92,7 +92,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
             <span className={`text-label-caps font-label-caps ${isActive ? "text-primary" : "text-text-muted"}`}>
               {t.time}
             </span>
-            <span className={`text-headline-lg font-tabular-nums font-semibold ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+            <span className={`text-prayer-time font-tabular-nums font-semibold ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
               {singleTimeDisplay.time}
             </span>
             <span className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}>
@@ -106,7 +106,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
                 <span className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}>
                   {t.adhan || "ADHAN"}
                 </span>
-                <span className={`text-headline-lg font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+                <span className={`text-prayer-time font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
                   {formatDisplayTime(prayer.adhan!, settings.timeFormat).time}
                 </span>
                 <span className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}>
@@ -120,7 +120,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
                 <span className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}>
                   {t.iqamah || "IQAMAH"}
                 </span>
-                <span className={`text-headline-lg font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+                <span className={`text-prayer-time font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
                   {formatDisplayTime(prayer.iqamah!, settings.timeFormat).time}
                 </span>
                 <span className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}>

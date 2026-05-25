@@ -113,6 +113,9 @@ export default {
           { lineHeight: "1.25rem", letterSpacing: "0.15em", fontWeight: "700" },
         ],
         "tabular-nums": ["clamp(1rem, 1.2vw, 1.25rem)", { lineHeight: "1.5rem", fontWeight: "600" }],
+        // Prayer-specific scales
+        "prayer-name": ["clamp(0.875rem, 1.2vw, 1.5rem)", { lineHeight: "1.25rem", fontWeight: "700" }],
+        "prayer-time": ["clamp(1.125rem, 2vw, 2.25rem)", { lineHeight: "1.1", fontWeight: "700" }],
       },
     },
   },
