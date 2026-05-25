@@ -71,11 +71,16 @@ export default {
         full: "9999px",
       },
       spacing: {
-        base: "8px",
-        "margin-page": "48px",
-        "gutter-grid": "24px",
-        "panel-padding": "32px",
-        "stage-gap": "64px",
+        // Base spacing token (formerly 8px)
+        base: "clamp(0.5rem, 0.8vw, 0.75rem)",
+        // Page margin: scales from 1rem (mobile) up to ~4rem (large)
+        "margin-page": "clamp(1rem, 3vw, 4rem)",
+        // Grid gutter between columns: scales from 0.5rem to 2rem
+        "gutter-grid": "clamp(0.5rem, 1.5vw, 2rem)",
+        // Panel padding inside cards/containers: scales from 1rem to 2.5rem
+        "panel-padding": "clamp(1rem, 2vw, 2.5rem)",
+        // Stage gap between major layout regions: scales from 1.5rem to 6rem
+        "stage-gap": "clamp(1.5rem, 4vw, 6rem)",
       },
       fontFamily: {
         "clock-display": ["Playfair Display", "serif"],
