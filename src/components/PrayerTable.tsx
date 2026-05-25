@@ -9,7 +9,7 @@ interface PrayerTableProps {
 export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
   return (
     <ul
-      className="flex flex-wrap items-start content-start gap-2 py-1 h-full min-h-0"
+      className="grid w-full min-h-0 grid-cols-2 gap-2 py-1 md:grid-cols-3 xl:grid-cols-6"
       aria-label="Prayer times"
     >
       {prayers.map((prayer, index) => {
