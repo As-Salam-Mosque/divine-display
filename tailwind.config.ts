@@ -114,8 +114,8 @@ export default {
         ],
         "tabular-nums": ["clamp(1rem, 1.2vw, 1.25rem)", { lineHeight: "1.5rem", fontWeight: "600" }],
         // Prayer-specific scales
-        "prayer-name": ["clamp(1rem, 1.6vw, 2.25rem)", { lineHeight: "1.25rem", fontWeight: "700" }],
-        "prayer-time": ["clamp(1.5rem, 3.5vw, 4rem)", { lineHeight: "1.1", fontWeight: "700" }],
+        "prayer-name": ["clamp(1.25rem, 3vw, 4.5rem)", { lineHeight: "1.2", fontWeight: "800" }],
+        "prayer-time": ["clamp(2rem, 5vw, 8rem)", { lineHeight: "1.05", fontWeight: "800" }],
       },
     },
   },
