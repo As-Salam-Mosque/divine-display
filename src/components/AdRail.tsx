@@ -33,10 +33,11 @@ function AdSlotCard({ slot }: AdSlotProps) {
           ref={imgRef}
           src={slot.image ?? ""}
           alt={slot.label}
-          className="w-full h-full object-contain abs-fill"
+          className="w-full h-full object-contain abs-fill aspect-16-9"
           onLoad={handleImageLoad}
           crossOrigin="anonymous"
           decoding="async"
+          loading="lazy"
         />
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center">
