@@ -32,12 +32,12 @@ function Display() {
       className={`${themeClasses} min-h-screen lg:h-screen flex flex-col font-body-md overflow-y-auto lg:overflow-hidden`}
     >
       <main
-        className={`flex-1 grid grid-cols-1 gap-1 sm:gap-2 md:gap-2 lg:gap-3 tv:gap-[20px] p-1 sm:p-2 md:p-3 lg:p-5 tv:p-[32px] lg:overflow-hidden ${
+        className={`flex-1 grid grid-cols-1 gap-1 sm:gap-2 md:gap-2 lg:gap-3 tv:gap-stage-gap p-1 sm:p-2 md:p-3 lg:p-5 tv:p-panel-padding lg:overflow-hidden ${
           showAdRail ? "lg:grid-cols-[minmax(0,1fr)_20vw]" : "lg:grid-cols-1"
         }`}
       >
         {/* Left Stage */}
-        <div className="col-span-1 flex-1 min-h-0 flex flex-col gap-1 sm:gap-2 md:gap-2 lg:gap-3 tv:gap-[20px] lg:h-full">
+        <div className="col-span-1 flex-1 min-h-0 flex flex-col gap-1 sm:gap-2 md:gap-2 lg:gap-3 tv:gap-stage-gap lg:h-full">
           <ClockPanel
             clock={clock}
             hijriDate={prayerTimes.hijriDate}
