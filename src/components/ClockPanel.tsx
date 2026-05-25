@@ -304,7 +304,7 @@ export function ClockPanel({
           {/* Dynamic Promotional Side Rail Component */}
           {showPromoRail && (
             <aside
-              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-(--promo-rail-width) pl-6 md:pl-8 h-full z-10 transform transition-all duration-900 ease-out ${promoSlideState}`}
+              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-[var(--promo-rail-width)] pl-6 md:pl-8 h-full z-10 transform transition-all duration-900 ease-out ${promoSlideState}`}
               aria-hidden={promoAlt === ""}
             >
               <div
@@ -326,10 +326,11 @@ export function ClockPanel({
                       ref={promoImgRef}
                       src={promoImage}
                       alt={promoAlt}
-                      className="object-contain w-full h-full"
+                      className="object-contain w-full h-full aspect-16-9"
                       onLoad={handlePromoImageLoad}
                       crossOrigin="anonymous"
                       decoding="async"
+                      loading="lazy"
                     />
                   </a>
                 ) : (
@@ -337,10 +338,11 @@ export function ClockPanel({
                     ref={promoImgRef}
                     src={promoImage}
                     alt={promoAlt}
-                    className="object-contain w-full h-full"
+                    className="object-contain w-full h-full aspect-16-9"
                     onLoad={handlePromoImageLoad}
                     crossOrigin="anonymous"
                     decoding="async"
+                    loading="lazy"
                   />
                 )}
               </div>
