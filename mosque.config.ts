@@ -38,7 +38,7 @@ const config: MosqueConfig = {
     // },
   ],
   adSlots: [
-        {
+    {
       id: 1,
       label: "SPONSOR SPACE",
       image: "/hajj-kids.jpeg",

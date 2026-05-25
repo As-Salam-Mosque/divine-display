@@ -47,6 +47,7 @@ App
 ### Layout
 
 12-column CSS grid:
+
 - **Left stage** (`col-span-9`): ClockPanel (top) + PrayerTable (bottom)
 - **Right ad rail** (`col-span-3`): stacked AdSlots — hidden when `showSponsors` is false (stage expands to `col-span-12`)
 - **Footer**: full-width marquee ticker, hidden on mobile
@@ -55,7 +56,7 @@ App
 
 - Times fetched from `https://api.aladhan.com/v1/timings/{date}` using coordinates and `calculationMethod` from config.
 - Iqamah = Adhan + `iqamahOffsets[prayerName]` minutes.
-- `activePrayerIndex`: normally the *next* prayer; switches to the *current* prayer while the window between Adhan and Iqamah is open (i.e., the Iqamah countdown is live).
+- `activePrayerIndex`: normally the _next_ prayer; switches to the _current_ prayer while the window between Adhan and Iqamah is open (i.e., the Iqamah countdown is live).
 - **Shuruq** is a special case: `adhan` and `iqamah` are `null`; only `time` is set. `PrayerCard` renders a single time row instead of the Adhan/Iqamah split layout.
 
 ## Design System
@@ -63,11 +64,13 @@ App
 All tokens are defined in **`tailwind.config.ts`** (source of truth). `references/DESIGN.md` mirrors them. Keep both in sync when adding tokens.
 
 **Colors** follow Material Design 3 naming:
+
 - `primary` (`#e9c176`) — gold; active prayer, clock, emphasis
 - `surface-panel` (`#111A35`) — card/panel background
 - `background-deep` (`#060A1A`) — page background
 
 **Typography** — dual-font strategy:
+
 - `font-clock-display` / `font-headline-lg` / `font-headline-md` → **Playfair Display** (serif)
 - `font-body-md` / `font-body-lg` / `font-label-caps` / `font-tabular-nums` → **Montserrat** (sans-serif)
 
@@ -76,6 +79,7 @@ Always use `font-tabular-nums` for Adhan/Iqamah time values to keep columns alig
 **Spacing tokens** (non-standard Tailwind values): `p-panel-padding`, `p-margin-page`, `gap-gutter-grid`, `gap-stage-gap`.
 
 **Custom CSS classes** (defined in `src/index.css`):
+
 - `.ghost-border` — 1px semi-transparent gold border; used on all inactive cards/panels
 - `.active-glow` — inset gold box-shadow + solid `#c5a059` border; used on active prayer card and clock panel
 

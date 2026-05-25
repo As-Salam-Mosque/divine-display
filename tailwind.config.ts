@@ -103,19 +103,41 @@ export default {
         ],
         "headline-lg": [
           "clamp(1.5rem, 2.2vw, 3rem)",
-          { lineHeight: "clamp(1.75rem, 2.8vw, 3.5rem)", letterSpacing: "0.05em", fontWeight: "600" },
+          {
+            lineHeight: "clamp(1.75rem, 2.8vw, 3.5rem)",
+            letterSpacing: "0.05em",
+            fontWeight: "600",
+          },
         ],
-        "headline-md": ["clamp(1.25rem, 1.6vw, 2rem)", { lineHeight: "clamp(1.5rem, 2.2vw, 2.5rem)", fontWeight: "600" }],
-        "body-lg": ["clamp(1rem, 1.6vw, 1.5rem)", { lineHeight: "clamp(1.25rem, 2vw, 2rem)", fontWeight: "500" }],
-        "body-md": ["clamp(0.875rem, 1.2vw, 1.125rem)", { lineHeight: "clamp(1rem, 1.6vw, 1.5rem)", fontWeight: "400" }],
+        "headline-md": [
+          "clamp(1.25rem, 1.6vw, 2rem)",
+          { lineHeight: "clamp(1.5rem, 2.2vw, 2.5rem)", fontWeight: "600" },
+        ],
+        "body-lg": [
+          "clamp(1rem, 1.6vw, 1.5rem)",
+          { lineHeight: "clamp(1.25rem, 2vw, 2rem)", fontWeight: "500" },
+        ],
+        "body-md": [
+          "clamp(0.875rem, 1.2vw, 1.125rem)",
+          { lineHeight: "clamp(1rem, 1.6vw, 1.5rem)", fontWeight: "400" },
+        ],
         "label-caps": [
           "clamp(0.75rem, 1vw, 0.875rem)",
           { lineHeight: "1.25rem", letterSpacing: "0.15em", fontWeight: "700" },
         ],
-        "tabular-nums": ["clamp(1rem, 1.2vw, 1.25rem)", { lineHeight: "1.5rem", fontWeight: "600" }],
+        "tabular-nums": [
+          "clamp(1rem, 1.2vw, 1.25rem)",
+          { lineHeight: "1.5rem", fontWeight: "600" },
+        ],
         // Prayer-specific scales
-        "prayer-name": ["clamp(1.25rem, 3vw, 4.5rem)", { lineHeight: "1.2", fontWeight: "800" }],
-        "prayer-time": ["clamp(2rem, 5vw, 8rem)", { lineHeight: "1.05", fontWeight: "800" }],
+        "prayer-name": [
+          "clamp(1.25rem, 3vw, 4.5rem)",
+          { lineHeight: "1.2", fontWeight: "800" },
+        ],
+        "prayer-time": [
+          "clamp(2rem, 5vw, 8rem)",
+          { lineHeight: "1.05", fontWeight: "800" },
+        ],
       },
     },
   },

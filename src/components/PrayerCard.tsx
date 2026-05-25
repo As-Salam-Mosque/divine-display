@@ -88,14 +88,20 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       {/* Right: Times (Athan / Iqamah) */}
       <div className="flex min-w-0 flex-1 flex-row items-center justify-center gap-3 sm:gap-4 lg:flex-col lg:gap-y-3">
         {hasNoAdhanOrIqamah ? (
-        <div className="flex min-w-0 flex-1 flex-col items-center text-center gap-1">
-            <span className={`text-label-caps font-label-caps ${isActive ? "text-primary" : "text-text-muted"}`}>
+          <div className="flex min-w-0 flex-1 flex-col items-center text-center gap-1">
+            <span
+              className={`text-label-caps font-label-caps ${isActive ? "text-primary" : "text-text-muted"}`}
+            >
               {t.time}
             </span>
-            <span className={`text-[clamp(1.5rem,3vw,4.5rem)] font-tabular-nums font-semibold ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+            <span
+              className={`text-[clamp(1.5rem,3vw,4.5rem)] font-tabular-nums font-semibold ${isActive ? "text-primary" : "text-on-surface-variant"}`}
+            >
               {singleTimeDisplay.time}
             </span>
-            <span className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}>
+            <span
+              className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}
+            >
               {singleTimeDisplay.ampm}
             </span>
           </div>
@@ -103,13 +109,19 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
           <>
             {prayer.adhan && (
               <div className="flex min-w-0 flex-1 flex-col items-center text-center gap-1">
-                <span className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}>
+                <span
+                  className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}
+                >
                   {t.adhan || "ADHAN"}
                 </span>
-                <span className={`text-[clamp(1.5rem,3vw,4.5rem)] font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+                <span
+                  className={`text-[clamp(1.5rem,3vw,4.5rem)] font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}
+                >
                   {formatDisplayTime(prayer.adhan!, settings.timeFormat).time}
                 </span>
-                <span className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}>
+                <span
+                  className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}
+                >
                   {formatDisplayTime(prayer.adhan!, settings.timeFormat).ampm}
                 </span>
               </div>
@@ -117,13 +129,19 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
             {prayer.iqamah && (
               <div className="flex min-w-0 flex-1 flex-col items-center text-center gap-1">
-                <span className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}>
+                <span
+                  className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}
+                >
                   {t.iqamah || "IQAMAH"}
                 </span>
-                <span className={`text-[clamp(1.5rem,3vw,4.5rem)] font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+                <span
+                  className={`text-[clamp(1.5rem,3vw,4.5rem)] font-semibold font-tabular-nums ${isActive ? "text-primary" : "text-on-surface-variant"}`}
+                >
                   {formatDisplayTime(prayer.iqamah!, settings.timeFormat).time}
                 </span>
-                <span className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}>
+                <span
+                  className={`text-label-caps font-tabular-nums ${isActive ? "text-primary" : "text-text-muted"}`}
+                >
                   {formatDisplayTime(prayer.iqamah!, settings.timeFormat).ampm}
                 </span>
               </div>

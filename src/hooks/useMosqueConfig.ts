@@ -37,7 +37,9 @@ export function useMosqueConfig(
       currentController = new AbortController();
 
       try {
-        const response = await fetch(resolvedUrl, { signal: currentController.signal });
+        const response = await fetch(resolvedUrl, {
+          signal: currentController.signal,
+        });
         if (!response.ok) {
           throw new Error(
             `Config request failed: ${response.status} ${response.statusText}`,
