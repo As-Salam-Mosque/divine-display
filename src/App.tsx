@@ -47,7 +47,7 @@ function Display() {
           />
 
           {prayerTimes.loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+            <div className="flex-1 min-h-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
@@ -56,10 +56,12 @@ function Display() {
               ))}
             </div>
           ) : (
-            <PrayerTable
-              prayers={prayerTimes.prayers}
-              activePrayerIndex={prayerTimes.activePrayerIndex}
-            />
+            <div className="flex-1 min-h-0">
+              <PrayerTable
+                prayers={prayerTimes.prayers}
+                activePrayerIndex={prayerTimes.activePrayerIndex}
+              />
+            </div>
           )}
         </div>
 

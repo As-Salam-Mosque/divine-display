@@ -52,7 +52,7 @@ export function useMosqueConfig(
             sourceUrl: resolvedUrl,
           });
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         // If aborted, just exit silently
         if (currentController?.signal.aborted) return;
         if (!isUnmounted) {

@@ -51,7 +51,7 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
   return (
     <ul
       ref={containerRef}
-      className="grid gap-2 py-1"
+      className="grid gap-2 py-1 h-full min-h-0"
       aria-label="Prayer times"
       style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
     >
