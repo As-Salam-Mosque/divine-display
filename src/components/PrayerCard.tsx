@@ -41,7 +41,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       aria-label={ariaLabel}
       className={[
         // Mobile: horizontal row layout (name | divider | times). md+: vertical card.
-        "rounded-xl bg-surface-panel ghost-border flex h-full min-w-0 w-full items-center justify-between lg:flex-col lg:items-center py-1 sm:py-1.5 md:py-2 lg:py-4 xl:py-5 tv:py-6 px-2 sm:px-3 md:px-4 lg:px-5 tv:px-6 relative max-h-[clamp(80px,12vh,140px)] lg:max-h-none overflow-hidden",
+        "rounded-xl bg-surface-panel ghost-border flex h-full min-w-0 w-full items-center justify-between lg:flex-col lg:items-center lg:gap-y-3 py-2 sm:py-2 md:py-3 lg:py-3 xl:py-4 tv:py-5 px-3 sm:px-3 md:px-4 lg:px-5 tv:px-6 relative max-h-[clamp(80px,12vh,140px)] lg:max-h-none overflow-hidden",
         isActive
           ? "bg-primary-10 border-2 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] z-30 overflow-visible"
           : "",
@@ -56,14 +56,14 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
 
       {/* Left: Prayer name + Arabic (centered horizontally) */}
       <div className="flex min-w-0 flex-col items-center justify-center text-center lg:flex-1">
-        <div className="flex min-w-0 flex-col items-center">
+        <div className="flex min-w-0 flex-col items-center gap-1">
           <span
             className={`font-label-caps text-[clamp(1.125rem,2vw,3rem)] font-bold ${isActive ? "text-primary" : "text-on-surface"}`}
           >
             {prayer.name.toUpperCase()}
           </span>
           <span
-            className={`font-body-md block lg:inline text-body-md mt-0 ${isActive ? "text-primary" : "text-text-muted"} [@media(max-height:40vh)]:hidden`}
+            className={`font-body-md block lg:inline text-body-md ${isActive ? "text-primary" : "text-text-muted"} [@media(max-height:40vh)]:hidden`}
             lang="ar"
           >
             {prayer.arabicName}
@@ -86,9 +86,9 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       />
 
       {/* Right: Times (Athan / Iqamah) */}
-      <div className="flex min-w-0 flex-1 flex-row items-center justify-center gap-3 sm:gap-4 lg:gap-4">
+      <div className="flex min-w-0 flex-1 flex-row items-center justify-center gap-3 sm:gap-4 lg:flex-col lg:gap-y-3">
         {hasNoAdhanOrIqamah ? (
-        <div className="flex min-w-0 flex-1 flex-col items-center text-center">
+        <div className="flex min-w-0 flex-1 flex-col items-center text-center gap-1">
             <span className={`text-label-caps font-label-caps ${isActive ? "text-primary" : "text-text-muted"}`}>
               {t.time}
             </span>
@@ -102,7 +102,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
         ) : (
           <>
             {prayer.adhan && (
-              <div className="flex min-w-0 flex-1 flex-col items-center text-center">
+              <div className="flex min-w-0 flex-1 flex-col items-center text-center gap-1">
                 <span className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}>
                   {t.adhan || "ADHAN"}
                 </span>
@@ -116,7 +116,7 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
             )}
 
             {prayer.iqamah && (
-              <div className="flex min-w-0 flex-1 flex-col items-center text-center">
+              <div className="flex min-w-0 flex-1 flex-col items-center text-center gap-1">
                 <span className={`text-label-caps font-label-caps font-bold ${isActive ? "text-primary" : "text-text-muted"}`}>
                   {t.iqamah || "IQAMAH"}
                 </span>
