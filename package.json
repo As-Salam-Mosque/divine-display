@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "check:translations": "ts-node scripts/check-translations.ts",
     "test": "vitest"
   },
   "dependencies": {

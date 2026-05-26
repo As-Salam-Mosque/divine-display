@@ -15,7 +15,10 @@ const baseClock: ClockState = {
   dayName: "Sunday",
 };
 
-const renderCritical = (statusType: "adhan-now" | "iqamah-now", message: string) =>
+const renderCritical = (
+  statusType: "adhan-now" | "iqamah-now",
+  message: string,
+) =>
   render(
     <SettingsProvider
       defaults={{

@@ -1,25 +1,27 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap");
 
 @import "tailwindcss";
 
-/* Ensure the old UI font usage: Montserrat for UI/body, Playfair Display for clock/headlines */
+/* Ensure the UI font usage: Inter for body and headlines */
 :root {
-    --font-body:
-        "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto,
-        "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-    --font-headline: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body:
+    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif;
+  --font-headline:
+    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif;
 }
 
 /* Apply default body font (matches old UI) */
 body {
-    font-family: var(--font-body);
-    background-color: var(--background-deep);
-    color: var(--on-surface);
+  font-family: var(--font-body);
+  background-color: var(--background-deep);
+  color: var(--on-surface);
 }
 
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* Map the design-system font utility classes to explicit font-families so
@@ -28,270 +30,399 @@ button {
 .font-clock-display-mobile,
 .font-headline-lg,
 .font-headline-md {
-    font-family: var(--font-headline) !important;
+  font-family: var(--font-headline) !important;
 }
 
 .font-body-lg,
 .font-body-md,
 .font-label-caps,
 .font-tabular-nums {
-    font-family: var(--font-body) !important;
+  font-family: var(--font-body) !important;
 }
 
 /* Tabular numbers for time values and numeric columns */
 .font-tabular-nums {
-    font-variant-numeric: tabular-nums;
-    -moz-font-feature-settings: "tnum" 1;
-    -webkit-font-feature-settings: "tnum" 1;
-    font-feature-settings:
-        "tnum" 1,
-        "lnum" 1;
+  font-variant-numeric: tabular-nums;
+  -moz-font-feature-settings: "tnum" 1;
+  -webkit-font-feature-settings: "tnum" 1;
+  font-feature-settings:
+    "tnum" 1,
+    "lnum" 1;
 }
 
 /* Make sure headings using headline fonts inherit appropriate weight/ligatures */
 .font-headline-lg,
 .font-headline-md,
 .font-clock-display {
-    font-feature-settings:
-        "liga" 1,
-        "kern" 1;
+  font-feature-settings:
+    "liga" 1,
+    "kern" 1;
 }
 
 /* Theme variables and light/dark palettes */
 :root {
-    /* Default (light) palette - high contrast with soft grey surfaces */
-    --primary: #b87a00;
-    --primary-rgb: 184, 122, 0;
+  /* Default (light) palette - high contrast with soft grey surfaces */
+  --primary: #b87a00;
+  --primary-rgb: 184, 122, 0;
 
-    --background-deep: #d5dce4;
-    --surface-panel: #ebeff4;
-    --surface: #f5f7fa;
-    --surface-container: #edf1f5;
-    --surface-container-low: #f3f6f9;
-    --surface-container-highest: #fafbfd;
+  --background-deep: #d5dce4;
+  --surface-panel: #ebeff4;
+  --surface: #f5f7fa;
+  --surface-container: #edf1f5;
+  --surface-container-low: #f3f6f9;
+  --surface-container-highest: #fafbfd;
 
-    --on-surface: #0f1724; /* strong text contrast on light */
-    --on-surface-rgb: 15, 23, 36;
-    --on-surface-variant: #1f2b3d;
-    --text-muted: rgba(15, 23, 36, 0.82);
-    --outline-variant: rgba(15, 23, 36, 0.3);
+  --on-surface: #0f1724; /* strong text contrast on light */
+  --on-surface-rgb: 15, 23, 36;
+  --on-surface-variant: #1f2b3d;
+  --text-muted: rgba(15, 23, 36, 0.82);
+  --outline-variant: rgba(15, 23, 36, 0.3);
 
-    --ghost-border-color: rgba(15, 23, 36, 0.34);
-    --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
-    --active-glow-alpha: 0.2;
-    --primary-alpha-10: 0.2;
-    --primary-alpha-20: 0.44;
-    --primary-alpha-25: 0.56;
+  --ghost-border-color: rgba(15, 23, 36, 0.34);
+  --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+  --active-glow-alpha: 0.2;
+  --primary-alpha-10: 0.2;
+  --primary-alpha-20: 0.44;
+  --primary-alpha-25: 0.56;
 }
 
 /* Dark theme overrides */
 .dark {
-    --primary: #e9c176;
-    --primary-rgb: 233, 193, 118;
+  --primary: #e9c176;
+  --primary-rgb: 233, 193, 118;
 
-    --background-deep: #060a1a;
-    --surface-panel: #111a35;
-    --surface: #0b1220;
-    --surface-container: #081028;
-    --surface-container-low: #071022;
-    --surface-container-highest: #081028;
+  --background-deep: #060a1a;
+  --surface-panel: #111a35;
+  --surface: #0b1220;
+  --surface-container: #081028;
+  --surface-container-low: #071022;
+  --surface-container-highest: #081028;
 
-    --on-surface: #ffffff;
-    --on-surface-rgb: 255, 255, 255;
-    --on-surface-variant: #dfe6ff;
-    --text-muted: rgba(255, 255, 255, 0.6);
-    --outline-variant: rgba(233, 193, 118, 0.08);
+  --on-surface: #ffffff;
+  --on-surface-rgb: 255, 255, 255;
+  --on-surface-variant: #dfe6ff;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --outline-variant: rgba(233, 193, 118, 0.08);
 
-    --ghost-border-color: rgba(233, 193, 118, 0.2);
-    --panel-separation-shadow: none;
-    --active-glow-alpha: 0.12;
-    --primary-alpha-10: 0.1;
-    --primary-alpha-20: 0.2;
-    --primary-alpha-25: 0.25;
+  --ghost-border-color: rgba(233, 193, 118, 0.2);
+  --panel-separation-shadow: none;
+  --active-glow-alpha: 0.12;
+  --primary-alpha-10: 0.1;
+  --primary-alpha-20: 0.2;
+  --primary-alpha-25: 0.25;
 }
 
 /* Light theme explicit (mirrors :root for clarity) */
 .light {
-    --primary: #b87a00;
-    --primary-rgb: 184, 122, 0;
+  --primary: #b87a00;
+  --primary-rgb: 184, 122, 0;
 
-    --background-deep: #d5dce4;
-    --surface-panel: #ebeff4;
-    --surface: #f5f7fa;
-    --surface-container: #edf1f5;
-    --surface-container-low: #f3f6f9;
-    --surface-container-highest: #fafbfd;
+  --background-deep: #d5dce4;
+  --surface-panel: #ebeff4;
+  --surface: #f5f7fa;
+  --surface-container: #edf1f5;
+  --surface-container-low: #f3f6f9;
+  --surface-container-highest: #fafbfd;
 
-    --on-surface: #0f1724;
-    --on-surface-rgb: 15, 23, 36;
-    --on-surface-variant: #1f2b3d;
-    --text-muted: rgba(15, 23, 36, 0.82);
-    --outline-variant: rgba(15, 23, 36, 0.3);
+  --on-surface: #0f1724;
+  --on-surface-rgb: 15, 23, 36;
+  --on-surface-variant: #1f2b3d;
+  --text-muted: rgba(15, 23, 36, 0.82);
+  --outline-variant: rgba(15, 23, 36, 0.3);
 
-    --ghost-border-color: rgba(15, 23, 36, 0.34);
-    --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
-    --active-glow-alpha: 0.2;
-    --primary-alpha-10: 0.2;
-    --primary-alpha-20: 0.44;
-    --primary-alpha-25: 0.56;
+  /* Adjusted highlight — brighter but not as strong as original */
+  --ghost-border-color: rgba(15, 23, 36, 0.30);
+  --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.40);
+  --active-glow-alpha: 0.14;
+  --primary-alpha-10: 0.12;
+  --primary-alpha-20: 0.36;
+  --primary-alpha-25: 0.45;
 }
 
 @layer components {
-    .ghost-border {
-        border: 1px solid var(--ghost-border-color);
-        box-shadow: var(--panel-separation-shadow);
-    }
-    .active-glow {
-        /* Use theme-aware variables for glow and border */
-        box-shadow: inset 0 0 20px
-            rgba(var(--primary-rgb), var(--active-glow-alpha));
-        border-color: var(--primary);
-    }
+  .ghost-border {
+    border: 1px solid var(--ghost-border-color);
+    box-shadow: var(--panel-separation-shadow);
+  }
+  .active-glow {
+    /* Use theme-aware variables for glow and border */
+    box-shadow: inset 0 0 20px
+      rgba(var(--primary-rgb), var(--active-glow-alpha));
+    border-color: var(--primary);
+  }
 
-    /* small primary shadow helper (theme-aware) */
-    .shadow-primary-sm {
-        box-shadow: 0 0 5px rgba(var(--primary-rgb), 0.7);
-    }
+  /* small primary shadow helper (theme-aware) */
+  .shadow-primary-sm {
+    box-shadow: 0 0 5px rgba(var(--primary-rgb), 0.7);
+  }
 
-    /* status pill (theme-aware, less dark) */
-    .status-pill {
-        background-color: rgba(var(--primary-rgb), 0.12);
-        border: 1px solid rgba(var(--primary-rgb), 0.35);
-        box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.35);
-    }
+  /* status pill (theme-aware, less dark) */
+  .status-pill {
+    background-color: rgba(var(--primary-rgb), 0.12);
+    border: 1px solid rgba(var(--primary-rgb), 0.35);
+    box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.35);
+  }
 
-    .clock-panel {
-        container-type: inline-size;
-    }
+  .clock-panel {
+    container-type: inline-size;
+  }
 
-    /* Map semantic token classes to CSS variables so light/dark themes work */
-    /* active card glow (no layout shift) */
-    .active-pulse {
-        animation: active-glow 2s ease-in-out infinite;
-    }
+  /* Map semantic token classes to CSS variables so light/dark themes work */
+  /* active card glow (no layout shift) */
+  .active-pulse {
+    animation: active-glow 2s ease-in-out infinite;
+  }
 
-    /* Map semantic token classes to CSS variables so light/dark themes work */
-    .bg-background-deep {
-        background-color: var(--background-deep) !important;
-    }
-    .bg-surface-panel {
-        background-color: var(--surface-panel) !important;
-    }
-    .bg-surface {
-        background-color: var(--surface) !important;
-    }
-    .bg-surface-container {
-        background-color: var(--surface-container) !important;
-    }
-    .bg-surface-container-low {
-        background-color: var(--surface-container-low) !important;
-    }
-    .bg-surface-container-highest {
-        background-color: var(--surface-container-highest) !important;
-    }
+  /* Map semantic token classes to CSS variables so light/dark themes work */
+  .bg-background-deep {
+    background-color: var(--background-deep) !important;
+  }
+  .bg-surface-panel {
+    background-color: var(--surface-panel) !important;
+  }
+  .bg-surface {
+    background-color: var(--surface) !important;
+  }
+  .bg-surface-container {
+    background-color: var(--surface-container) !important;
+  }
+  .bg-surface-container-low {
+    background-color: var(--surface-container-low) !important;
+  }
+  .bg-surface-container-highest {
+    background-color: var(--surface-container-highest) !important;
+  }
 
-    .text-on-surface {
-        color: var(--on-surface) !important;
-    }
-    .text-on-surface-variant {
-        color: var(--on-surface-variant) !important;
-    }
-    .text-text-muted {
-        color: var(--text-muted) !important;
-    }
+  .text-on-surface {
+    color: var(--on-surface) !important;
+  }
+  .text-on-surface-variant {
+    color: var(--on-surface-variant) !important;
+  }
+  .text-text-muted {
+    color: var(--text-muted) !important;
+  }
 
-    .border-outline-variant {
-        border-color: var(--outline-variant) !important;
-    }
+  .border-outline-variant {
+    border-color: var(--outline-variant) !important;
+  }
 
-    .text-primary {
-        color: var(--primary) !important;
-    }
-    .bg-primary {
-        background-color: var(--primary) !important;
-    }
-    .border-primary {
-        border-color: var(--primary) !important;
-    }
+  .text-primary {
+    color: var(--primary) !important;
+  }
+  .bg-primary {
+    background-color: var(--primary) !important;
+  }
+  .border-primary {
+    border-color: var(--primary) !important;
+  }
 
-    /* opacity helpers for primary (theme-aware) */
-    .bg-primary-10 {
-        background-color: rgba(
-            var(--primary-rgb),
-            var(--primary-alpha-10)
-        ) !important;
-    }
-    .bg-primary-20 {
-        background-color: rgba(
-            var(--primary-rgb),
-            var(--primary-alpha-20)
-        ) !important;
-    }
+  /* opacity helpers for primary (theme-aware) */
+  .bg-primary-10 {
+    background-color: rgba(
+      var(--primary-rgb),
+      var(--primary-alpha-10)
+    ) !important;
+  }
+  .bg-primary-20 {
+    background-color: rgba(
+      var(--primary-rgb),
+      var(--primary-alpha-20)
+    ) !important;
+  }
 
-    .border-primary-20 {
-        border-color: rgba(
-            var(--primary-rgb),
-            var(--primary-alpha-20)
-        ) !important;
-    }
-    .border-primary-25 {
-        border-color: rgba(
-            var(--primary-rgb),
-            var(--primary-alpha-25)
-        ) !important;
-    }
+  .border-primary-20 {
+    border-color: rgba(var(--primary-rgb), var(--primary-alpha-20)) !important;
+  }
+  .border-primary-25 {
+    border-color: rgba(var(--primary-rgb), var(--primary-alpha-25)) !important;
+  }
 
-    .focus-ring:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  /* Styles for PrayerCard using plain CSS (avoid @apply to satisfy linters) */
+  .prayer-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+     justify-content: space-between;
+     padding: 0.5rem; /* p-2 */
+  }
+    /* responsive padding: keep compact on small, slightly larger on desktop */
+  @media (min-width: 640px) {
+    .prayer-card {
+       padding: 0.5rem; /* keep compact on small screens */
     }
+  }
+  @media (min-width: 768px) {
+    .prayer-card {
+       padding: 0.875rem; /* md: ~p-3.5 for a bit more breathing room */
+    }
+  }
+
+  .prayer-card-name-section {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+     padding-right: 0.5rem; /* pr-2 */
+  }
+  @media (min-width: 640px) {
+    .prayer-card-name-section { padding-right: 0.75rem; /* sm:pr-3 */ }
+  }
+  @media (min-width: 768px) {
+    .prayer-card-name-section { padding-right: 1rem; /* md:pr-4 */ }
+  }
+
+  .prayer-card-divider {
+    height: 2.5rem; /* h-10 */
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: rgba(var(--primary-rgb), var(--primary-alpha-20));
+  }
+  @media (min-width: 640px) { .prayer-card-divider { height: 3rem; /* sm:h-12 */ } }
+  @media (min-width: 768px) { .prayer-card-divider { height: 3.5rem; /* md:h-14 */ } }
+
+  /* if card uses primary background, make divider primary color */
+  .prayer-card.bg-primary-10 .prayer-card-divider,
+  .prayer-card.border-primary .prayer-card-divider {
+    border-left-color: var(--primary);
+  }
+
+  .prayer-card-time-section {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 0.75rem; /* gap-3 */
+  }
+
+  /* Dark-mode active style for prayer card: mirror ClockPanel critical appearance */
+  .dark .prayer-card.dark-active {
+    background-color: var(--background-deep) !important;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 45px rgba(var(--primary-rgb), 0.6) !important;
+  }
+  @media (min-width: 640px) { .prayer-card-time-section { gap: 1rem; /* gap-4 */ } }
+  @media (min-width: 768px) { .prayer-card-time-section { gap: 1.25rem; /* gap-5 */ } }
+
+  /* TimeCell variants visibility controlled by media query */
+  .timecell-compact { display: block; }
+  .timecell-normal { display: none; }
+
+  /* Normal layout (vertical) on larger viewports */
+  @media (min-width: 768px) {
+    .prayer-card { flex-direction: column; align-items: stretch; justify-content: center; }
+    .prayer-card-name-section { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0; }
+    .prayer-card-divider { margin: 0.25rem 0; height: 0; border-left: none; border-top: 1px solid rgba(var(--primary-rgb), var(--primary-alpha-20)); }
+    .prayer-card-time-section { display: flex; flex-direction: column; align-items: stretch; justify-content: center; gap: 0.25rem; }
+    .timecell-compact { display: none; }
+    .timecell-normal { display: block; }
+  }
 }
 
-@container (max-width: 600px) {
-    .clock-panel .clock-panel__dates {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+@container clock-panel (max-width: 600px) {
+  .clock-panel .clock-panel__dates {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-    .clock-panel .clock-panel__time {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+  .clock-panel .clock-panel__time {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-    .clock-panel .clock-panel__status {
-        flex-wrap: wrap;
-        justify-content: center;
-        text-align: center;
-    }
+  .clock-panel .clock-panel__status {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 @layer utilities {
-    .animate-marquee {
-        animation: marquee 60s linear infinite;
-    }
+  .animate-marquee {
+    animation: marquee 60s linear infinite;
+  }
 }
 
 @keyframes marquee {
-    0% {
-        transform: translateX(100%);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Accessibility: respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .active-pulse,
+  .shadow-primary-sm {
+    animation: none !important;
+    transition: none !important;
+  }
+  .clock-panel * {
+    transition: none !important;
+  }
+}
+
+/* Image helpers to reserve space and avoid CLS */
+.ad-image,
+.promo-image,
+.abs-fill img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Provide a sensible aspect-ratio utility for ad/promo containers */
+.aspect-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+/* Fluid clock font sizing (Phase 1): scales between small and TV */
+.font-clock-display {
+  font-size: clamp(4rem, 8vw, 12.5rem) !important; /* ~64px → 200px */
+  line-height: 1 !important;
+}
+
+/* Fluid time sizing for prayer times: scales smoothly between small and large displays */
+.time-large {
+  font-size: clamp(1.25rem, 3.5vw, 3.25rem);
+  line-height: 1;
+}
+
+@media (min-width: 1280px) {
+  .time-large {
+    font-size: clamp(1.5rem, 2.5vw, 4rem);
+  }
 }
 
 .material-symbols-outlined {
-    font-variation-settings:
-        "FILL" 0,
-        "wght" 300,
-        "GRAD" 0,
-        "opsz" 24;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 300,
+    "GRAD" 0,
+    "opsz" 24;
 }
 
 .material-symbols-outlined.filled {
-    font-variation-settings:
-        "FILL" 1,
-        "wght" 400,
-        "GRAD" 0,
-        "opsz" 24;
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }

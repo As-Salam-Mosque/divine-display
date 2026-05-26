@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+// React hooks not required in this component file
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
-import type { AdSlot, ClockState, StatusType } from "../types";
-import { useDominantColor } from "../hooks/useDominantColor";
+import type { ClockState, StatusType } from "../types";
 
 interface ClockPanelProps {
   clock: ClockState;
@@ -10,6 +9,7 @@ interface ClockPanelProps {
   statusMessage: string;
   statusType: StatusType;
   onOpenSettings: () => void;
+  promoActive?: boolean;
 }
 
 // Reusable Campaign SVG with your custom path data
@@ -42,6 +42,7 @@ export function ClockPanel({
   statusMessage,
   statusType,
   onOpenSettings,
+  promoActive = false,
 }: ClockPanelProps) {
   const { settings } = useSettings();
   const t = useT(settings.language);
@@ -51,118 +52,8 @@ export function ClockPanel({
   const isCriticalSignal =
     statusType === "adhan-now" || statusType === "iqamah-now";
 
-  const promoExitDurationMs = 900;
-  const [promoPhase, setPromoPhase] = useState<
-    "hidden" | "enter" | "visible" | "exit"
-  >("hidden");
-  const [currentPromoSlot, setCurrentPromoSlot] = useState<AdSlot | null>(null);
-
-  const timersRef = useRef<{
-    initial?: number;
-    cycle?: number;
-    promo?: number;
-    exit?: number;
-    enterFrame?: number;
-  }>({});
-
-  useEffect(() => {
-    const currentTimers = timersRef.current;
-
-    const clearAllTimers = () => {
-      if (currentTimers.initial) window.clearTimeout(currentTimers.initial);
-      if (currentTimers.cycle) window.clearTimeout(currentTimers.cycle);
-      if (currentTimers.promo) window.clearTimeout(currentTimers.promo);
-      if (currentTimers.exit) window.clearTimeout(currentTimers.exit);
-      if (currentTimers.enterFrame)
-        window.cancelAnimationFrame(currentTimers.enterFrame);
-    };
-
-    const resetPromoState = () => {
-      clearAllTimers();
-      setPromoPhase("hidden");
-      setCurrentPromoSlot(null);
-    };
-
-    if (typeof window !== "undefined" && window.innerWidth < 768) {
-      resetPromoState();
-      return;
-    }
-
-    if (!settings.showSponsors) {
-      resetPromoState();
-      return;
-    }
-
-    const promoCfg = settings.mosque?.promo || {};
-    const promoDisplayDurationMs = promoCfg.displayDurationMs ?? 10_000;
-    const promoCycleMs = promoCfg.cycleMs ?? 120_000;
-    const initialDelayMs = promoCfg.initialDelayMs ?? 15_000;
-
-    const candidates = (settings.mosque?.adSlots || []).filter(
-      (s) => !!s.image && (s.weight ?? 0) > 0,
-    );
-    if (candidates.length === 0) {
-      resetPromoState();
-      return;
-    }
-
-    const pickWeightedSlot = (): AdSlot => {
-      const total = candidates.reduce((acc, s) => acc + (s.weight ?? 0), 0);
-      if (total <= 0) return candidates[0];
-      let r = Math.random() * total;
-      for (const s of candidates) {
-        r -= s.weight ?? 0;
-        if (r <= 0) return s;
-      }
-      return candidates[0];
-    };
-
-    const runPromoCycle = () => {
-      const chosen = pickWeightedSlot();
-      setCurrentPromoSlot(chosen);
-      setPromoPhase("enter");
-
-      currentTimers.enterFrame = window.requestAnimationFrame(() => {
-        setPromoPhase("visible");
-      });
-
-      currentTimers.promo = window.setTimeout(() => {
-        setPromoPhase("exit");
-
-        currentTimers.exit = window.setTimeout(() => {
-          setPromoPhase("hidden");
-          setCurrentPromoSlot(null);
-        }, promoExitDurationMs);
-      }, promoDisplayDurationMs);
-
-      currentTimers.cycle = window.setTimeout(runPromoCycle, promoCycleMs);
-    };
-
-    currentTimers.initial = window.setTimeout(runPromoCycle, initialDelayMs);
-
-    return () => clearAllTimers();
-  }, [settings.showSponsors, settings.mosque]);
-
-  const promoSlot = currentPromoSlot;
-  const promoImage = promoSlot?.image ?? null;
-  const promoAlt = promoSlot?.label ?? "";
-  const promoActive =
-    !isCriticalSignal && settings.showSponsors && promoPhase !== "hidden";
-  const promoSlideState =
-    promoActive && promoPhase === "visible"
-      ? "translate-x-0 opacity-100"
-      : "translate-x-full opacity-0";
-  const showPromoRail =
-    !isCriticalSignal && settings.showSponsors && promoImage;
-
-  const {
-    imgRef: promoImgRef,
-    bgCss: promoBgCss,
-    handleImageLoad: handlePromoImageLoad,
-  } = useDominantColor();
-
   const panelClassName =
-    "clock-panel [--promo-rail-width:50%] rounded-xl p-4 sm:p-6 md:p-8 lg:p-10 tv:p-12 md:flex-1 flex flex-col items-center justify-center relative overflow-hidden " +
+    "clock-panel rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 tv:p-12 h-full w-full flex flex-col items-center justify-center relative overflow-hidden " +
     (isCriticalSignal
       ? "bg-background-deep border-2 border-primary shadow-[0_0_45px_rgba(var(--primary-rgb),0.6)]"
       : "bg-surface-panel ghost-border active-glow");
@@ -204,7 +95,7 @@ export function ClockPanel({
       ) : (
         <div
           className={
-            "z-10 w-full flex flex-col items-center justify-center max-md:flex-col max-md:items-center max-md:justify-center " +
+            "z-10 w-full max-h-full flex flex-col items-center justify-center gap-2 md:gap-3 lg:gap-4 max-md:flex-col max-md:items-center max-md:justify-center " +
             (promoActive
               ? "md:transition-all md:duration-900 md:flex-row md:items-stretch md:justify-between"
               : "")
@@ -215,34 +106,34 @@ export function ClockPanel({
             className={
               "flex flex-col min-w-0 " +
               (promoActive
-                ? "md:transition-all md:duration-900 md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-6 md:pl-8 max-md:items-center max-md:w-full"
+                ? "md:transition-all md:duration-900 md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
                 : "items-center w-full")
             }
           >
             {/* Mosque Branding */}
-            <div className="flex flex-col items-center mb-2 md:mb-4 lg:mb-6 md:items-start">
-              <div className="flex flex-col items-center mb-1 md:mb-3 lg:mb-4 md:items-start">
+            <div className="flex flex-col items-center mb-1 md:mb-2 lg:mb-3 md:items-start">
+              <div className="flex flex-col items-center mb-1 md:mb-2 lg:mb-2 md:items-start">
                 <span
-                  className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl mb-1 md:mb-2"
+                  className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl mb-1 md:mb-2"
                   aria-hidden="true"
                 >
                   mosque
                 </span>
-                <h1 className="font-headline-md text-sm md:text-xl lg:text-3xl tv:text-4xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
+                <h1 className="font-headline-md text-base md:text-2xl lg:text-4xl xl:text-5xl tv:text-6xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
                   {settings.mosque?.name}
                 </h1>
-                <p className="font-label-caps text-xs md:text-sm lg:text-base text-text-muted">
+                <p className="font-label-caps text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-text-muted">
                   {settings.mosque?.city}
                 </p>
               </div>
 
               {/* Calendar Row */}
-              <div className="clock-panel__dates flex items-center gap-3 md:gap-6 lg:gap-8">
+              <div className="clock-panel__dates flex items-center gap-2 md:gap-4 lg:gap-5">
                 <div className="flex flex-col items-center md:items-start">
-                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface font-medium">
+                  <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
                     {clock.gregorianDate}
                   </span>
-                  <span className="font-label-caps text-xs md:text-sm lg:text-sm text-text-muted">
+                  <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
                     {clock.dayName}
                   </span>
                 </div>
@@ -251,10 +142,10 @@ export function ClockPanel({
                   aria-hidden="true"
                 ></div>
                 <div className="flex flex-col items-center md:items-start">
-                  <span className="font-body-md text-sm md:text-base lg:text-lg text-on-surface font-medium">
+                  <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
                     {hijriDate || "—"}
                   </span>
-                  <span className="font-label-caps text-xs md:text-sm lg:text-sm text-text-muted">
+                  <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
                     {t.hijri}
                   </span>
                 </div>
@@ -262,23 +153,23 @@ export function ClockPanel({
             </div>
 
             {/* Time Metrics */}
-            <h1 className="font-label-caps text-xs md:text-sm lg:text-sm text-primary tracking-wide md:tracking-wider z-10 mb-1 md:mb-2 lg:mb-3">
+            <h1 className="font-label-caps font-bold text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-primary tracking-wide md:tracking-wider z-10 mb-0.5 md:mb-1 lg:mb-1.5">
               {t.currentTime}
             </h1>
             <div
-              className="clock-panel__time flex items-baseline gap-3 md:gap-8 lg:gap-10 text-on-surface z-10"
+              className="clock-panel__time flex items-baseline gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
               aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
               role="timer"
             >
-              <span className="font-clock-display text-6xl sm:text-[8rem] md:text-[9rem] lg:text-[12rem] tv:text-[13rem] leading-none">
+              <span className="font-clock-display text-7xl sm:text-[9rem] md:text-[10rem] lg:text-[13rem] xl:text-[15rem] tv:text-[17rem] leading-none">
                 {displayHours}:{clock.minutes}
               </span>
-              <div className="flex flex-col items-start">
-                <span className="text-lg sm:text-xl md:text-4xl lg:text-5xl tv:text-6xl text-primary font-bold leading-tight">
+              <div className="relative flex items-start leading-none">
+                <span className="text-xl sm:text-2xl md:text-5xl lg:text-6xl xl:text-7xl tv:text-8xl text-primary font-bold leading-tight">
                   :{clock.seconds}
                 </span>
                 {!is24h && (
-                  <span className="text-lg sm:text-xl md:text-4xl lg:text-5xl tv:text-6xl text-primary font-bold leading-tight">
+                  <span className="absolute -top-[0.9em] right-0 whitespace-nowrap text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-primary font-semibold leading-none">
                     {clock.ampm}
                   </span>
                 )}
@@ -288,64 +179,20 @@ export function ClockPanel({
             {/* STANDARD PILL STATUS BAR - DRIVEN BY SVG SCALING */}
             {statusMessage && (
               <div
-                className="clock-panel__status mt-2 md:mt-4 lg:mt-6 flex items-center gap-4 md:gap-6 status-pill rounded-full px-6 md:px-10 lg:px-12 py-3 md:py-4 lg:py-5 z-10 max-w-full"
+                className="clock-panel__status mt-1 md:mt-2 lg:mt-3 flex items-center gap-3 md:gap-4 status-pill rounded-full px-3 md:px-5 lg:px-6 py-1.5 md:py-2 lg:py-2.5 z-10 max-w-full"
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
               >
-                <CampaignIcon className="text-primary w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 shrink-0" />
-                <span className="font-body-md text-base md:text-xl lg:text-2xl text-on-surface text-center font-semibold">
+                <CampaignIcon className="text-primary w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 tv:w-16 tv:h-16 shrink-0" />
+                <span className="font-body-md text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl text-on-surface text-center font-semibold">
                   {statusMessage}
                 </span>
               </div>
             )}
           </div>
 
-          {/* Dynamic Promotional Side Rail Component */}
-          {showPromoRail && (
-            <aside
-              className={`md:block hidden md:absolute md:top-0 md:bottom-0 md:right-0 md:w-(--promo-rail-width) pl-6 md:pl-8 h-full z-10 transform transition-all duration-900 ease-out ${promoSlideState}`}
-              aria-hidden={promoAlt === ""}
-            >
-              <div
-                className={`w-full h-full rounded-xl overflow-hidden flex items-center justify-center shadow-inner ${
-                  promoBgCss
-                    ? ""
-                    : "bg-linear-to-tr from-[rgba(var(--primary-rgb),0.2)] to-[rgba(var(--primary-rgb),0.1)]"
-                }`}
-                style={promoBgCss ? { backgroundColor: promoBgCss } : undefined}
-              >
-                {promoSlot?.link && promoAlt !== "" ? (
-                  <a
-                    href={promoSlot.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full h-full block rounded-xl focus-ring"
-                  >
-                    <img
-                      ref={promoImgRef}
-                      src={promoImage}
-                      alt={promoAlt}
-                      className="object-contain w-full h-full"
-                      onLoad={handlePromoImageLoad}
-                      crossOrigin="anonymous"
-                      decoding="async"
-                    />
-                  </a>
-                ) : (
-                  <img
-                    ref={promoImgRef}
-                    src={promoImage}
-                    alt={promoAlt}
-                    className="object-contain w-full h-full"
-                    onLoad={handlePromoImageLoad}
-                    crossOrigin="anonymous"
-                    decoding="async"
-                  />
-                )}
-              </div>
-            </aside>
-          )}
+          {/* Promo rail moved to a sibling component (PromoRail) */}
         </div>
       )}
     </div>

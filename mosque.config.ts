@@ -37,7 +37,14 @@ const config: MosqueConfig = {
     //   time: "14:00",
     // },
   ],
-  adSlots: [],
+  adSlots: [
+    {
+      id: 1,
+      label: "SPONSOR SPACE",
+      image: "/hajj-kids.jpeg",
+      weight: 1,
+    },
+  ],
   promo: { displayDurationMs: 10000, cycleMs: 90000, initialDelayMs: 5000 },
   announcements_en: [
     "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2:10PM (English)",
