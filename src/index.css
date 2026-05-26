@@ -130,12 +130,13 @@ button {
   --text-muted: rgba(15, 23, 36, 0.82);
   --outline-variant: rgba(15, 23, 36, 0.3);
 
-  --ghost-border-color: rgba(15, 23, 36, 0.34);
-  --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
-  --active-glow-alpha: 0.2;
-  --primary-alpha-10: 0.2;
-  --primary-alpha-20: 0.44;
-  --primary-alpha-25: 0.56;
+  /* Adjusted highlight — brighter but not as strong as original */
+  --ghost-border-color: rgba(15, 23, 36, 0.30);
+  --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.40);
+  --active-glow-alpha: 0.14;
+  --primary-alpha-10: 0.12;
+  --primary-alpha-20: 0.36;
+  --primary-alpha-25: 0.45;
 }
 
 @layer components {
@@ -241,6 +242,94 @@ button {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
+
+  /* Styles for PrayerCard using plain CSS (avoid @apply to satisfy linters) */
+  .prayer-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+     justify-content: space-between;
+     padding: 0.5rem; /* p-2 */
+  }
+    /* responsive padding: keep compact on small, slightly larger on desktop */
+  @media (min-width: 640px) {
+    .prayer-card {
+       padding: 0.5rem; /* keep compact on small screens */
+    }
+  }
+  @media (min-width: 768px) {
+    .prayer-card {
+       padding: 0.875rem; /* md: ~p-3.5 for a bit more breathing room */
+    }
+  }
+
+  .prayer-card-name-section {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+     padding-right: 0.5rem; /* pr-2 */
+  }
+  @media (min-width: 640px) {
+    .prayer-card-name-section { padding-right: 0.75rem; /* sm:pr-3 */ }
+  }
+  @media (min-width: 768px) {
+    .prayer-card-name-section { padding-right: 1rem; /* md:pr-4 */ }
+  }
+
+  .prayer-card-divider {
+    height: 2.5rem; /* h-10 */
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: rgba(var(--primary-rgb), var(--primary-alpha-20));
+  }
+  @media (min-width: 640px) { .prayer-card-divider { height: 3rem; /* sm:h-12 */ } }
+  @media (min-width: 768px) { .prayer-card-divider { height: 3.5rem; /* md:h-14 */ } }
+
+  /* if card uses primary background, make divider primary color */
+  .prayer-card.bg-primary-10 .prayer-card-divider,
+  .prayer-card.border-primary .prayer-card-divider {
+    border-left-color: var(--primary);
+  }
+
+  .prayer-card-time-section {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 0.75rem; /* gap-3 */
+  }
+
+  /* Dark-mode active style for prayer card: mirror ClockPanel critical appearance */
+  .dark .prayer-card.dark-active {
+    background-color: var(--background-deep) !important;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 45px rgba(var(--primary-rgb), 0.6) !important;
+  }
+  @media (min-width: 640px) { .prayer-card-time-section { gap: 1rem; /* gap-4 */ } }
+  @media (min-width: 768px) { .prayer-card-time-section { gap: 1.25rem; /* gap-5 */ } }
+
+  /* TimeCell variants visibility controlled by media query */
+  .timecell-compact { display: block; }
+  .timecell-normal { display: none; }
+
+  /* Normal layout (vertical) on larger viewports */
+  @media (min-width: 768px) {
+    .prayer-card { flex-direction: column; align-items: stretch; justify-content: center; }
+    .prayer-card-name-section { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0; }
+    .prayer-card-divider { margin: 0.25rem 0; height: 0; border-left: none; border-top: 1px solid rgba(var(--primary-rgb), var(--primary-alpha-20)); }
+    .prayer-card-time-section { display: flex; flex-direction: column; align-items: stretch; justify-content: center; gap: 0.25rem; }
+    .timecell-compact { display: none; }
+    .timecell-normal { display: block; }
+  }
 }
 
 @container clock-panel (max-width: 600px) {
@@ -308,6 +397,18 @@ button {
 .font-clock-display {
   font-size: clamp(4rem, 8vw, 12.5rem) !important; /* ~64px → 200px */
   line-height: 1 !important;
+}
+
+/* Fluid time sizing for prayer times: scales smoothly between small and large displays */
+.time-large {
+  font-size: clamp(1.25rem, 3.5vw, 3.25rem);
+  line-height: 1;
+}
+
+@media (min-width: 1280px) {
+  .time-large {
+    font-size: clamp(1.5rem, 2.5vw, 4rem);
+  }
 }
 
 .material-symbols-outlined {
