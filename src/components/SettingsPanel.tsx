@@ -53,7 +53,7 @@ function PillGroup<T extends string>({
           onClick={() => onChange(opt.value)}
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all focus-ring ${
             value === opt.value
-              ? "bg-primary text-on-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]"
+              ? "bg-primary text-black shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]"
               : "bg-surface-container-low text-text-muted hover:text-on-surface border border-outline-variant"
           }`}
         >

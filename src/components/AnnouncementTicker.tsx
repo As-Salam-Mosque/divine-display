@@ -12,7 +12,7 @@ export function AnnouncementTicker() {
   const items = [...announcements, ...announcements];
 
   return (
-    <footer className="w-full flex items-center px-4 md:px-6 lg:px-margin-page tv:px-margin-page h-[3rem] sm:h-[3.5rem] md:h-[4rem] tv:h-[5rem] border-t border-primary-20 bg-surface-panel overflow-hidden shrink-0">
+    <footer className="w-full flex items-center px-4 md:px-6 lg:px-margin-page tv:px-margin-page h-[clamp(3rem,3.5vw,5rem)] border-t border-primary-20 bg-surface-panel overflow-hidden shrink-0">
       {/* Label */}
       <div className="flex items-center gap-3 lg:gap-4 bg-surface-panel z-10 pr-3 lg:pr-4 border-r border-primary-20 h-full shrink-0">
         <span className="material-symbols-outlined text-primary text-[1.125rem] md:text-[1.25rem] lg:text-[1.5rem] tv:text-[2rem]">
@@ -24,7 +24,7 @@ export function AnnouncementTicker() {
       </div>
 
       {/* Scrolling text */}
-      <div className="flex-1 overflow-hidden ml-4">
+      <div className="flex-1 overflow-hidden ml-3 md:ml-4 lg:ml-5">
         <div className="flex items-center h-full gap-4 md:gap-6 lg:gap-8 font-body-md text-[0.95rem] md:text-[1rem] lg:text-[1.125rem] tv:text-[1.25rem] leading-tight text-text-muted whitespace-nowrap animate-marquee">
           {items.map((text, i) => (
             <p

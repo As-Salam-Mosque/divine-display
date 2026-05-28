@@ -1,5 +1,36 @@
 ---
 name: Noor Majesty
+themes:
+  dark:
+    primary: "#e9c176"
+    primary-rgb: "233, 193, 118"
+    background-deep: "#060a1a"
+    surface-panel: "#111a35"
+    surface: "#0b1220"
+    surface-container: "#081028"
+    surface-container-low: "#071022"
+    surface-container-highest: "#081028"
+    on-surface: "#ffffff"
+    on-surface-variant: "#dfe6ff"
+    text-muted: "rgba(255,255,255,0.6)"
+    outline-variant: "rgba(233,193,118,0.08)"
+    ghost-border-color: "rgba(233,193,118,0.2)"
+    active-glow-alpha: "0.12"
+  light:
+    primary: "#b87a00"
+    primary-rgb: "184, 122, 0"
+    background-deep: "#d5dce4"
+    surface-panel: "#ebeff4"
+    surface: "#f5f7fa"
+    surface-container: "#edf1f5"
+    surface-container-low: "#f3f6f9"
+    surface-container-highest: "#fafbfd"
+    on-surface: "#0f1724"
+    on-surface-variant: "#1f2b3d"
+    text-muted: "rgba(15,23,36,0.82)"
+    outline-variant: "rgba(15,23,36,0.3)"
+    ghost-border-color: "rgba(15,23,36,0.34)"
+    active-glow-alpha: "0.14"
 colors:
   surface: "#16130e"
   surface-dim: "#16130e"
@@ -54,49 +85,63 @@ colors:
   text-muted: "#8E9BB1"
   text-on-dark: "#FFFFFF"
 typography:
+  # All font utility classes (font-clock-display, font-headline-*, font-body-*, etc.)
+  # resolve to Inter at runtime via CSS variable override in index.css.
+  # The semantic font class names are preserved for structural meaning.
+  font-family: Inter
   clock-display:
-    fontFamily: Playfair Display
-    fontSize: 160px
+    fontFamily: Inter
+    fontSize: "clamp(4rem, 8vw, 12.5rem)"
     fontWeight: "700"
-    lineHeight: 160px
+    lineHeight: "1"
     letterSpacing: -0.02em
   clock-display-mobile:
-    fontFamily: Playfair Display
-    fontSize: 80px
+    fontFamily: Inter
+    fontSize: "clamp(2.5rem, 6vw, 6.25rem)"
     fontWeight: "700"
-    lineHeight: 80px
+    lineHeight: "1"
   headline-lg:
-    fontFamily: Playfair Display
-    fontSize: 48px
+    fontFamily: Inter
+    fontSize: "clamp(1.5rem, 2.2vw, 3rem)"
     fontWeight: "600"
-    lineHeight: 56px
+    lineHeight: "clamp(1.75rem, 2.8vw, 3.5rem)"
     letterSpacing: 0.05em
   headline-md:
-    fontFamily: Playfair Display
-    fontSize: 32px
+    fontFamily: Inter
+    fontSize: "clamp(1.25rem, 1.6vw, 2rem)"
     fontWeight: "600"
-    lineHeight: 40px
+    lineHeight: "clamp(1.5rem, 2.2vw, 2.5rem)"
   body-lg:
-    fontFamily: Montserrat
-    fontSize: 24px
+    fontFamily: Inter
+    fontSize: "clamp(1rem, 1.6vw, 1.5rem)"
     fontWeight: "500"
-    lineHeight: 32px
+    lineHeight: "clamp(1.25rem, 2vw, 2rem)"
   body-md:
-    fontFamily: Montserrat
-    fontSize: 18px
+    fontFamily: Inter
+    fontSize: "clamp(0.875rem, 1.2vw, 1.125rem)"
     fontWeight: "400"
-    lineHeight: 24px
+    lineHeight: "clamp(1rem, 1.6vw, 1.5rem)"
   label-caps:
-    fontFamily: Montserrat
-    fontSize: 14px
+    fontFamily: Inter
+    fontSize: "clamp(0.75rem, 1vw, 0.875rem)"
     fontWeight: "700"
-    lineHeight: 20px
+    lineHeight: "1.25rem"
     letterSpacing: 0.15em
   tabular-nums:
-    fontFamily: Montserrat
-    fontSize: 20px
+    fontFamily: Inter
+    fontSize: "clamp(1rem, 1.2vw, 1.25rem)"
     fontWeight: "600"
-    lineHeight: 24px
+    lineHeight: "1.5rem"
+  prayer-name:
+    fontFamily: Inter
+    fontSize: "clamp(1.25rem, 3vw, 4.5rem)"
+    fontWeight: "800"
+    lineHeight: "1.2"
+  prayer-time:
+    fontFamily: Inter
+    fontSize: "clamp(2rem, 5vw, 8rem)"
+    fontWeight: "800"
+    lineHeight: "1.05"
 rounded:
   sm: 0.125rem
   DEFAULT: 0.25rem
@@ -105,87 +150,154 @@ rounded:
   xl: 0.75rem
   full: 9999px
 spacing:
-  base: 8px
-  margin-page: 48px
-  gutter-grid: 24px
-  panel-padding: 32px
-  stage-gap: 64px
+  # All spacing tokens use fluid clamp() values for viewport-responsive scaling
+  base: "clamp(0.5rem, 0.8vw, 0.75rem)"
+  margin-page: "clamp(1rem, 3vw, 4rem)"
+  gutter-grid: "clamp(0.5rem, 1.5vw, 2rem)"
+  panel-padding: "clamp(1rem, 2vw, 2.5rem)"
+  stage-gap: "clamp(1.5rem, 4vw, 6rem)"
+breakpoints:
+  sm: 640px
+  md: 768px
+  lg: 1024px
+  xl: 1280px
+  2xl: 1536px
+  tv: 1920px
 ---
 
 ## Brand & Style
 
 The design system is crafted for sacred spaces, prioritizing tranquility, reverence, and absolute legibility. It centers on a **Corporate / Modern** framework infused with **Minimalist** discipline, ensuring that functional data (prayer times) feels like a natural extension of the mosque's architecture.
 
-The personality is authoritative yet welcoming. It balances the weight of tradition with the precision of modern technology. The UI avoids unnecessary ornamentation, relying instead on high-contrast typography and a structured grid to create a sense of order and calm. The emotional response should be one of spiritual focus, where the "now" (current time) is the anchor, and the "next" (upcoming prayer) is clearly illuminated.
+The personality is authoritative yet welcoming. The UI avoids unnecessary ornamentation, relying instead on high-contrast typography and a structured grid to create a sense of order and calm. The emotional response should be one of spiritual focus, where the "now" (current time) is the anchor, and the "next" (upcoming prayer) is clearly illuminated.
+
+The system supports both **dark** and **light** themes. The dark theme remains the primary experience (deep navy + gold), while the light theme inverts to a high-contrast slate-grey + amber palette suitable for well-lit environments.
 
 ## Colors
 
-This design system utilizes a high-contrast dark mode palette to ensure maximum visibility from a distance while maintaining a low-glare presence in prayer halls.
+Colors are resolved at runtime via CSS custom properties (`--primary`, `--background-deep`, `--surface-panel`, etc.) so that both themes share the same component markup. The Tailwind `colors` palette in the YAML above provides the static token set; the `themes` section documents the actual runtime values per theme.
 
-- **Primary (Gold):** Used exclusively for essential highlights, active prayer states, and the clock. It symbolizes value and spiritual significance.
-- **Secondary (Deep Navy):** The foundational layer, providing a receding, calm background that makes the gold and white text "pop" with clarity.
-- **Neutral (Slate/Navy Grays):** Used for structural borders and secondary labels to prevent the interface from appearing overly "flat" while maintaining a monochromatic depth.
+- **Primary (Gold / Amber):** Essential highlights, active prayer states, the clock, and all interactive affordances. Dark theme: `#e9c176`. Light theme: `#b87a00`.
+- **Background Deep:** The outermost page background. Dark: `#060A1A`. Light: `#d5dce4`.
+- **Surface Panel:** Card and panel fills. Dark: `#111A35`. Light: `#ebeff4`.
+- **Ghost Border:** 1px semi-transparent primary border on inactive panels — defined by `--ghost-border-color`. Creates architectural depth without visual noise.
+- **Text Muted:** Secondary label color — 60% white in dark, ~82% black in light.
 
-The palette relies on the interplay between the deep navy and gold to guide the eye toward the most critical information first.
+The palette is designed so the primary color guides the eye to the most critical information first, regardless of theme.
 
 ## Typography
 
-Typography is the primary vehicle for the "High-Contrast" requirement. It employs a dual-font strategy:
+All text is rendered in **Inter** — a single geometric sans-serif family optimized for screen legibility across all sizes and weights. The legacy semantic class names (`font-clock-display`, `font-headline-lg`, `font-body-md`, etc.) are preserved for structural meaning and are each mapped to Inter via CSS variable override in `index.css`.
 
-- **Playfair Display (Serif):** Reserved for the current time and primary prayer headers. It provides an elegant, traditional character that reflects the sanctity of the environment.
-- **Montserrat (Sans-Serif):** Used for all data points, secondary labels, and messages. Its geometric clarity ensures that numerical data (Adhan/Iqamah times) is unambiguous at a distance.
+**Font scales are fluid**, using `clamp()` values to scale continuously from mobile to 4K TV without breakpoint jumps. See the `typography` section of the YAML for exact ranges.
 
-**Arabic Support:** Use a high-quality Naskh-style typeface for Arabic text to match the stroke contrast of Playfair Display. Ensure that Arabic and Latin characters share a visual baseline and optical weight.
+Two prayer-specific scales are defined separately from the general type ramp:
+
+- **`prayer-name`:** `clamp(1.25rem, 3vw, 4.5rem)` at weight 800 — the prayer name label inside each card.
+- **`prayer-time`:** `clamp(2rem, 5vw, 8rem)` at weight 800 — the Adhan/Iqamah time numerals.
+
+**Arabic Prayer Names:** rendered with `lang="ar"` on the containing element. Arabic text is displayed in the browser's default Arabic fallback (system Naskh) and hidden below 40% viewport height to avoid crowding on small displays.
+
+**Tabular numerals:** `font-tabular-nums` enables `font-feature-settings: "tnum" 1, "lnum" 1` to keep time columns aligned across rows regardless of digit width.
 
 ## Layout & Spacing
 
-The layout uses a **Fluid Grid** model optimized for large-format displays (16:9 aspect ratio).
+All spacing tokens use **fluid `clamp()` values** that scale proportionally with the viewport — no hard breakpoint jumps.
 
-1.  **Main Stage (Top-Left 75%):** Contains the Mosque Name, the oversized Clock, and the Prayer Status. This area prioritizes whitespace to ensure the clock is the undisputed anchor.
-2.  **Secondary Rail (Right 25%):** A dedicated vertical column for ads and announcements. It is visually separated by a subtle vertical divider or a distinct background tone.
-3.  **Prayer Table (Bottom 100%):** Spans the full width (or sits below the main stage) in a horizontal grid.
-4.  **Footer Strip:** A narrow, full-width band at the very bottom for persistent links or ticker-style notifications.
+The main layout is a **CSS grid with two columns** on `lg`+:
 
-**Breakpoints:**
+```
+[ Left Stage: minmax(0, 1fr) ] [ Ad Rail: --adrail-width ]
+```
 
-- **Desktop/TV (1080p target):** 12-column grid. The ad rail is fixed at a maximum of 400px; the clock stage expands to fill the remainder. The announcements ticker is visible.
-- **Mobile/Tablet:** Single-column layout; the ad rail and announcements ticker are hidden to prioritize prayer times. The clock scales down but remains centered.
+`--adrail-width` is `20vw` when sponsors are enabled and there is no critical signal, or `0px` otherwise (the rail collapses without reflow).
+
+### Left Stage breakdown
+
+The left stage is a flex column split into two height regions:
+
+- **Top ~65% — ClockPanel:** Contains mosque branding, live clock, Hijri date, countdown status, and optional PromoRail overlay.
+- **Bottom ~35% — PrayerTable:** Horizontal row of 6 PrayerCards.
+
+### Critical Signal Mode
+
+When `statusType` is `"adhan-now"` or `"iqamah-now"`, the entire layout switches to an **immersive alert state**:
+
+- The ClockPanel fills its container with a full-height announcement showing a pulsing Campaign icon and the status message in large `font-headline-lg` text.
+- The ad rail is hidden (width collapses to `0px`).
+- The panel gains a 2px `border-primary` border and a `0 0 45px rgba(primary, 0.6)` outer glow.
+- An `role="alert"` + `aria-live="assertive"` region ensures screen readers announce the prayer call immediately.
+
+### Breakpoints
+
+| Token | Width   | Notes                                         |
+|-------|---------|-----------------------------------------------|
+| `sm`  | 640px   | Prayer card switches to compact row layout    |
+| `md`  | 768px   | Prayer card switches to vertical column layout; ticker visible |
+| `lg`  | 1024px  | Ad rail appears; layout locks to `h-screen`   |
+| `xl`  | 1280px  | Larger padding and font steps                 |
+| `tv`  | 1920px  | Full-scale token values; maximum panel padding |
+
+- **Mobile/Tablet (< `lg`):** Single-column layout; ad rail hidden; prayer cards in compact horizontal layout; footer ticker hidden below `md`.
+- **Desktop (`lg`+):** Two-column grid, full PromoRail cycling, ticker visible.
+- **TV (`tv`):** All tokens at maximum size; ad rail and ticker fully visible.
 
 ## Elevation & Depth
 
-This design system uses **Tonal Layers** rather than heavy shadows to maintain a clean, architectural feel.
+**Tonal layers** rather than heavy shadows:
 
-- **Background:** `#060A1A` (The deepest layer).
-- **Panels/Cards:** `#111A35` with a very thin (1px) border in `#C5A059` at 20% opacity. This creates "ghost borders" that define space without adding visual noise.
-- **Active State:** When a prayer is currently active or next, the panel receives a subtle interior glow or a solid `#C5A059` border to signify importance.
-- **Ad Rail:** Slightly more muted than the main stage to ensure secondary content doesn't distract from the prayer times.
+- **Background:** `--background-deep` (deepest layer — page fill).
+- **Panels/Cards:** `--surface-panel` with `.ghost-border` (1px `--ghost-border-color` + optional panel-separation inset shadow in light mode). Defines space without visual noise.
+- **Active / Next Prayer:** `.active-glow` — `inset 0 0 20px rgba(primary, activeGlowAlpha)` + solid `border-primary`. In dark theme, active cards additionally use `.dark-active`, which replaces the fill with `--background-deep` and applies a `0 0 45px rgba(primary, 0.6)` outer glow, mirroring the critical signal appearance.
+- **Ad Rail:** Sits at the same `--surface-panel` depth as panels but is visually separated by the grid gap.
+- **Clock Panel:** Always uses `.active-glow` in normal mode (gold inset glow + ghost border), signaling that it is the permanent focus anchor.
 
 ## Shapes
 
-The shape language is **Soft (0.25rem)**. While the overall aesthetic is architectural and structured, slightly rounded corners prevent the UI from feeling sharp or aggressive.
+**Soft (0.25rem default)**. Rounded corners prevent the interface from feeling sharp.
 
-- **Prayer Time Cards:** Use `rounded-lg` (0.5rem) to differentiate them as discrete interactive or data-rich elements.
-- **Ad Slots:** Match the card roundedness for a unified look.
-- **Status Pills:** Use pill-shaped (1rem+) for status indicators (e.g., "LIVE" or "NEXT") to distinguish them from structural panels.
+- **Prayer Cards / Ad Slots / Clock Panel:** `rounded-xl` (0.75rem).
+- **Status Pills:** Pill-shaped (`rounded-full`) for urgency indicators.
+- **Settings Button:** `rounded-full` floating gear icon.
 
 ## Components
 
+### Clock Panel
+
+The dominant component. Displays mosque branding (mosque icon + name + city), the live time in `font-clock-display`, Hijri date + Gregorian date, and the countdown status pill. A decorative mosque silhouette SVG is rendered at 10% opacity behind the content. In critical signal mode the entire panel is replaced by a full-height immersive alert (pulsing campaign icon + message text).
+
+### PromoRail
+
+An overlay that slides in from the right edge of the ClockPanel on a configurable timer cycle. Shows a weighted-random sponsor image from `adSlots`, with the background tinted to the image's dominant colour (extracted via `useDominantColor`). Automatically suppressed in critical signal mode or when `showSponsors` is false. Controlled by `PromoRail.tsx` and coordinated with `ClockPanel` via an `onActiveChange` callback.
+
 ### Prayer Table
 
-The table should be a series of vertical cards. Each card contains the Prayer Name (Headline-MD), Arabic Translation (Body-MD), and two distinct rows for Adhan and Iqamah times using **Tabular Numerals** to ensure alignment.
+A horizontal row of six `PrayerCard` components. Cards use **CSS container queries** to switch between two layouts:
 
-### Main Clock
+- **Compact (< 768px):** Horizontal row — prayer name on the left, divider, Adhan/Iqamah times to the right.
+- **Normal (≥ 768px):** Vertical column — prayer name on top, horizontal divider, time cells below.
 
-The clock is the dominant component. It should use a heavy weight of the headline font. The AM/PM indicator should be half the size of the numerals and vertically aligned to the top or center of the time string.
+Each card shows Prayer Name (Latin caps) and Arabic name below it, separated from time cells by a primary-tinted divider. **Shuruq** is a special case: only a single TIME row is shown (no Adhan/Iqamah split).
 
-### Ad Rail Cards
+### Prayer Card States
 
-Sponsor spaces should be clearly boxed with a label "COMMUNITY SPONSORS" in `label-caps`. If a slot is empty, it should display a subtle textured background or the mosque's logo at low opacity to maintain layout integrity.
+| State      | Appearance |
+|------------|------------|
+| **Inactive** | `bg-surface-panel ghost-border rounded-xl` |
+| **Active / Next** | `ghost-border active-glow` + in dark theme: `.dark-active` (`bg-background-deep`, 2px `border-primary`, outer glow `0 0 45px rgba(primary, 0.6)`) |
+
+### Ad Rail
+
+Visible only at `lg`+ breakpoint. A vertical flex column labelled "COMMUNITY SPONSORS" in `font-label-caps`. Each slot renders a sponsor image (with dominant-colour background) or a placeholder (storefront icon + "Available" label). Rail width is `20vw`; collapses to `0px` when sponsors are hidden or during critical signal mode.
 
 ### Announcements Ticker
 
-The footer strip should support a horizontal scrolling or fading text component for masjid announcements. Use `body-md` for the text to ensure it is readable but not distracting.
+Full-width footer strip, hidden below `md`. Announces labelled as `masjidAnnouncements`. Items scroll right-to-left via `@keyframes marquee` (60s linear loop) with `prefers-reduced-motion` disabling the animation. Announcement text before ` — ` is bolded in `text-on-surface`; the rest renders in `text-muted`. Strip height scales from `3rem` (mobile) to `5rem` (TV).
 
 ### Status Indicators
 
-Use the primary gold color to highlight the "Current Prayer." The active card in the prayer table should swap its background to a semi-transparent gold or gain a high-contrast border.
+The `.status-pill` helper class provides a gold-tinted background, border, and outer glow for the status chip in ClockPanel. In critical signal mode the status message replaces the pill entirely and is rendered at headline scale with `role="alert"`.
+
+### Settings Button
+
+A floating gear icon (`material-symbols-outlined: settings`) anchored to the top-right of ClockPanel. Uses `rounded-full` with `focus-visible` ring and hover/focus state that highlights in primary gold.

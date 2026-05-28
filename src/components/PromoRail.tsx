@@ -95,7 +95,7 @@ export function PromoRail({ isCriticalSignal, onActiveChange }: PromoRailProps) 
   const promoSlot = currentPromoSlot;
   const promoImage = promoSlot?.image ?? null;
   const promoAlt = promoSlot?.label ?? "";
-  const promoActive = !isCriticalSignal && settings.showSponsors && promoPhase !== "hidden";
+  const promoActive = !isCriticalSignal && settings.showSponsors && promoPhase !== "hidden" && promoPhase !== "exit";
   // Notify parent when promo active state changes so layout can adapt
   useEffect(() => {
     if (onActiveChange) onActiveChange(promoActive);

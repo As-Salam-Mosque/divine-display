@@ -106,7 +106,7 @@ export function ClockPanel({
             className={
               "flex flex-col min-w-0 " +
               (promoActive
-                ? "md:transition-all md:duration-900 md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
+                ? "promo-compact md:transition-all md:duration-900 md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
                 : "items-center w-full")
             }
           >
@@ -161,7 +161,7 @@ export function ClockPanel({
               aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
               role="timer"
             >
-              <span className="font-clock-display text-7xl sm:text-[9rem] md:text-[10rem] lg:text-[13rem] xl:text-[15rem] tv:text-[17rem] leading-none">
+              <span className="font-clock-display leading-none">
                 {displayHours}:{clock.minutes}
               </span>
               <div className="relative flex items-start leading-none">

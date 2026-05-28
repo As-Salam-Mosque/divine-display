@@ -167,6 +167,27 @@ button {
     container-type: inline-size;
   }
 
+  /* When PromoRail is active, scale down text to fit the narrower content column */
+  .promo-compact {
+    container-type: inline-size;
+  }
+  .promo-compact .font-clock-display {
+    font-size: clamp(2.5rem, 14cqw, 9rem) !important;
+  }
+  .promo-compact .text-xl.sm\:text-2xl.md\:text-5xl,
+  .promo-compact [class*="text-primary"][class*="font-bold"][class*="leading-tight"] {
+    font-size: clamp(1rem, 6cqw, 4.5rem) !important;
+  }
+  .promo-compact .status-pill {
+    max-width: 100%;
+  }
+  .promo-compact .status-pill span.font-body-md {
+    font-size: clamp(0.875rem, 4cqw, 2.5rem) !important;
+  }
+  .promo-compact h1.font-headline-md {
+    font-size: clamp(0.875rem, 5cqw, 3rem) !important;
+  }
+
   /* Map semantic token classes to CSS variables so light/dark themes work */
   /* active card glow (no layout shift) */
   .active-pulse {
@@ -245,6 +266,7 @@ button {
 
   /* Styles for PrayerCard using plain CSS (avoid @apply to satisfy linters) */
   .prayer-card {
+    container-type: inline-size;
     display: flex;
     flex-direction: row;
     align-items: center;

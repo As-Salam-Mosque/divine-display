@@ -65,8 +65,8 @@ export function AdRail({ slots }: AdRailProps) {
   const t = useT(settings.language);
 
   return (
-    <div className="hidden lg:flex flex-col gap-1 sm:gap-2 md:gap-2 lg:gap-3 tv:gap-[20px] h-full min-h-0 w-full justify-self-stretch overflow-hidden">
-      <div className="flex justify-between items-center px-2 lg:px-3 shrink-0">
+    <div className="hidden lg:flex flex-col gap-2 md:gap-3 lg:gap-3 tv:gap-stage-gap h-full min-h-0 w-full justify-self-stretch overflow-hidden">
+      <div className="flex justify-between items-center px-3 lg:px-4 shrink-0">
         <span className="font-label-caps font-bold text-[10px] lg:text-xs xl:text-sm tv:text-base tracking-widest text-primary">
           {t.communitySponsors}
         </span>
