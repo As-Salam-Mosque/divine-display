@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { AppSettings, MosqueConfig } from "../types";
+import type { AppSettings, MosqueConfig, Language } from "../types";
 import { DEFAULT_APP_SETTINGS } from "../types";
 
 type SettingsPatch = Partial<Omit<AppSettings, "mosque">> & {
@@ -29,33 +29,69 @@ export function SettingsProvider({
   // allow optional override, but fall back to hardcoded defaults
   defaults?: AppSettings;
 }) {
-  const baseSettings = defaults ?? DEFAULT_APP_SETTINGS;
-  const [overrides, setOverrides] = useState<SettingsPatch>({});
+  // Resolve base settings: merge provided defaults over app defaults and
+  // pick a sensible language fallback (detect 'fr' prefix in navigator).
+  const resolvedBaseSettings = useMemo<AppSettings>(() => {
+    const detectedLanguage: Language =
+      navigator.language?.startsWith('fr')
+        ? 'fr'
+        : DEFAULT_APP_SETTINGS.language;
+
+    const base = { ...DEFAULT_APP_SETTINGS, ...(defaults ?? {}) } as AppSettings;
+    if (!base.language) base.language = detectedLanguage;
+    return base;
+  }, [defaults]);
+  const STORAGE_KEY = 'divine-display-settings';
+
+  const [overrides, setOverrides] = useState<SettingsPatch>(() => {
+    if (typeof window === 'undefined') return {};
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? (JSON.parse(raw) as SettingsPatch) : {};
+    } catch {
+      return {};
+    }
+  });
 
   const settings = useMemo<AppSettings>(() => {
     const mergedMosque: MosqueConfig = {
-      ...baseSettings.mosque,
+      ...resolvedBaseSettings.mosque,
       ...(overrides.mosque ?? {}),
     };
 
     return {
-      ...baseSettings,
+      ...resolvedBaseSettings,
       ...overrides,
       mosque: mergedMosque,
     };
-  }, [baseSettings, overrides]);
+  }, [resolvedBaseSettings, overrides]);
 
-  const updateSettings = useCallback((patch: SettingsPatch) => {
-    setOverrides((prev) => {
-      const next: SettingsPatch = {
-        ...prev,
-        ...patch,
-        mosque: { ...(prev.mosque ?? {}), ...(patch.mosque ?? {}) },
-      };
-      // Intentionally do not persist settings to localStorage.
-      return next;
-    });
-  }, []);
+  const updateSettings = useCallback(
+    (patch: SettingsPatch) =>
+      setOverrides((prev) => {
+        const next: SettingsPatch = {
+          ...prev,
+          ...patch,
+          mosque: { ...(prev.mosque ?? {}), ...(patch.mosque ?? {}) },
+        };
+
+        try {
+          if (typeof window !== 'undefined') {
+            const merged: AppSettings = {
+              ...resolvedBaseSettings,
+              ...next,
+              mosque: { ...resolvedBaseSettings.mosque, ...(next.mosque ?? {}) },
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+          }
+        } catch {
+          /* ignore */
+        }
+
+        return next;
+      }),
+    [resolvedBaseSettings],
+  );
 
   return (
     <SettingsContext.Provider value={{ settings, updateSettings }}>

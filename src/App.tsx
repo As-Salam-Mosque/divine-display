@@ -38,7 +38,7 @@ function Display() {
         style={{ ['--adrail-width' as any]: showAdRail ? '20vw' : '0px' }}
       >
         {/* Left Stage */}
-        <div className="col-span-1 flex-1 min-h-0 flex flex-col gap-2 md:gap-3 lg:gap-3 tv:gap-stage-gap lg:h-auto">
+        <div className="col-span-1 flex-1 min-h-0 flex flex-col gap-2 md:gap-3 lg:gap-3 tv:gap-stage-gap lg:h-full">
           {/* Top: ClockPanel + Promo — takes ~65% of vertical space and ClockPanel fills height */}
           <div className="lg:basis-[65%] basis-auto min-h-0 flex items-stretch justify-center">
             <div className={`relative w-full h-auto max-h-full [--promo-rail-width:50%] md:flex md:items-stretch ${promoActive ? 'md:transition-all md:duration-900 md:flex-row md:justify-between' : ''}`}>
@@ -76,7 +76,7 @@ function Display() {
         </div>
 
         {/* Right Ad Rail — kept in DOM to avoid reflow when toggling */}
-        <div aria-hidden={!showAdRail} className="min-h-0 overflow-hidden">
+        <div aria-hidden={!showAdRail} className="min-h-0 h-full overflow-hidden">
           <AdRail slots={settings.mosque.adSlots} />
         </div>
       </main>
