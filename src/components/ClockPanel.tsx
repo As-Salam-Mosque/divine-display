@@ -1,46 +1,37 @@
-// React hooks not required in this component file
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
-import type { ClockState, StatusType } from "../types";
+import { cn } from "../utils/cn";
+import type { ClockState, CriticalSignalData, StatusType } from "../types";
+import { CriticalSignalPanel } from "./CriticalSignalPanel";
 
 interface ClockPanelProps {
   clock: ClockState;
   hijriDate: string;
   statusMessage: string;
   statusType: StatusType;
+  criticalSignal?: CriticalSignalData | null;
   onOpenSettings: () => void;
   promoActive?: boolean;
 }
 
-// Reusable Campaign SVG with your custom path data
-const CampaignIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    className={className}
-    fill="currentColor"
-    aria-hidden="true"
-  >
-    <path d="M0 0h24v24H0z" fill="none" />
-    <path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z" />
-  </svg>
-);
-
-const MosqueSilhouette = () => (
-  <div
-    className="absolute bottom-0 w-full h-20 md:h-36 lg:h-44 opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
-    style={{
-      backgroundImage: `url("data:image/svg+xml;utf8,<svg viewBox='0 0 1000 300' xmlns='http://www.w3.org/2000/svg' fill='%23c5a059'><path d='M500 50 C450 150 400 200 400 300 L600 300 C600 200 550 150 500 50 Z M200 150 C180 200 150 250 150 300 L250 300 C250 250 220 200 200 150 Z M800 150 C780 200 750 250 750 300 L850 300 C850 250 820 200 800 150 Z M50 200 L70 300 L30 300 Z M950 200 L970 300 L930 300 Z'/></svg>")`,
-    }}
-    aria-hidden="true"
-  />
-);
+function MosqueSilhouette() {
+  return (
+    <div
+      className="absolute bottom-0 w-full h-20 md:h-36 lg:h-44 opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
+      style={{
+        backgroundImage: `url("data:image/svg+xml;utf8,<svg viewBox='0 0 1000 300' xmlns='http://www.w3.org/2000/svg' fill='%23c5a059'><path d='M500 50 C450 150 400 200 400 300 L600 300 C600 200 550 150 500 50 Z M200 150 C180 200 150 250 150 300 L250 300 C250 250 220 200 200 150 Z M800 150 C780 200 750 250 750 300 L850 300 C850 250 820 200 800 150 Z M50 200 L70 300 L30 300 Z M950 200 L970 300 L930 300 Z'/></svg>")`,
+      }}
+      aria-hidden="true"
+    />
+  );
+}
 
 export function ClockPanel({
   clock,
   hijriDate,
   statusMessage,
   statusType,
+  criticalSignal = null,
   onOpenSettings,
   promoActive = false,
 }: ClockPanelProps) {
@@ -52,17 +43,18 @@ export function ClockPanel({
   const isCriticalSignal =
     statusType === "adhan-now" || statusType === "iqamah-now";
 
-  const panelClassName =
-    "clock-panel rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 tv:p-12 h-full w-full flex flex-col items-center justify-center relative overflow-hidden " +
-    (isCriticalSignal
-      ? "bg-background-deep border-2 border-primary shadow-[0_0_45px_rgba(var(--primary-rgb),0.6)]"
-      : "bg-surface-panel ghost-border active-glow");
-
   return (
-    <div className={panelClassName}>
+    <div
+      className={cn(
+        "clock-panel rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 tv:p-12 h-full w-full flex flex-col items-center justify-center relative overflow-hidden",
+        isCriticalSignal
+          ? "bg-background-deep border-2 border-primary critical-enter"
+          : "bg-surface-panel ghost-border active-glow",
+      )}
+    >
       {!isCriticalSignal && <MosqueSilhouette />}
 
-      {/* Settings Gear */}
+      {/* Settings Gear — hidden during critical state */}
       {!isCriticalSignal && (
         <button
           type="button"
@@ -79,36 +71,30 @@ export function ClockPanel({
         </button>
       )}
 
-      {isCriticalSignal ? (
-        <div
-          className="z-20 w-full h-full flex flex-col items-center justify-center text-center gap-6 md:gap-10 lg:gap-12"
-          role="alert"
-          aria-live="assertive"
-        >
-          {/* CRITICAL IMMERSIVE SVG ICON - ENORMOUS SIZING FOR TV PANELS */}
-          <CampaignIcon className="text-primary motion-safe:animate-pulse w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 lg:w-64 lg:h-64 tv:w-[22rem] tv:h-[22rem]" />
-
-          <div className="max-w-[90%] font-headline-lg text-primary text-xl md:text-4xl lg:text-6xl leading-tight font-bold">
-            {statusMessage}
-          </div>
-        </div>
+      {isCriticalSignal && criticalSignal ? (
+        <CriticalSignalPanel
+          criticalSignal={criticalSignal}
+          statusMessage={statusMessage}
+          clock={clock}
+          is24h={is24h}
+          displayHours={displayHours}
+        />
       ) : (
         <div
-          className={
-            "z-10 w-full max-h-full flex flex-col items-center justify-center gap-2 md:gap-3 lg:gap-4 max-md:flex-col max-md:items-center max-md:justify-center " +
-            (promoActive
-              ? "md:transition-all md:duration-900 md:flex-row md:items-stretch md:justify-between"
-              : "")
-          }
+          className={cn(
+            "z-10 w-full max-h-full flex flex-col items-center justify-center gap-2 md:gap-3 lg:gap-4 max-md:flex-col max-md:items-center max-md:justify-center",
+            promoActive &&
+              "md:transition-all md:duration-900 md:flex-row md:items-stretch md:justify-between",
+          )}
         >
           {/* Main Display / Left Column */}
           <div
-            className={
-              "flex flex-col min-w-0 " +
-              (promoActive
+            className={cn(
+              "flex flex-col min-w-0",
+              promoActive
                 ? "promo-compact md:transition-all md:duration-900 md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
-                : "items-center w-full")
-            }
+                : "items-center w-full",
+            )}
           >
             {/* Mosque Branding */}
             <div className="flex flex-col items-center mb-1 md:mb-2 lg:mb-3 md:items-start">
@@ -140,7 +126,7 @@ export function ClockPanel({
                 <div
                   className="w-px h-5 md:h-8 lg:h-12 bg-primary-20"
                   aria-hidden="true"
-                ></div>
+                />
                 <div className="flex flex-col items-center md:items-start">
                   <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
                     {hijriDate || "—"}
@@ -152,10 +138,10 @@ export function ClockPanel({
               </div>
             </div>
 
-            {/* Time Metrics */}
-            <h1 className="font-label-caps font-bold text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-primary tracking-wide md:tracking-wider z-10 mb-0.5 md:mb-1 lg:mb-1.5">
+            {/* Time Display */}
+            <h2 className="font-label-caps font-bold text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-primary tracking-wide md:tracking-wider z-10 mb-0.5 md:mb-1 lg:mb-1.5">
               {t.currentTime}
-            </h1>
+            </h2>
             <div
               className="clock-panel__time flex items-baseline gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
               aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
@@ -169,14 +155,14 @@ export function ClockPanel({
                   :{clock.seconds}
                 </span>
                 {!is24h && (
-                  <span className="absolute -top-[0.9em] right-0 whitespace-nowrap text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-primary font-semibold leading-none">
+                  <span className="absolute top-[-0.9em] right-0 whitespace-nowrap text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-primary font-semibold leading-none">
                     {clock.ampm}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* STANDARD PILL STATUS BAR - DRIVEN BY SVG SCALING */}
+            {/* Status Pill */}
             {statusMessage && (
               <div
                 className="clock-panel__status mt-1 md:mt-2 lg:mt-3 flex items-center gap-3 md:gap-4 status-pill rounded-full px-3 md:px-5 lg:px-6 py-1.5 md:py-2 lg:py-2.5 z-10 max-w-full"
@@ -184,15 +170,22 @@ export function ClockPanel({
                 aria-live="polite"
                 aria-atomic="true"
               >
-                <CampaignIcon className="text-primary w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 tv:w-16 tv:h-16 shrink-0" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  className="text-primary w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 tv:w-16 tv:h-16 shrink-0"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z" />
+                </svg>
                 <span className="font-body-md text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl text-on-surface text-center font-semibold">
                   {statusMessage}
                 </span>
               </div>
             )}
           </div>
-
-          {/* Promo rail moved to a sibling component (PromoRail) */}
         </div>
       )}
     </div>

@@ -1,6 +1,27 @@
 import { useT } from "../i18n";
 import { useSettings } from "../context/SettingsContext";
 
+/**
+ * Splits an announcement at the " — " delimiter and returns structured parts.
+ * The title (before the dash) is rendered bold; the rest is normal weight.
+ */
+function AnnouncementItem({ text }: { text: string }) {
+  const dashIndex = text.indexOf(" — ");
+  if (dashIndex === -1) {
+    return <p>{text}</p>;
+  }
+
+  const title = text.slice(0, dashIndex);
+  const rest = text.slice(dashIndex);
+
+  return (
+    <p>
+      <span className="text-on-surface font-semibold">{title}</span>
+      {rest}
+    </p>
+  );
+}
+
 export function AnnouncementTicker() {
   const { settings } = useSettings();
   const t = useT(settings.language);
@@ -8,14 +29,23 @@ export function AnnouncementTicker() {
     settings.language === "fr"
       ? settings.mosque.announcements_fr
       : settings.mosque.announcements_en;
+
+  if (announcements.length === 0) return null;
+
   // Duplicate items so the marquee loops seamlessly
   const items = [...announcements, ...announcements];
 
   return (
-    <footer className="w-full flex items-center px-4 md:px-6 lg:px-margin-page tv:px-margin-page h-[clamp(3rem,3.5vw,5rem)] border-t border-primary-20 bg-surface-panel overflow-hidden shrink-0">
+    <footer
+      className="w-full flex items-center px-4 md:px-6 lg:px-margin-page tv:px-margin-page h-[clamp(3rem,3.5vw,5rem)] border-t border-primary-20 bg-surface-panel overflow-hidden shrink-0"
+      aria-label={t.masjidAnnouncements}
+    >
       {/* Label */}
       <div className="flex items-center gap-3 lg:gap-4 bg-surface-panel z-10 pr-3 lg:pr-4 border-r border-primary-20 h-full shrink-0">
-        <span className="material-symbols-outlined text-primary text-[1.125rem] md:text-[1.25rem] lg:text-[1.5rem] tv:text-[2rem]">
+        <span
+          className="material-symbols-outlined text-primary text-[1.125rem] md:text-[1.25rem] lg:text-[1.5rem] tv:text-[2rem]"
+          aria-hidden="true"
+        >
           view_list
         </span>
         <span className="font-label-caps font-bold text-label-caps text-primary whitespace-nowrap">
@@ -24,25 +54,17 @@ export function AnnouncementTicker() {
       </div>
 
       {/* Scrolling text */}
-      <div className="flex-1 overflow-hidden ml-3 md:ml-4 lg:ml-5">
+      <div
+        className="flex-1 overflow-hidden ml-3 md:ml-4 lg:ml-5"
+        role="marquee"
+        aria-live="off"
+      >
         <div className="flex items-center h-full gap-4 md:gap-6 lg:gap-8 font-body-md text-[0.95rem] md:text-[1rem] lg:text-[1.125rem] tv:text-[1.25rem] leading-tight text-text-muted whitespace-nowrap animate-marquee">
           {items.map((text, i) => (
-            <p
-              key={i}
-              dangerouslySetInnerHTML={{ __html: formatAnnouncement(text) }}
-            />
+            <AnnouncementItem key={`${text.slice(0, 20)}-${i}`} text={text} />
           ))}
         </div>
       </div>
     </footer>
   );
-}
-
-/** Bold the part before " — " if present */
-function formatAnnouncement(text: string): string {
-  const dashIndex = text.indexOf(" — ");
-  if (dashIndex === -1) return text;
-  const title = text.slice(0, dashIndex);
-  const rest = text.slice(dashIndex);
-  return `<span class="text-on-surface font-semibold">${title}</span>${rest}`;
 }

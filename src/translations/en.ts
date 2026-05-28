@@ -29,6 +29,7 @@ const en = {
   // status messages
   statusAdhanNow: (name: string) => `Adhan for ${name} — come to prayer`,
   statusIqamahNow: (name: string) => `Iqamah for ${name} — come to prayer`,
+  criticalSubtitle: "Come to prayer",
   statusIqamah: (name: string, remaining: string) =>
     `${name} Iqamah in ${remaining}`,
   statusNext: (name: string, remaining: string) => `${name} in ${remaining}`,

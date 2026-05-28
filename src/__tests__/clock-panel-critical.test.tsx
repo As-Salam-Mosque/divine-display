@@ -2,7 +2,11 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ClockPanel } from "../components/ClockPanel";
 import { SettingsProvider } from "../context/SettingsContext";
-import { DEFAULT_APP_SETTINGS, type ClockState } from "../types";
+import {
+  DEFAULT_APP_SETTINGS,
+  type ClockState,
+  type CriticalSignalData,
+} from "../types";
 import { translations } from "../i18n";
 
 const baseClock: ClockState = {
@@ -18,6 +22,7 @@ const baseClock: ClockState = {
 const renderCritical = (
   statusType: "adhan-now" | "iqamah-now",
   message: string,
+  criticalSignal: CriticalSignalData,
 ) =>
   render(
     <SettingsProvider
@@ -29,9 +34,10 @@ const renderCritical = (
     >
       <ClockPanel
         clock={baseClock}
-        hijriDate="Rabiʿ al-Awwal 1, 1446 AH"
+        hijriDate="Rabi\u02BF al-Awwal 1, 1446 AH"
         statusMessage={message}
         statusType={statusType}
+        criticalSignal={criticalSignal}
         onOpenSettings={() => undefined}
       />
     </SettingsProvider>,
@@ -40,7 +46,11 @@ const renderCritical = (
 describe("ClockPanel critical signal", () => {
   it("shows adhan call to prayer message and hides the clock", () => {
     const message = translations.en.statusAdhanNow("Fajr");
-    renderCritical("adhan-now", message);
+    renderCritical("adhan-now", message, {
+      prayerName: "Fajr",
+      urgency: "low",
+      subtitle: "Come to prayer",
+    });
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent(/adhan/i);
@@ -51,7 +61,11 @@ describe("ClockPanel critical signal", () => {
 
   it("shows iqamah call to prayer message and hides the clock", () => {
     const message = translations.en.statusIqamahNow("Dhuhr");
-    renderCritical("iqamah-now", message);
+    renderCritical("iqamah-now", message, {
+      prayerName: "Dhuhr",
+      urgency: "high",
+      subtitle: "Come to prayer",
+    });
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent(/iqamah/i);

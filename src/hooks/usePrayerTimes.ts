@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type {
   Language,
   PrayerTime,
   PrayerTimesState,
   StatusType,
+  CriticalSignalData,
+  MosqueConfig,
 } from "../types";
-import type { MosqueConfig } from "../types";
 import { translations } from "../i18n";
+import { parseTime, addMinutes, formatRemaining } from "../utils/time";
 
 const PRAYER_META: Record<
   string,
@@ -47,39 +49,6 @@ function cacheKeyForConfig(config: MosqueConfig): string {
   return `prayer-times-${todayKey()}-${config.latitude}-${config.longitude}-${config.calculationMethod}`;
 }
 
-function parseTime(timeStr: string): Date {
-  const [h, m] = timeStr.split(":").map(Number);
-  const d = new Date();
-  d.setHours(h, m, 0, 0);
-  return d;
-}
-
-function addMinutes(timeStr: string, minutes: number): string {
-  const d = parseTime(timeStr);
-  d.setMinutes(d.getMinutes() + minutes);
-  const h = String(d.getHours()).padStart(2, "0");
-  const m = String(d.getMinutes()).padStart(2, "0");
-  return `${h}:${m}`;
-}
-
-function formatRemaining(targetDate: Date, now: Date) {
-  // Return a countdown string in H:mm:ss (omit leading "00" hour)
-  const totalSeconds = Math.max(
-    0,
-    Math.ceil((targetDate.getTime() - now.getTime()) / 1000),
-  );
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  const mm = String(minutes).padStart(2, "0");
-  const ss = String(seconds).padStart(2, "0");
-  if (hours === 0) {
-    // show MM:SS when under 1 hour (no leading 00:)
-    return `${mm}:${ss}`;
-  }
-  return `${hours}:${mm}:${ss}`;
-}
-
 const STATUS_SIGNAL_WINDOW_MS = 60_000;
 
 function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
@@ -95,7 +64,11 @@ function buildStatus(
   nextPrayerIndex: number | null,
   now: Date,
   language: Language,
-): { message: string; type: StatusType } {
+): {
+  message: string;
+  type: StatusType;
+  criticalSignal: CriticalSignalData | null;
+} {
   const t = translations[language];
   // If we're currently before iqamah of the active prayer, show Iqamah countdown
   if (activePrayerIndex !== null) {
@@ -104,11 +77,27 @@ function buildStatus(
     const iqDate = active.iqamah ? parseTime(active.iqamah.trim()) : null;
 
     if (iqDate && isWithinSignalWindow(iqDate, now)) {
-      return { message: t.statusIqamahNow(active.name), type: "iqamah-now" };
+      return {
+        message: t.statusIqamahNow(active.name),
+        type: "iqamah-now",
+        criticalSignal: {
+          prayerName: active.name,
+          urgency: "high",
+          subtitle: t.criticalSubtitle,
+        },
+      };
     }
 
     if (adhanDate && isWithinSignalWindow(adhanDate, now)) {
-      return { message: t.statusAdhanNow(active.name), type: "adhan-now" };
+      return {
+        message: t.statusAdhanNow(active.name),
+        type: "adhan-now",
+        criticalSignal: {
+          prayerName: active.name,
+          urgency: "low",
+          subtitle: t.criticalSubtitle,
+        },
+      };
     }
 
     if (iqDate) {
@@ -117,6 +106,7 @@ function buildStatus(
         return {
           message: t.statusIqamah(active.name, formatRemaining(iqDate, now)),
           type: "iqamah-countdown",
+          criticalSignal: null,
         };
       }
     }
@@ -135,10 +125,11 @@ function buildStatus(
       return {
         message: t.statusNext(next.name, formatRemaining(nextDate, now)),
         type: "next-countdown",
+        criticalSignal: null,
       };
     }
   }
-  return { message: "", type: "none" };
+  return { message: "", type: "none", criticalSignal: null };
 }
 
 interface CachedData {
@@ -151,15 +142,43 @@ export function usePrayerTimes(
   config: MosqueConfig,
   language: Language = "en",
 ): PrayerTimesState {
-  const [state, setState] = useState<PrayerTimesState>({
-    prayers: [],
-    hijriDate: "",
-    activePrayerIndex: null,
-    nextPrayerIndex: null,
-    statusMessage: "",
-    statusType: "none",
-    loading: true,
-    error: null,
+  // Lazy initializer: check localStorage cache immediately so we can
+  // render prayer data on the first frame without a loading flash.
+  const [state, setState] = useState<PrayerTimesState>(() => {
+    const cacheKey = cacheKeyForConfig(config);
+    try {
+      const raw = localStorage.getItem(cacheKey);
+      if (raw) {
+        const data: CachedData = JSON.parse(raw);
+        if (data.key === cacheKey) {
+          const prayers = buildPrayers(data.timings, config);
+          return {
+            prayers,
+            hijriDate: data.hijriDate,
+            activePrayerIndex: null,
+            nextPrayerIndex: null,
+            statusMessage: "",
+            statusType: "none" as StatusType,
+            criticalSignal: null,
+            loading: false,
+            error: null,
+          };
+        }
+      }
+    } catch {
+      // ignore corrupt cache
+    }
+    return {
+      prayers: [],
+      hijriDate: "",
+      activePrayerIndex: null,
+      nextPrayerIndex: null,
+      statusMessage: "",
+      statusType: "none",
+      criticalSignal: null,
+      loading: true,
+      error: null,
+    };
   });
 
   const deriveDynamic = useCallback(
@@ -202,8 +221,8 @@ export function usePrayerTimes(
         }
       }
 
-      // Highlight next by default, but if we're before iqamah highlight current
-      const highlightedIndex = beforeIqamah ? currentIndex : nextIndex;
+      // Highlight next by default, but if we're between adhan and iqamah highlight current
+      const beforeIqamahHighlight = beforeIqamah ? currentIndex : nextIndex;
 
       const status = buildStatus(
         prayers,
@@ -213,42 +232,36 @@ export function usePrayerTimes(
         language,
       );
 
+      // During iqamah-now the current prayer is starting — highlight the next prayer instead
+      const highlightedIndex =
+        status.type === "iqamah-now" ? nextIndex : beforeIqamahHighlight;
+
       setState((prev) => ({
         ...prev,
         activePrayerIndex: highlightedIndex,
         nextPrayerIndex: nextIndex,
         statusMessage: status.message,
         statusType: status.type,
+        criticalSignal: status.criticalSignal,
       }));
     },
     [language],
   );
 
+  // Track whether we've already fetched for the current config to avoid
+  // re-fetching when the lazy initializer already provided cached data.
+  const hasFetchedRef = useRef(false);
+
   useEffect(() => {
     const cacheKey = cacheKeyForConfig(config);
-    const cached = localStorage.getItem(cacheKey);
 
-    if (cached) {
-      try {
-        const data: CachedData = JSON.parse(cached);
-        if (data.key === cacheKey) {
-          const prayers = buildPrayers(data.timings, config);
-          // Defer state update slightly to avoid synchronous setState inside effect
-          setTimeout(() => {
-            setState((prev) => ({
-              ...prev,
-              prayers,
-              hijriDate: data.hijriDate,
-              loading: false,
-            }));
-            deriveDynamic(prayers);
-          }, 0);
-          return;
-        }
-      } catch {
-        // ignore corrupt cache
-      }
+    // If lazy initializer already loaded valid cache for this config, skip fetch
+    if (!hasFetchedRef.current && !state.loading && state.prayers.length > 0) {
+      hasFetchedRef.current = true;
+      return;
     }
+
+    hasFetchedRef.current = true;
 
     const today = new Date();
     const dateStr = `${String(today.getDate()).padStart(2, "0")}-${String(today.getMonth() + 1).padStart(2, "0")}-${today.getFullYear()}`;
@@ -285,6 +298,10 @@ export function usePrayerTimes(
           error: String(err),
         }));
       });
+    // state.loading and state.prayers.length are read only on mount to check
+    // if the lazy initializer already populated the cache. They are intentionally
+    // excluded to avoid refetching on every state update.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config, deriveDynamic]);
 
   // Poll every second to keep the status message countdown live
@@ -340,7 +357,7 @@ function buildPrayers(
   const extras = (config.extraPrayers ?? []).map((e) => {
     const adhan = e.adhan ?? e.time ?? null;
     return {
-      name: e.name as PrayerTime["name"] as PrayerTime["name"],
+      name: e.name,
       arabicName: e.arabicName ?? e.name,
       icon: e.icon ?? "campaign",
       adhan,

@@ -23,6 +23,7 @@ const fr = {
   hijri: "HÉGIRE",
   statusAdhanNow: (name: string) => `Adhan de ${name} — venez à la prière`,
   statusIqamahNow: (name: string) => `Iqama de ${name} — venez à la prière`,
+  criticalSubtitle: "Venez à la prière",
   statusIqamah: (name: string, remaining: string) =>
     `Iqama de ${name} dans ${remaining}`,
   statusNext: (name: string, remaining: string) => `${name} dans ${remaining}`,
