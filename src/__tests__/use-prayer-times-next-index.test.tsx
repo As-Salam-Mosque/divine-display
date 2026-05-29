@@ -3,36 +3,6 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 import { type MosqueConfig, DEFAULT_APP_SETTINGS } from "../types";
 
-const MOCK_TIMINGS = {
-  Fajr: "05:00",
-  Sunrise: "06:20",
-  Dhuhr: "12:30",
-  Asr: "15:45",
-  Maghrib: "18:10",
-  Isha: "19:30",
-};
-
-const MOCK_API_RESPONSE = {
-  data: {
-    timings: MOCK_TIMINGS,
-    date: {
-      hijri: {
-        month: { en: "Ramadan" },
-        day: "1",
-        year: "1447",
-      },
-    },
-  },
-};
-
-function mockPrayerTimesFetch() {
-  const fetchMock = vi
-    .fn()
-    .mockResolvedValue({ json: async () => MOCK_API_RESPONSE });
-  vi.stubGlobal("fetch", fetchMock as unknown as typeof fetch);
-  return fetchMock;
-}
-
 function createConfig(overrides: Partial<MosqueConfig>): MosqueConfig {
   return {
     ...DEFAULT_APP_SETTINGS.mosque,
