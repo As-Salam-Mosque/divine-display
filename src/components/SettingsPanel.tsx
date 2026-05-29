@@ -105,13 +105,15 @@ function Toggle({
       <span
         aria-hidden="true"
         className={cn(
-          "relative shrink-0 w-11 h-6 rounded-full transition-colors duration-200",
-          checked ? "bg-primary" : "bg-surface-container-highest",
+          "relative shrink-0 w-11 h-6 rounded-full border transition-all duration-200",
+          checked
+            ? "bg-primary border-primary"
+            : "bg-surface-container border-outline-variant",
         )}
       >
         <span
           className={cn(
-            "absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200",
+            "absolute inset-y-0 my-auto left-0.5 w-5 h-5 bg-white rounded-full border border-outline-variant shadow transition-transform duration-200",
             checked ? "translate-x-5" : "translate-x-0",
           )}
         />

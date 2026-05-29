@@ -355,7 +355,6 @@ function buildPrayers(
     };
   });
 
-  // Append any admin-supplied extraPrayers from config.
   // Extras can provide iqamah explicitly, or derive it from iqamahOffsets[name].
   const extras: PrayerTime[] = (config.extraPrayers ?? []).map((e) => {
     const adhan = e.adhan ?? e.time ?? null;

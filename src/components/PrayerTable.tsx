@@ -52,8 +52,9 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
     <div
       ref={scrollContainerRef}
       className={cn(
-        "prayer-table-scroll-region h-full min-h-0 overflow-y-hidden",
-        isScrollable && "prayer-table-scroll-region--active overflow-y-scroll",
+        "prayer-table-scroll-region h-full min-h-0 overflow-visible",
+        isScrollable &&
+          "prayer-table-scroll-region--active overflow-y-scroll overflow-x-hidden",
       )}
     >
       <ul
@@ -68,6 +69,7 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
               key={`${prayer.name}-${index}`}
               prayer={prayer}
               isActive={isActive}
+              backgroundVariant={index % 2 === 0 ? "a" : "b"}
             />
           );
         })}

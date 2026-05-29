@@ -84,6 +84,10 @@ button {
     --primary-alpha-10: 0.2;
     --primary-alpha-20: 0.44;
     --primary-alpha-25: 0.56;
+
+    /* PrayerCard alternating backgrounds: analogous hues, equal visual weight */
+    --prayer-card-bg-a: #e9f0f8; /* cool blue */
+    --prayer-card-bg-b: #e8f3f2; /* blue-teal */
 }
 
 /* Dark theme overrides */
@@ -110,6 +114,10 @@ button {
     --primary-alpha-10: 0.1;
     --primary-alpha-20: 0.2;
     --primary-alpha-25: 0.25;
+
+    /* PrayerCard alternating backgrounds: analogous hues, equal visual weight */
+    --prayer-card-bg-a: #182846; /* deep blue */
+    --prayer-card-bg-b: #182e42; /* deep blue-teal */
 }
 
 /* Light theme explicit (mirrors :root for clarity) */
@@ -137,6 +145,10 @@ button {
     --primary-alpha-10: 0.12;
     --primary-alpha-20: 0.36;
     --primary-alpha-25: 0.45;
+
+    /* PrayerCard alternating backgrounds: analogous hues, equal visual weight */
+    --prayer-card-bg-a: #e9f0f8; /* cool blue */
+    --prayer-card-bg-b: #e8f3f2; /* blue-teal */
 }
 
 @layer components {
@@ -205,6 +217,12 @@ button {
     }
     .bg-surface-panel {
         background-color: var(--surface-panel) !important;
+    }
+    .bg-prayer-card-a {
+        background-color: var(--prayer-card-bg-a) !important;
+    }
+    .bg-prayer-card-b {
+        background-color: var(--prayer-card-bg-b) !important;
     }
     .bg-surface {
         background-color: var(--surface) !important;
