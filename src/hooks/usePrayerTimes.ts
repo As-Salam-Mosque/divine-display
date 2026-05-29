@@ -172,19 +172,16 @@ export function usePrayerTimes(
   const deriveDynamic = useCallback(
     (prayers: PrayerTime[]) => {
       const now = new Date();
-      let currentIndex: number | null = null;
       let nextIndex: number | null = null;
 
-      // Find current (last prayer whose adhan has passed) and next
+      // Find the next prayer (first prayer whose adhan/time is after now)
       for (let i = 0; i < prayers.length; i++) {
         const prayer = prayers[i];
         const adhanStr = prayer.adhan ?? prayer.time ?? null;
         if (!adhanStr) continue;
         const prayerDate = parseTime(adhanStr.trim());
 
-        if (prayerDate <= now) {
-          currentIndex = i;
-        } else if (nextIndex === null) {
+        if (prayerDate > now && nextIndex === null) {
           nextIndex = i;
         }
       }
