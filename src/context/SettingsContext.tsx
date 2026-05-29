@@ -6,12 +6,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { AppSettings, MosqueConfig, Language } from "../types";
+import type { AppSettings, Language } from "../types";
 import { DEFAULT_APP_SETTINGS } from "../types";
 
-type SettingsPatch = Partial<Omit<AppSettings, "mosque">> & {
-  mosque?: Partial<MosqueConfig>;
-};
+/** Only user-adjustable preferences are persisted — mosque config is never cached. */
+type SettingsPatch = Partial<Omit<AppSettings, "mosque">>;
 
 interface SettingsContextValue {
   settings: AppSettings;
@@ -26,16 +25,21 @@ function readStoredOverrides(): SettingsPatch {
   if (typeof window === "undefined") return {};
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as SettingsPatch) : {};
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    // Strip `mosque` if it was previously stored (migration from older versions)
+    delete parsed.mosque;
+    return parsed as SettingsPatch;
   } catch {
     return {};
   }
 }
 
-function persistSettings(settings: AppSettings): void {
+function persistSettings(patch: SettingsPatch): void {
   try {
     if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+      // Only persist user preferences — never mosque config
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(patch));
     }
   } catch {
     // Ignore storage errors (quota exceeded, private browsing, etc.)
@@ -68,14 +72,11 @@ export function SettingsProvider({
     useState<SettingsPatch>(readStoredOverrides);
 
   const settings = useMemo<AppSettings>(() => {
-    const mergedMosque: MosqueConfig = {
-      ...resolvedBaseSettings.mosque,
-      ...(overrides.mosque ?? {}),
-    };
     return {
       ...resolvedBaseSettings,
       ...overrides,
-      mosque: mergedMosque,
+      // mosque always comes fresh from defaults (useMosqueConfig), never from cache
+      mosque: resolvedBaseSettings.mosque,
     };
   }, [resolvedBaseSettings, overrides]);
 
@@ -85,19 +86,13 @@ export function SettingsProvider({
         const next: SettingsPatch = {
           ...prev,
           ...patch,
-          mosque: { ...(prev.mosque ?? {}), ...(patch.mosque ?? {}) },
         };
 
-        const merged: AppSettings = {
-          ...resolvedBaseSettings,
-          ...next,
-          mosque: { ...resolvedBaseSettings.mosque, ...(next.mosque ?? {}) },
-        };
-        persistSettings(merged);
+        persistSettings(next);
 
         return next;
       }),
-    [resolvedBaseSettings],
+    [],
   );
 
   const value = useMemo(
