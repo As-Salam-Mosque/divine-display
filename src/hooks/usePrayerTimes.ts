@@ -58,10 +58,11 @@ function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
   );
 }
 
-function buildStatus(
+type EventType = "iqamah" | "adhan" | "time";
+
+function buildStatusFromEvent(
   prayers: PrayerTime[],
-  activePrayerIndex: number | null,
-  nextPrayerIndex: number | null,
+  nextEvent: { prayerIndex: number; type: EventType; date: Date } | null,
   now: Date,
   language: Language,
 ): {
@@ -70,68 +71,53 @@ function buildStatus(
   criticalSignal: CriticalSignalData | null;
 } {
   const t = translations[language];
-  // If we're currently before iqamah of the active prayer, show Iqamah countdown
-  if (activePrayerIndex !== null) {
-    const active = prayers[activePrayerIndex];
-    const adhanDate = active.adhan ? parseTime(active.adhan.trim()) : null;
-    const iqDate = active.iqamah ? parseTime(active.iqamah.trim()) : null;
+  if (!nextEvent) return { message: "", type: "none", criticalSignal: null };
 
-    if (iqDate && isWithinSignalWindow(iqDate, now)) {
-      return {
-        message: t.statusIqamahNow(active.name),
-        type: "iqamah-now",
-        criticalSignal: {
-          prayerName: active.name,
-          arabicName: active.arabicName,
-          urgency: "high",
-          subtitle: t.criticalSubtitle,
-        },
-      };
-    }
+  const p = prayers[nextEvent.prayerIndex];
+  const { type, date } = nextEvent;
 
-    if (adhanDate && isWithinSignalWindow(adhanDate, now)) {
-      return {
-        message: t.statusAdhanNow(active.name),
-        type: "adhan-now",
-        criticalSignal: {
-          prayerName: active.name,
-          arabicName: active.arabicName,
-          urgency: "low",
-          subtitle: t.criticalSubtitle,
-        },
-      };
-    }
-
-    if (iqDate) {
-      const adhanFloor = adhanDate ?? new Date(0);
-      if (now >= adhanFloor && now < iqDate) {
-        return {
-          message: t.statusIqamah(active.name, formatRemaining(iqDate, now)),
-          type: "iqamah-countdown",
-          criticalSignal: null,
-        };
-      }
-    }
+  // Critical signal windows
+  if (type === "iqamah" && isWithinSignalWindow(date, now)) {
+    return {
+      message: t.statusIqamahNow(p.name),
+      type: "iqamah-now",
+      criticalSignal: {
+        prayerName: p.name,
+        arabicName: p.arabicName,
+        urgency: "high",
+        subtitle: t.criticalSubtitle,
+      },
+    };
   }
 
-  // Otherwise, show next prayer countdown
-  if (nextPrayerIndex !== null) {
-    const next = prayers[nextPrayerIndex];
-    const nextAdhan = next.adhan ?? next.time ?? null;
-    if (nextAdhan) {
-      const nextDate = parseTime(nextAdhan.trim());
-      if (nextDate.getTime() <= now.getTime()) {
-        // next is tomorrow's first prayer
-        nextDate.setDate(nextDate.getDate() + 1);
-      }
-      return {
-        message: t.statusNext(next.name, formatRemaining(nextDate, now)),
-        type: "next-countdown",
-        criticalSignal: null,
-      };
-    }
+  if (type === "adhan" && isWithinSignalWindow(date, now)) {
+    return {
+      message: t.statusAdhanNow(p.name),
+      type: "adhan-now",
+      criticalSignal: {
+        prayerName: p.name,
+        arabicName: p.arabicName,
+        urgency: "low",
+        subtitle: t.criticalSubtitle,
+      },
+    };
   }
-  return { message: "", type: "none", criticalSignal: null };
+
+  // Non-critical countdowns
+  if (type === "iqamah") {
+    return {
+      message: t.statusIqamah(p.name, formatRemaining(date, now)),
+      type: "iqamah-countdown",
+      criticalSignal: null,
+    };
+  }
+
+  // For adhan or time, show next countdown label
+  return {
+    message: t.statusNext(p.name, formatRemaining(date, now)),
+    type: "next-countdown",
+    criticalSignal: null,
+  };
 }
 
 interface CachedData {
@@ -186,19 +172,16 @@ export function usePrayerTimes(
   const deriveDynamic = useCallback(
     (prayers: PrayerTime[]) => {
       const now = new Date();
-      let currentIndex: number | null = null;
       let nextIndex: number | null = null;
 
-      // Find current (last prayer whose adhan has passed) and next
+      // Find the next prayer (first prayer whose adhan/time is after now)
       for (let i = 0; i < prayers.length; i++) {
         const prayer = prayers[i];
         const adhanStr = prayer.adhan ?? prayer.time ?? null;
         if (!adhanStr) continue;
         const prayerDate = parseTime(adhanStr.trim());
 
-        if (prayerDate <= now) {
-          currentIndex = i;
-        } else if (nextIndex === null) {
+        if (prayerDate > now && nextIndex === null) {
           nextIndex = i;
         }
       }
@@ -206,37 +189,43 @@ export function usePrayerTimes(
       // if there is no next (all prayers passed), wrap to first
       if (nextIndex === null && prayers.length) nextIndex = 0;
 
-      // Determine whether we're before iqamah of the current prayer
-      let beforeIqamah = false;
-      if (currentIndex !== null) {
-        const current = prayers[currentIndex];
-        if (current.iqamah) {
-          const iqDate = parseTime(current.iqamah.trim());
+      // Build a flattened list of candidate events (iqamah, time, adhan)
+      const events: { prayerIndex: number; type: EventType; date: Date }[] = [];
+      for (let i = 0; i < prayers.length; i++) {
+        const p = prayers[i];
+        // iqamah has highest semantic priority but we still compare by actual time
+        if (p.iqamah) {
+          const d = parseTime(p.iqamah.trim());
+          // if it's significantly in the past, treat it as tomorrow
+          if (d.getTime() - now.getTime() < -STATUS_SIGNAL_WINDOW_MS)
+            d.setDate(d.getDate() + 1);
+          events.push({ prayerIndex: i, type: "iqamah", date: d });
+        }
 
-          // determine adhan date/time
-          let adhanDate = new Date(0);
-          if (current.adhan) {
-            adhanDate = parseTime(current.adhan.trim());
-          }
-
-          if (now >= adhanDate && now < iqDate) beforeIqamah = true;
+        // adhan (or canonical time for Shuruq) and explicit time
+        const adhanOrTime = p.adhan ?? p.time ?? null;
+        if (adhanOrTime) {
+          const d = parseTime(adhanOrTime.trim());
+          if (d.getTime() - now.getTime() < -STATUS_SIGNAL_WINDOW_MS)
+            d.setDate(d.getDate() + 1);
+          // treat prayers that only have `time` (e.g., Shuruq) as "time"
+          const ty: EventType = p.adhan ? "adhan" : "time";
+          events.push({ prayerIndex: i, type: ty, date: d });
         }
       }
 
-      // Highlight next by default, but if we're between adhan and iqamah highlight current
-      const beforeIqamahHighlight = beforeIqamah ? currentIndex : nextIndex;
+      // Pick the soonest event by sorting events by their absolute Date
+      events.sort((a, b) => a.date.getTime() - b.date.getTime());
+      const nextEvent = events.length ? events[0] : null;
 
-      const status = buildStatus(
-        prayers,
-        currentIndex,
-        nextIndex,
-        now,
-        language,
-      );
+      const status = buildStatusFromEvent(prayers, nextEvent, now, language);
 
-      // During iqamah-now the current prayer is starting — highlight the next prayer instead
+      // Determine highlighted index: by default use the prayer associated with the next event.
+      // Preserve previous behavior: during iqamah-now the current prayer is starting — highlight the next prayer instead
       const highlightedIndex =
-        status.type === "iqamah-now" ? nextIndex : beforeIqamahHighlight;
+        status.type === "iqamah-now"
+          ? nextIndex
+          : (nextEvent?.prayerIndex ?? nextIndex);
 
       setState((prev) => ({
         ...prev,
@@ -355,16 +344,22 @@ function buildPrayers(
     };
   });
 
-  // Append any admin-supplied extraPrayers from config. Convert ExtraPrayer -> PrayerTime
-  const extras = (config.extraPrayers ?? []).map((e) => {
+  // Extras can provide iqamah explicitly, or derive it from iqamahOffsets[name].
+  const extras: PrayerTime[] = (config.extraPrayers ?? []).map((e) => {
     const adhan = e.adhan ?? e.time ?? null;
+    const offset = config.iqamahOffsets[e.name];
+    const iqamah =
+      e.iqamah ??
+      (adhan && offset !== undefined ? addMinutes(adhan, offset) : null);
+
     return {
       name: e.name,
       arabicName: e.arabicName ?? e.name,
       icon: e.icon ?? "campaign",
       adhan,
+      iqamah,
       time: e.time,
-    } as PrayerTime;
+    };
   });
 
   return [...basePrayers, ...extras];

@@ -105,13 +105,15 @@ function Toggle({
       <span
         aria-hidden="true"
         className={cn(
-          "relative shrink-0 w-11 h-6 rounded-full transition-colors duration-200",
-          checked ? "bg-primary" : "bg-surface-container-highest",
+          "relative shrink-0 w-11 h-6 rounded-full border transition-all duration-200",
+          checked
+            ? "bg-primary border-primary"
+            : "bg-surface-container border-outline-variant",
         )}
       >
         <span
           className={cn(
-            "absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200",
+            "absolute inset-y-0 my-auto left-0.5 w-5 h-5 bg-white rounded-full border border-outline-variant shadow transition-transform duration-200",
             checked ? "translate-x-5" : "translate-x-0",
           )}
         />
@@ -254,6 +256,20 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 checked={settings.showSponsors}
                 onChange={(v) => updateSettings({ showSponsors: v })}
                 label={t.showSponsors}
+              />
+            </div>
+          </section>
+
+          {/* ── Accessibility ── */}
+          <section aria-labelledby="section-accessibility">
+            <SectionHeader label={t.sectionAccessibility} />
+            <div id="section-accessibility">
+              <Toggle
+                checked={Boolean(settings.alternatePrayerCardColors)}
+                onChange={(v) =>
+                  updateSettings({ alternatePrayerCardColors: v })
+                }
+                label={t.alternatePrayerCardColors}
               />
             </div>
           </section>

@@ -125,6 +125,10 @@ export interface AppSettings {
   showSponsors: boolean;
   theme: Theme;
   mosque: MosqueConfig;
+  // Accessibility: when true, prayer cards will alternate between two
+  // background colors for visual separation. Defaults to false so all cards
+  // share the same background by default.
+  alternatePrayerCardColors?: boolean;
 }
 
 // Hardcoded default app settings. Use these as the single source of truth
@@ -153,4 +157,6 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     announcements_fr: [],
     extraPrayers: [],
   },
+  // Accessibility defaults: do not alternate prayer card colors by default.
+  alternatePrayerCardColors: false,
 };

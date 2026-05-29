@@ -7,6 +7,7 @@ import { formatDisplayTime, type FormattedTime } from "../utils/time";
 interface PrayerCardProps {
   prayer: PrayerTime;
   isActive: boolean;
+  backgroundVariant?: "a" | "b";
 }
 
 function TimeCellContent({
@@ -73,7 +74,11 @@ function TimeCell({
   );
 }
 
-export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
+export function PrayerCard({
+  prayer,
+  isActive,
+  backgroundVariant = "a",
+}: PrayerCardProps) {
   const { settings } = useSettings();
   const t = useT(settings.language);
 
@@ -94,9 +99,12 @@ export function PrayerCard({ prayer, isActive }: PrayerCardProps) {
       aria-label={ariaLabel}
       aria-current={isActive ? "true" : undefined}
       className={cn(
-        "prayer-card rounded-xl bg-surface-panel ghost-border flex flex-1 h-full min-w-0 w-full overflow-hidden",
-        isActive &&
-          "bg-surface-panel ghost-border active-glow dark-active z-30 overflow-visible",
+        "prayer-card rounded-xl ghost-border flex flex-1 h-full min-w-0 w-full overflow-hidden",
+        isActive
+          ? "bg-surface-panel ghost-border active-glow dark-active z-30 overflow-visible"
+          : backgroundVariant === "a"
+            ? "bg-prayer-card-a"
+            : "bg-prayer-card-b",
       )}
     >
       <div className="prayer-card-name-section">

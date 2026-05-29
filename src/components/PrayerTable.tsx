@@ -8,7 +8,10 @@ interface PrayerTableProps {
   activePrayerIndex: number | null;
 }
 
+import { useSettings } from "../context/SettingsContext";
+
 export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
+  const { settings } = useSettings();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
@@ -52,8 +55,9 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
     <div
       ref={scrollContainerRef}
       className={cn(
-        "prayer-table-scroll-region h-full min-h-0 overflow-y-hidden",
-        isScrollable && "prayer-table-scroll-region--active overflow-y-scroll",
+        "prayer-table-scroll-region h-full min-h-0 overflow-visible",
+        isScrollable &&
+          "prayer-table-scroll-region--active overflow-y-scroll overflow-x-hidden",
       )}
     >
       <ul
@@ -62,12 +66,18 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
       >
         {prayers.map((prayer, index) => {
           const isActive = activePrayerIndex === index;
+          const backgroundVariant = settings.alternatePrayerCardColors
+            ? index % 2 === 0
+              ? "a"
+              : "b"
+            : "a";
 
           return (
             <PrayerCard
               key={`${prayer.name}-${index}`}
               prayer={prayer}
               isActive={isActive}
+              backgroundVariant={backgroundVariant}
             />
           );
         })}

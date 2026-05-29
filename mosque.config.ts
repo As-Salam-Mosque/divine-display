@@ -20,22 +20,22 @@ const config: MosqueConfig = {
     Isha: 0,
   },
   extraPrayers: [
-    // {
-    //   name: "Khutbah 1",
-    //   arabicName: "خطبة 1",
-    //   icon: "campaign",
-    //   adhan: null,
-    //   iqamah: null,
-    //   time: "13:00",
-    // },
-    // {
-    //   name: "Khutbah 2",
-    //   arabicName: "خطبة 2",
-    //   icon: "campaign",
-    //   adhan: null,
-    //   iqamah: null,
-    //   time: "14:00",
-    // },
+    {
+      name: "Khutbah 1",
+      arabicName: "خطبة 1",
+      icon: "campaign",
+      adhan: null,
+      iqamah: null,
+      time: "13:00",
+    },
+    {
+      name: "Khutbah 2",
+      arabicName: "خطبة 2",
+      icon: "campaign",
+      adhan: null,
+      iqamah: null,
+      time: "14:00",
+    },
   ],
   adSlots: [
     {

@@ -139,6 +139,7 @@ export default function App() {
       showSponsors: true,
       theme: "dark",
       mosque: config,
+      alternatePrayerCardColors: false,
     }),
     [config],
   );
