@@ -355,16 +355,23 @@ function buildPrayers(
     };
   });
 
-  // Append any admin-supplied extraPrayers from config. Convert ExtraPrayer -> PrayerTime
-  const extras = (config.extraPrayers ?? []).map((e) => {
+  // Append any admin-supplied extraPrayers from config.
+  // Extras can provide iqamah explicitly, or derive it from iqamahOffsets[name].
+  const extras: PrayerTime[] = (config.extraPrayers ?? []).map((e) => {
     const adhan = e.adhan ?? e.time ?? null;
+    const offset = config.iqamahOffsets[e.name];
+    const iqamah =
+      e.iqamah ??
+      (adhan && offset !== undefined ? addMinutes(adhan, offset) : null);
+
     return {
       name: e.name,
       arabicName: e.arabicName ?? e.name,
       icon: e.icon ?? "campaign",
       adhan,
+      iqamah,
       time: e.time,
-    } as PrayerTime;
+    };
   });
 
   return [...basePrayers, ...extras];
