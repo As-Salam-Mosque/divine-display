@@ -82,6 +82,7 @@ function buildStatus(
         type: "iqamah-now",
         criticalSignal: {
           prayerName: active.name,
+          arabicName: active.arabicName,
           urgency: "high",
           subtitle: t.criticalSubtitle,
         },
@@ -94,6 +95,7 @@ function buildStatus(
         type: "adhan-now",
         criticalSignal: {
           prayerName: active.name,
+          arabicName: active.arabicName,
           urgency: "low",
           subtitle: t.criticalSubtitle,
         },

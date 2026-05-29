@@ -48,6 +48,7 @@ describe("ClockPanel critical signal", () => {
     const message = translations.en.statusAdhanNow("Fajr");
     renderCritical("adhan-now", message, {
       prayerName: "Fajr",
+      arabicName: "الفجر",
       urgency: "low",
       subtitle: "Come to prayer",
     });
@@ -56,6 +57,9 @@ describe("ClockPanel critical signal", () => {
     expect(alert).toHaveTextContent(/adhan/i);
     expect(alert).toHaveTextContent(/fajr/i);
     expect(alert).toHaveTextContent(/come to prayer/i);
+    expect(alert).toHaveTextContent("الفجر");
+    expect(alert).toHaveTextContent("Sep 1, 2024");
+    expect(alert).toHaveTextContent(/Rabi.*1446 AH/);
     expect(screen.queryByRole("timer")).not.toBeInTheDocument();
   });
 
@@ -63,6 +67,7 @@ describe("ClockPanel critical signal", () => {
     const message = translations.en.statusIqamahNow("Dhuhr");
     renderCritical("iqamah-now", message, {
       prayerName: "Dhuhr",
+      arabicName: "الظهر",
       urgency: "high",
       subtitle: "Come to prayer",
     });
@@ -71,6 +76,9 @@ describe("ClockPanel critical signal", () => {
     expect(alert).toHaveTextContent(/iqamah/i);
     expect(alert).toHaveTextContent(/dhuhr/i);
     expect(alert).toHaveTextContent(/come to prayer/i);
+    expect(alert).toHaveTextContent("الظهر");
+    expect(alert).toHaveTextContent("Sep 1, 2024");
+    expect(alert).toHaveTextContent(/Rabi.*1446 AH/);
     expect(screen.queryByRole("timer")).not.toBeInTheDocument();
   });
 });

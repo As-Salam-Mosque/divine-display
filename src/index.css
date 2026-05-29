@@ -275,6 +275,34 @@ button {
         outline-offset: 2px;
     }
 
+    .prayer-table-scroll-region--active {
+        scrollbar-gutter: stable;
+        scrollbar-width: auto;
+        scrollbar-color: rgba(var(--primary-rgb), 0.72)
+            rgba(var(--primary-rgb), 0.12);
+    }
+
+    .prayer-table-scroll-region--active::-webkit-scrollbar {
+        width: 0.875rem;
+    }
+
+    .prayer-table-scroll-region--active::-webkit-scrollbar-track {
+        background: rgba(var(--primary-rgb), 0.12);
+        border-radius: 9999px;
+    }
+
+    .prayer-table-scroll-region--active::-webkit-scrollbar-thumb {
+        background: rgba(var(--primary-rgb), 0.72);
+        border: 2px solid transparent;
+        border-radius: 9999px;
+        background-clip: padding-box;
+    }
+
+    .prayer-table-scroll-region--active::-webkit-scrollbar-thumb:hover {
+        background: rgba(var(--primary-rgb), 0.84);
+        background-clip: padding-box;
+    }
+
     /* Styles for PrayerCard using plain CSS (avoid @apply to satisfy linters) */
     .prayer-card {
         container-type: inline-size;

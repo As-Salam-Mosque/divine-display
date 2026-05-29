@@ -76,6 +76,7 @@ export function ClockPanel({
           criticalSignal={criticalSignal}
           statusMessage={statusMessage}
           clock={clock}
+          hijriDate={hijriDate}
           is24h={is24h}
           displayHours={displayHours}
         />

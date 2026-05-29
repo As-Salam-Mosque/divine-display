@@ -7,6 +7,7 @@ interface CriticalSignalPanelProps {
   criticalSignal: CriticalSignalData;
   statusMessage: string;
   clock: ClockState;
+  hijriDate: string;
   is24h: boolean;
   displayHours: string;
 }
@@ -15,6 +16,7 @@ export function CriticalSignalPanel({
   criticalSignal,
   statusMessage,
   clock,
+  hijriDate,
   is24h,
   displayHours,
 }: CriticalSignalPanelProps) {
@@ -53,12 +55,20 @@ export function CriticalSignalPanel({
           </span>
 
           {/* Hero prayer name */}
-          <h2
-            className="font-clock-display text-primary leading-none"
-            style={{ fontSize: "clamp(3.5rem, 10vw, 13rem)" }}
-          >
-            {criticalSignal.prayerName}
-          </h2>
+          <div className="flex flex-col items-center gap-2 md:gap-3 lg:gap-4">
+            <h2
+              className="font-clock-display text-primary leading-none"
+              style={{ fontSize: "clamp(3.5rem, 10vw, 13rem)" }}
+            >
+              {criticalSignal.prayerName}
+            </h2>
+            <span
+              className="font-body-lg text-on-surface/80 font-medium text-2xl md:text-4xl lg:text-5xl xl:text-6xl tv:text-7xl leading-none"
+              lang="ar"
+            >
+              {criticalSignal.arabicName}
+            </span>
+          </div>
 
           {/* Subtitle — blinks to draw attention */}
           <span className="font-body-lg text-base md:text-xl lg:text-3xl xl:text-4xl tv:text-5xl text-on-surface/80 font-medium critical-text-blink">
@@ -81,14 +91,22 @@ export function CriticalSignalPanel({
         </div>
       </div>
 
-      {/* Retained current time — corner */}
-      <span
-        className="absolute bottom-3 left-4 md:bottom-4 md:left-5 lg:bottom-5 lg:left-6 font-tabular-nums text-text-muted text-base md:text-xl lg:text-3xl xl:text-4xl tv:text-5xl opacity-70 z-30"
+      {/* Retained current time + dates — corner */}
+      <div
+        className="absolute bottom-3 left-4 md:bottom-4 md:left-5 lg:bottom-5 lg:left-6 flex flex-col items-start gap-1 md:gap-1.5 lg:gap-2 text-text-muted opacity-70 z-30"
         aria-hidden="true"
       >
-        {displayHours}:{clock.minutes}
-        {!is24h && <span className="ml-1 text-[0.7em]">{clock.ampm}</span>}
-      </span>
+        <span className="font-tabular-nums text-base md:text-xl lg:text-3xl xl:text-4xl tv:text-5xl">
+          {displayHours}:{clock.minutes}
+          {!is24h && <span className="ml-1 text-[0.7em]">{clock.ampm}</span>}
+        </span>
+        <span className="font-body-md text-xs md:text-sm lg:text-lg xl:text-xl tv:text-2xl">
+          {clock.gregorianDate}
+        </span>
+        <span className="font-body-md text-xs md:text-sm lg:text-lg xl:text-xl tv:text-2xl">
+          {hijriDate || "—"}
+        </span>
+      </div>
     </div>
   );
 }

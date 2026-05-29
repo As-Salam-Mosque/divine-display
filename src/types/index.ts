@@ -96,6 +96,7 @@ export type StatusType =
 /** Structured data for the critical (adhan-now / iqamah-now) display state. */
 export interface CriticalSignalData {
   prayerName: string;
+  arabicName: string;
   /** urgency level: "low" = adhan (preparatory), "medium" = reserved, "high" = iqamah (starting now) */
   urgency: "low" | "medium" | "high";
   subtitle: string;

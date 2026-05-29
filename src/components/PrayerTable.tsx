@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import type { PrayerTime } from "../types";
+import { cn } from "../utils/cn";
 import { PrayerCard } from "./PrayerCard";
 
 interface PrayerTableProps {
@@ -7,22 +9,69 @@ interface PrayerTableProps {
 }
 
 export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
-  return (
-    <ul
-      className="grid w-full h-full min-h-0 gap-2 py-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(160px,1fr))]"
-      aria-label="Prayer times"
-    >
-      {prayers.map((prayer, index) => {
-        const isActive = activePrayerIndex === index;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isScrollable, setIsScrollable] = useState(false);
 
-        return (
-          <PrayerCard
-            key={`${prayer.name}-${index}`}
-            prayer={prayer}
-            isActive={isActive}
-          />
-        );
-      })}
-    </ul>
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+
+    if (!container) {
+      return;
+    }
+
+    const updateScrollable = () => {
+      const nextIsScrollable =
+        container.scrollHeight > container.clientHeight + 1;
+
+      setIsScrollable((currentIsScrollable) =>
+        currentIsScrollable === nextIsScrollable
+          ? currentIsScrollable
+          : nextIsScrollable,
+      );
+    };
+
+    updateScrollable();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateScrollable();
+    });
+
+    resizeObserver.observe(container);
+
+    const content = container.firstElementChild;
+    if (content instanceof HTMLElement) {
+      resizeObserver.observe(content);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  return (
+    <div
+      ref={scrollContainerRef}
+      className={cn(
+        "prayer-table-scroll-region h-full min-h-0 overflow-y-hidden",
+        isScrollable && "prayer-table-scroll-region--active overflow-y-scroll",
+      )}
+    >
+      <ul
+        className="grid w-full min-h-full gap-2 py-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(160px,1fr))]"
+        aria-label="Prayer times"
+      >
+        {prayers.map((prayer, index) => {
+          const isActive = activePrayerIndex === index;
+
+          return (
+            <PrayerCard
+              key={`${prayer.name}-${index}`}
+              prayer={prayer}
+              isActive={isActive}
+            />
+          );
+        })}
+      </ul>
+    </div>
   );
 }
