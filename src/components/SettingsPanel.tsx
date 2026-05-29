@@ -260,6 +260,20 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             </div>
           </section>
 
+          {/* ── Accessibility ── */}
+          <section aria-labelledby="section-accessibility">
+            <SectionHeader label={t.sectionAccessibility} />
+            <div id="section-accessibility">
+              <Toggle
+                checked={Boolean(settings.alternatePrayerCardColors)}
+                onChange={(v) =>
+                  updateSettings({ alternatePrayerCardColors: v })
+                }
+                label={t.alternatePrayerCardColors}
+              />
+            </div>
+          </section>
+
           {/* ── Mosque Information ── */}
           <section aria-labelledby="section-mosque-info">
             <SectionHeader label={t.sectionMosqueInfo} />

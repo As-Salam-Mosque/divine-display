@@ -39,6 +39,10 @@ const fr = {
   iqamah: "IQAMAH",
   // theme
   lightTheme: "Activer le thème clair",
+  // accessibility
+  sectionAccessibility: "Accessibilité",
+  alternatePrayerCardColors:
+    "Utiliser des fonds alternés pour les cartes de prière",
 };
 
 export default fr;

@@ -8,7 +8,10 @@ interface PrayerTableProps {
   activePrayerIndex: number | null;
 }
 
+import { useSettings } from "../context/SettingsContext";
+
 export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
+  const { settings } = useSettings();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
@@ -63,13 +66,18 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
       >
         {prayers.map((prayer, index) => {
           const isActive = activePrayerIndex === index;
+          const backgroundVariant = settings.alternatePrayerCardColors
+            ? index % 2 === 0
+              ? "a"
+              : "b"
+            : "a";
 
           return (
             <PrayerCard
               key={`${prayer.name}-${index}`}
               prayer={prayer}
               isActive={isActive}
-              backgroundVariant={index % 2 === 0 ? "a" : "b"}
+              backgroundVariant={backgroundVariant}
             />
           );
         })}
