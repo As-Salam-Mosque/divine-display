@@ -3,10 +3,10 @@ name: Check translations
 on:
   push:
     paths:
-      - 'src/translations/**'
+      - "src/translations/**"
   pull_request:
     paths:
-      - 'src/translations/**'
+      - "src/translations/**"
   workflow_dispatch: {}
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install dependencies
         run: |
@@ -28,4 +28,4 @@ jobs:
 
       - name: Run TypeScript translation validator
         run: |
-          npm run check:translations:ts
+          npm run check:translations
