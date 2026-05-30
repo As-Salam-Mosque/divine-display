@@ -104,7 +104,7 @@ describe("usePrayerTimes extra prayers iqamah support", () => {
           icon: "campaign",
           adhan: "13:00",
           iqamah: "13:12",
-          time: ["13:00"],
+          times: "13:00",
         },
       ],
     });
@@ -136,7 +136,7 @@ describe("usePrayerTimes extra prayers iqamah support", () => {
           icon: "campaign",
           adhan: null,
           iqamah: null,
-          time: ["14:00"],
+          times: "14:00",
         },
       ],
     });

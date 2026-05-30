@@ -83,7 +83,11 @@ export function PrayerCard({
   const t = useT(settings.language);
 
   const timeEntries = (
-    Array.isArray(prayer.time) ? prayer.time : prayer.time ? [prayer.time] : []
+    Array.isArray(prayer.times)
+      ? prayer.times
+      : prayer.times
+        ? [prayer.times]
+        : []
   )
     .map((time) => time.trim())
     .filter(Boolean);

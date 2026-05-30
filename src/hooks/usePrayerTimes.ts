@@ -203,7 +203,7 @@ export function usePrayerTimes(
         if (p.adhan) {
           addEvent(i, "adhan", p.adhan);
         } else {
-          normalizeTimeList(p.time).forEach((time) =>
+          normalizeTimeList(p.times).forEach((time) =>
             addEvent(i, "time", time),
           );
         }
@@ -334,7 +334,7 @@ function buildPrayers(
         adhan: null,
         iqamah: null,
         // Keep raw 24-hour HH:MM for centralized formatting in UI
-        time: raw ? [raw] : undefined,
+        times: raw,
       };
     }
 
@@ -354,7 +354,7 @@ function buildPrayers(
 
   // Extras can provide iqamah explicitly, or derive it from iqamahOffsets[name].
   const extras: PrayerTime[] = (config.extraPrayers ?? []).map((e) => {
-    const timeList = normalizeTimeList(e.time);
+    const timeList = normalizeTimeList(e.times);
     const adhan = e.adhan ?? null;
     const offset = config.iqamahOffsets[e.name];
     const iqamahBase = adhan ?? (timeList.length === 1 ? timeList[0] : null);
@@ -368,9 +368,9 @@ function buildPrayers(
       name: e.name,
       arabicName: e.arabicName ?? e.name,
       icon: e.icon ?? "campaign",
-      adhan,
+      adhan: e.adhan,
       iqamah,
-      time: timeList.length ? timeList : undefined,
+      times: e.times,
     };
   });
 

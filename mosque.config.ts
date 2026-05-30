@@ -26,7 +26,7 @@ const config: MosqueConfig = {
       icon: "campaign",
       adhan: null,
       iqamah: null,
-      time: ["13:00", "14:00"],
+      times: ["13:00", "14:00"],
     },
   ],
   adSlots: [

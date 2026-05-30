@@ -66,8 +66,6 @@ CSS grid with dynamic column template:
 - **Critical signal**: 60-second window after Adhan/Iqamah time triggers `adhan-now` or `iqamah-now` status type and full-screen alert.
 - **Shuruq** is a special case: `adhan` and `iqamah` are `null`; only `time` is set.
 
----
-
 ## Project Structure
 
 ```
@@ -88,8 +86,6 @@ src/
 ├── types/            — TypeScript type definitions
 └── __tests__/        — Vitest test files
 ```
-
----
 
 ## Code Patterns & Best Practices
 
@@ -154,8 +150,6 @@ useEffect(() => {
 - Never use `dangerouslySetInnerHTML` — render safe React elements instead.
 - Use `aria-hidden="true"` on decorative icons and dividers.
 
----
-
 ## Tailwind CSS v4 Setup
 
 This project uses **Tailwind CSS v4** with the `@tailwindcss/vite` plugin. Key differences from v3:
@@ -168,7 +162,6 @@ This project uses **Tailwind CSS v4** with the `@tailwindcss/vite` plugin. Key d
   - `duration-2000` not `duration-[2000ms]`
   - `z-100` not `z-[100]`
 
----
 
 ## Design System
 
@@ -207,15 +200,11 @@ Non-standard Tailwind values: `p-panel-padding`, `p-margin-page`, `gap-gutter-gr
 | `.focus-ring` | Visible focus indicator (`outline: 2px solid var(--primary)`) |
 | `.prayer-card` | Container-query-aware card layout (row on mobile, column on desktop) |
 
----
-
 ## Prayer Card States
 
 - **Inactive:** `bg-surface-panel ghost-border rounded-xl`
 - **Active/Next:** `active-glow dark-active` with `aria-current="true"` — text in `text-primary`
 - **Shuruq:** single TIME row (no Adhan/Iqamah split)
-
----
 
 ## Accessibility (WCAG 2.2 AA)
 
@@ -258,8 +247,6 @@ This project follows WCAG 2.2 AA guidelines. Key requirements:
 - Remove focus outlines without providing a `:focus-visible` replacement.
 - Use color alone to convey information.
 
----
-
 ## Icons
 
 Uses **Material Symbols Outlined** via Google Fonts. Render as:
@@ -269,8 +256,6 @@ Uses **Material Symbols Outlined** via Google Fonts. Render as:
 ```
 
 Icon names are text content, not imports. Use class `filled` for filled style.
-
----
 
 ## i18n
 
@@ -283,13 +268,9 @@ const t = useT(settings.language);
 
 Status message strings are functions: `statusIqamah(name, remaining)` and `statusNext(name, remaining)`. Add keys to **both** locale files when extending.
 
----
-
 ## Footer Marquee
 
 Defined via `@keyframes marquee` in `src/index.css`, applied with utility class `.animate-marquee`. The `AnnouncementTicker` component duplicates items for seamless looping and renders each announcement as a safe React component (no `innerHTML`).
-
----
 
 ## Testing
 
@@ -298,8 +279,6 @@ Tests use **Vitest** + **@testing-library/react**. Run with `npm test` (watch mo
 - Test files live in `src/__tests__/`.
 - Setup file: `src/test/setup.ts`.
 - Environment: jsdom.
-
----
 
 ## Adding New Features — Checklist
 
