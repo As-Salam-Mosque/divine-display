@@ -101,7 +101,6 @@ describe("usePrayerTimes extra prayers iqamah support", () => {
         {
           name: "Khutbah 1",
           arabicName: "خطبة 1",
-          icon: "campaign",
           adhan: "13:00",
           iqamah: "13:12",
           times: "13:00",
@@ -133,7 +132,6 @@ describe("usePrayerTimes extra prayers iqamah support", () => {
         {
           name: "Khutbah 2",
           arabicName: "خطبة 2",
-          icon: "campaign",
           adhan: null,
           iqamah: null,
           times: "14:00",

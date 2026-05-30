@@ -23,7 +23,6 @@ const config: MosqueConfig = {
     {
       name: "Khutbah",
       arabicName: "خطبة",
-      icon: "campaign",
       adhan: null,
       iqamah: null,
       times: ["13:00", "14:00"],

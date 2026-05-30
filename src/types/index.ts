@@ -12,7 +12,6 @@ export interface PrayerTime {
   // Previously a narrow union; now any string (e.g., "Khutbah 1")
   name: string;
   arabicName: string;
-  icon: string;
   adhan: string | null;
   iqamah: string | null;
   // Optional time-only entry/entries (e.g., multiple khutbah sessions)

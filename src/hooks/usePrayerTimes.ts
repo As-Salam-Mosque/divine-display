@@ -12,14 +12,14 @@ import { parseTime, addMinutes, formatRemaining } from "../utils/time";
 
 const PRAYER_META: Record<
   string,
-  { arabicName: string; icon: string; isShuruq?: boolean }
+  { arabicName: string; isShuruq?: boolean }
 > = {
-  Fajr: { arabicName: "الفجر", icon: "partly_cloudy_night" },
-  Shuruq: { arabicName: "الشروق", icon: "wb_twilight", isShuruq: true },
-  Dhuhr: { arabicName: "الظهر", icon: "light_mode" },
-  Asr: { arabicName: "العصر", icon: "wb_sunny" },
-  Maghrib: { arabicName: "المغرب", icon: "nights_stay" },
-  Isha: { arabicName: "العشاء", icon: "bedtime" },
+  Fajr: { arabicName: "الفجر" },
+  Shuruq: { arabicName: "الشروق", isShuruq: true },
+  Dhuhr: { arabicName: "الظهر" },
+  Asr: { arabicName: "العصر" },
+  Maghrib: { arabicName: "المغرب" },
+  Isha: { arabicName: "العشاء" },
 };
 
 const PRAYER_ORDER: string[] = [
@@ -330,10 +330,8 @@ function buildPrayers(
       return {
         name: name as PrayerTime["name"],
         arabicName: meta.arabicName,
-        icon: meta.icon,
         adhan: null,
         iqamah: null,
-        // Keep raw 24-hour HH:MM for centralized formatting in UI
         times: raw,
       };
     }
@@ -345,8 +343,6 @@ function buildPrayers(
     return {
       name: name as PrayerTime["name"],
       arabicName: meta.arabicName,
-      icon: meta.icon,
-      // Store raw 24-hour HH:MM strings
       adhan: adhanRaw,
       iqamah: iqamahRaw,
     };
@@ -367,7 +363,6 @@ function buildPrayers(
     return {
       name: e.name,
       arabicName: e.arabicName ?? e.name,
-      icon: e.icon ?? "campaign",
       adhan: e.adhan,
       iqamah,
       times: e.times,
