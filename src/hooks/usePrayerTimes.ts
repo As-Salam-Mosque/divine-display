@@ -51,6 +51,11 @@ function cacheKeyForConfig(config: MosqueConfig): string {
 
 const STATUS_SIGNAL_WINDOW_MS = 60_000;
 
+function normalizeTimeList(times?: string | string[] | null): string[] {
+  const list = Array.isArray(times) ? times : times ? [times] : [];
+  return list.map((time) => time.trim()).filter(Boolean);
+}
+
 function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
   return (
     now.getTime() >= targetDate.getTime() &&
@@ -59,6 +64,20 @@ function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
 }
 
 type EventType = "iqamah" | "adhan" | "time";
+
+const EVENT_TYPE_PRIORITY: Record<EventType, number> = {
+  adhan: 0,
+  iqamah: 1,
+  time: 2,
+};
+
+function toEventDate(timeStr: string, now: Date): Date {
+  const d = parseTime(timeStr.trim());
+  if (d.getTime() - now.getTime() < -STATUS_SIGNAL_WINDOW_MS) {
+    d.setDate(d.getDate() + 1);
+  }
+  return d;
+}
 
 function buildStatusFromEvent(
   prayers: PrayerTime[],
@@ -172,62 +191,40 @@ export function usePrayerTimes(
   const deriveDynamic = useCallback(
     (prayers: PrayerTime[]) => {
       const now = new Date();
-      let nextIndex: number | null = null;
-
-      // Find the next prayer (first prayer whose adhan/time is after now)
-      for (let i = 0; i < prayers.length; i++) {
-        const prayer = prayers[i];
-        const adhanStr = prayer.adhan ?? prayer.time ?? null;
-        if (!adhanStr) continue;
-        const prayerDate = parseTime(adhanStr.trim());
-
-        if (prayerDate > now && nextIndex === null) {
-          nextIndex = i;
-        }
-      }
-
-      // if there is no next (all prayers passed), wrap to first
-      if (nextIndex === null && prayers.length) nextIndex = 0;
-
-      // Build a flattened list of candidate events (iqamah, time, adhan)
       const events: { prayerIndex: number; type: EventType; date: Date }[] = [];
+      const addEvent = (prayerIndex: number, type: EventType, time: string) => {
+        events.push({ prayerIndex, type, date: toEventDate(time, now) });
+      };
+
       for (let i = 0; i < prayers.length; i++) {
         const p = prayers[i];
-        // iqamah has highest semantic priority but we still compare by actual time
-        if (p.iqamah) {
-          const d = parseTime(p.iqamah.trim());
-          // if it's significantly in the past, treat it as tomorrow
-          if (d.getTime() - now.getTime() < -STATUS_SIGNAL_WINDOW_MS)
-            d.setDate(d.getDate() + 1);
-          events.push({ prayerIndex: i, type: "iqamah", date: d });
-        }
+        if (p.iqamah) addEvent(i, "iqamah", p.iqamah);
 
-        // adhan (or canonical time for Shuruq) and explicit time
-        const adhanOrTime = p.adhan ?? p.time ?? null;
-        if (adhanOrTime) {
-          const d = parseTime(adhanOrTime.trim());
-          if (d.getTime() - now.getTime() < -STATUS_SIGNAL_WINDOW_MS)
-            d.setDate(d.getDate() + 1);
-          // treat prayers that only have `time` (e.g., Shuruq) as "time"
-          const ty: EventType = p.adhan ? "adhan" : "time";
-          events.push({ prayerIndex: i, type: ty, date: d });
+        if (p.adhan) {
+          addEvent(i, "adhan", p.adhan);
+        } else {
+          normalizeTimeList(p.time).forEach((time) =>
+            addEvent(i, "time", time),
+          );
         }
       }
 
       // Pick the soonest event by sorting events by their absolute Date
-      const typePriority: Record<EventType, number> = {
-        adhan: 0,
-        iqamah: 1,
-        time: 2,
-      };
       events.sort(
         (a, b) =>
           a.date.getTime() -
           b.date.getTime() +
-          typePriority[a.type] -
-          typePriority[b.type],
+          EVENT_TYPE_PRIORITY[a.type] -
+          EVENT_TYPE_PRIORITY[b.type],
       );
       const nextEvent = events.length ? events[0] : null;
+      const nextPrayerEvent =
+        events.find((event) => event.type !== "iqamah") ?? null;
+      const nextIndex = nextPrayerEvent
+        ? nextPrayerEvent.prayerIndex
+        : prayers.length
+          ? 0
+          : null;
 
       const status = buildStatusFromEvent(prayers, nextEvent, now, language);
 
@@ -337,7 +334,7 @@ function buildPrayers(
         adhan: null,
         iqamah: null,
         // Keep raw 24-hour HH:MM for centralized formatting in UI
-        time: raw,
+        time: raw ? [raw] : undefined,
       };
     }
 
@@ -357,11 +354,15 @@ function buildPrayers(
 
   // Extras can provide iqamah explicitly, or derive it from iqamahOffsets[name].
   const extras: PrayerTime[] = (config.extraPrayers ?? []).map((e) => {
-    const adhan = e.adhan ?? e.time ?? null;
+    const timeList = normalizeTimeList(e.time);
+    const adhan = e.adhan ?? null;
     const offset = config.iqamahOffsets[e.name];
+    const iqamahBase = adhan ?? (timeList.length === 1 ? timeList[0] : null);
     const iqamah =
       e.iqamah ??
-      (adhan && offset !== undefined ? addMinutes(adhan, offset) : null);
+      (iqamahBase && offset !== undefined
+        ? addMinutes(iqamahBase, offset)
+        : null);
 
     return {
       name: e.name,
@@ -369,7 +370,7 @@ function buildPrayers(
       icon: e.icon ?? "campaign",
       adhan,
       iqamah,
-      time: e.time,
+      time: timeList.length ? timeList : undefined,
     };
   });
 
