@@ -104,7 +104,7 @@ describe("usePrayerTimes extra prayers iqamah support", () => {
           icon: "campaign",
           adhan: "13:00",
           iqamah: "13:12",
-          time: "13:00",
+          time: ["13:00"],
         },
       ],
     });
@@ -136,7 +136,7 @@ describe("usePrayerTimes extra prayers iqamah support", () => {
           icon: "campaign",
           adhan: null,
           iqamah: null,
-          time: "14:00",
+          time: ["14:00"],
         },
       ],
     });
@@ -149,7 +149,7 @@ describe("usePrayerTimes extra prayers iqamah support", () => {
 
     const extra = result.current.prayers.find((p) => p.name === "Khutbah 2");
     expect(extra).toBeDefined();
-    expect(extra?.adhan).toBe("14:00");
+    expect(extra?.adhan).toBeNull();
     expect(extra?.iqamah).toBe("14:10");
   });
 });

@@ -21,20 +21,12 @@ const config: MosqueConfig = {
   },
   extraPrayers: [
     {
-      name: "Khutbah 1",
-      arabicName: "خطبة 1",
+      name: "Khutbah",
+      arabicName: "خطبة",
       icon: "campaign",
       adhan: null,
       iqamah: null,
-      time: "13:00",
-    },
-    {
-      name: "Khutbah 2",
-      arabicName: "خطبة 2",
-      icon: "campaign",
-      adhan: null,
-      iqamah: null,
-      time: "14:00",
+      time: ["13:00", "14:00"],
     },
   ],
   adSlots: [
@@ -49,13 +41,11 @@ const config: MosqueConfig = {
   announcements_en: [
     "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2:10PM (English)",
     "Quran Halaqah — Weekly Quran circle every Saturday after 3PM in the main hall.",
-    // "Parking Notice — East lot closed for repaving. Please use the side entrance.",
     "See all out events at assalam.info/services",
   ],
   announcements_fr: [
     "Khutbah du vendredi — Le Sheikh Ali dirigera le khutbah à 13h (Arabe) et 14h10 (Anglais)",
     "Halaqah du Coran — Halaqah du Coran chaque samedi après 15h dans la salle principale.",
-    // "Avis de stationnement — Lot est fermé pour réparation. Veuillez utiliser l'entrée latérale.",
     "Consultez tous nos événements sur assalam.info/services",
   ],
 };

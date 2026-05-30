@@ -15,7 +15,8 @@ export interface PrayerTime {
   icon: string;
   adhan: string | null;
   iqamah: string | null;
-  time?: string;
+  // Optional time-only entry/entries (e.g., multiple khutbah sessions)
+  time?: string | string[];
 }
 
 export interface AdSlot {

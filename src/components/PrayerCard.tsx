@@ -82,9 +82,15 @@ export function PrayerCard({
   const { settings } = useSettings();
   const t = useT(settings.language);
 
-  const hasNoAdhanOrIqamah = !prayer.adhan && !prayer.iqamah;
-  const singleTime = prayer.time ?? "—";
-  const singleTimeDisplay = formatDisplayTime(singleTime, settings.timeFormat);
+  const timeEntries = (
+    Array.isArray(prayer.time) ? prayer.time : prayer.time ? [prayer.time] : []
+  )
+    .map((time) => time.trim())
+    .filter(Boolean);
+  const showTimeList = !prayer.adhan && timeEntries.length > 0;
+  const showTimeFallback =
+    !prayer.adhan && !prayer.iqamah && timeEntries.length === 0;
+  const fallbackTimeDisplay = formatDisplayTime("—", settings.timeFormat);
 
   const ariaLabel = [
     prayer.name,
@@ -132,10 +138,19 @@ export function PrayerCard({
       <div className="prayer-card-divider" aria-hidden="true" />
 
       <div className="prayer-card-time-section">
-        {hasNoAdhanOrIqamah ? (
+        {showTimeList ? (
+          timeEntries.map((time, index) => (
+            <TimeCell
+              key={`${prayer.name}-time-${index}`}
+              label={timeEntries.length > 1 ? `${t.time} ${index + 1}` : t.time}
+              time={formatDisplayTime(time, settings.timeFormat)}
+              isActive={isActive}
+            />
+          ))
+        ) : showTimeFallback ? (
           <TimeCell
             label={t.time}
-            time={singleTimeDisplay}
+            time={fallbackTimeDisplay}
             isActive={isActive}
           />
         ) : (
