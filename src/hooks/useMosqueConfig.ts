@@ -73,8 +73,8 @@ export function useMosqueConfig(
     // initial fetch
     fetchConfig();
 
-    // poll every 1 minute
-    const intervalId = window.setInterval(fetchConfig, 1 * 60 * 1000);
+    // poll every 5 minutes
+    const intervalId = window.setInterval(fetchConfig, 5 * 60 * 1000);
 
     return () => {
       isUnmounted = true;

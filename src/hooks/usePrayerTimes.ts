@@ -215,7 +215,18 @@ export function usePrayerTimes(
       }
 
       // Pick the soonest event by sorting events by their absolute Date
-      events.sort((a, b) => a.date.getTime() - b.date.getTime());
+      const typePriority: Record<EventType, number> = {
+        adhan: 0,
+        iqamah: 1,
+        time: 2,
+      };
+      events.sort(
+        (a, b) =>
+          a.date.getTime() -
+          b.date.getTime() +
+          typePriority[a.type] -
+          typePriority[b.type],
+      );
       const nextEvent = events.length ? events[0] : null;
 
       const status = buildStatusFromEvent(prayers, nextEvent, now, language);
