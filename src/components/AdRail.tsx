@@ -61,7 +61,7 @@ export function AdRail({ slots }: AdRailProps) {
 
   return (
     <aside
-      className="hidden lg:flex flex-col gap-2 md:gap-3 lg:gap-3 tv:gap-stage-gap h-full min-h-0 w-full justify-self-stretch overflow-hidden"
+      className="hidden lg:flex flex-col gap-2 lg:gap-3 tv:gap-stage-gap h-full min-h-0 w-full justify-self-stretch overflow-hidden"
       aria-label={t.communitySponsors}
     >
       <div className="flex justify-between items-center px-3 lg:px-4 shrink-0">

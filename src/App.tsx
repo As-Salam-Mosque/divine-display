@@ -44,7 +44,7 @@ function Display() {
       </a>
 
       <main
-        className="flex-1 grid grid-cols-1 gap-1 sm:gap-2 md:gap-2 lg:gap-3 tv:gap-stage-gap p-1 sm:p-2 md:p-3 lg:p-5 tv:p-panel-padding lg:overflow-hidden lg:grid-cols-[minmax(0,1fr)_var(--adrail-width)]"
+        className="flex-1 grid grid-cols-1 gap-2 md:gap-3 tv:gap-stage-gap p-2 md:p-3 lg:p-5 tv:p-panel-padding lg:overflow-hidden lg:grid-cols-[minmax(0,1fr)_var(--adrail-width)]"
         style={
           {
             "--adrail-width": showAdRail ? "20vw" : "0px",
@@ -52,7 +52,7 @@ function Display() {
         }
       >
         {/* Left Stage */}
-        <div className="col-span-1 flex-1 min-h-0 flex flex-col gap-2 md:gap-3 lg:gap-3 tv:gap-stage-gap lg:h-full">
+        <div className="col-span-1 flex-1 min-h-0 flex flex-col gap-2 md:gap-3 tv:gap-stage-gap lg:h-full">
           {/* Clock + Promo section */}
           <div className="lg:basis-[65%] basis-auto min-h-0 flex items-stretch justify-center">
             <div
