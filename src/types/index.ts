@@ -16,6 +16,10 @@ export interface PrayerTime {
   iqamah: string | null;
   // Optional time-only entry/entries (e.g., multiple khutbah sessions)
   times?: string | string[];
+  // When true, this prayer is shown in the table but excluded from event
+  // processing: it won't drive countdowns, highlights, or critical signals.
+  // Extra prayers default to true; base prayers default to undefined (falsy).
+  displayOnly?: boolean;
 }
 
 export interface AdSlot {

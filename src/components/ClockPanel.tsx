@@ -98,8 +98,18 @@ export function ClockPanel({
             )}
           >
             {/* Mosque Branding */}
-            <div className={cn("flex flex-col items-center mb-1 md:mb-2 lg:mb-3", promoActive && "md:items-start")}>
-              <div className={cn("flex flex-col items-center mb-1 md:mb-2", promoActive && "md:items-start")}>
+            <div
+              className={cn(
+                "flex flex-col items-center mb-1 md:mb-2 lg:mb-3",
+                promoActive && "md:items-start",
+              )}
+            >
+              <div
+                className={cn(
+                  "flex flex-col items-center mb-1 md:mb-2",
+                  promoActive && "md:items-start",
+                )}
+              >
                 <span
                   className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl mb-1 md:mb-2"
                   aria-hidden="true"
@@ -116,7 +126,12 @@ export function ClockPanel({
 
               {/* Calendar Row */}
               <div className="clock-panel__dates flex items-center gap-2 md:gap-4 lg:gap-5">
-                <div className={cn("flex flex-col items-center", promoActive && "md:items-start")}>
+                <div
+                  className={cn(
+                    "flex flex-col items-center",
+                    promoActive && "md:items-start",
+                  )}
+                >
                   <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
                     {clock.gregorianDate}
                   </span>
@@ -128,7 +143,12 @@ export function ClockPanel({
                   className="w-px h-5 md:h-8 lg:h-12 bg-primary-20"
                   aria-hidden="true"
                 />
-                <div className={cn("flex flex-col items-center", promoActive && "md:items-start")}>
+                <div
+                  className={cn(
+                    "flex flex-col items-center",
+                    promoActive && "md:items-start",
+                  )}
+                >
                   <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
                     {hijriDate || "—"}
                   </span>

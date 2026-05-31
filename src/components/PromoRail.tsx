@@ -23,21 +23,18 @@ export function PromoRail({
 
   const promoImage = currentSlot?.image ?? null;
   const promoAlt = currentSlot?.label ?? "";
+  // Only "active" once the promo is actually transitioning into view.
   const isActive =
-    !isCriticalSignal &&
-    settings.showSponsors &&
-    phase !== "hidden" &&
-    phase !== "exit";
+    !isCriticalSignal && settings.showSponsors && phase === "visible";
 
   // Notify parent when promo active state changes so layout can adapt
   useEffect(() => {
     onActiveChange?.(isActive);
   }, [isActive, onActiveChange]);
 
-  const slideState =
-    isActive && phase === "visible"
-      ? "translate-x-0 opacity-100"
-      : "translate-x-full opacity-0";
+  const slideState = isActive
+    ? "translate-x-0 opacity-100"
+    : "translate-x-full opacity-0";
 
   const showRail = !isCriticalSignal && settings.showSponsors && promoImage;
 

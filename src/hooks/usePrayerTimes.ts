@@ -198,6 +198,8 @@ export function usePrayerTimes(
 
       for (let i = 0; i < prayers.length; i++) {
         const p = prayers[i];
+        if (p.displayOnly) continue;
+
         if (p.iqamah) addEvent(i, "iqamah", p.iqamah);
 
         if (p.adhan) {
@@ -366,6 +368,7 @@ function buildPrayers(
       adhan: e.adhan,
       iqamah,
       times: e.times,
+      displayOnly: e.displayOnly ?? true,
     };
   });
 
