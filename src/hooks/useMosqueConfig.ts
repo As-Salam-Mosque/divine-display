@@ -5,9 +5,8 @@ import fallbackConfig from "../../mosque.config";
 const DEFAULT_CONFIG_URL = import.meta.env.VITE_MOSQUE_CONFIG_URL || "";
 
 interface InternalConfigState {
-  config: MosqueConfig;
+  config: MosqueConfig | null;
   error: string | null;
-  source: MosqueConfigState["source"];
   sourceUrl: string | null;
 }
 
@@ -17,9 +16,8 @@ export function useMosqueConfig(
   const resolvedUrl = url?.trim() || undefined;
 
   const [state, setState] = useState<InternalConfigState>(() => ({
-    config: fallbackConfig,
+    config: null,
     error: null,
-    source: "default",
     sourceUrl: null,
   }));
 
@@ -50,7 +48,6 @@ export function useMosqueConfig(
           setState({
             config,
             error: null,
-            source: "remote",
             sourceUrl: resolvedUrl,
           });
         }
@@ -59,9 +56,8 @@ export function useMosqueConfig(
         if (currentController?.signal.aborted) return;
         if (!isUnmounted) {
           setState({
-            config: fallbackConfig,
+            config: null,
             error: String(err),
-            source: "default",
             sourceUrl: resolvedUrl,
           });
         }
@@ -85,11 +81,16 @@ export function useMosqueConfig(
 
   const hasUrl = Boolean(resolvedUrl);
   const isCurrent = resolvedUrl ? state.sourceUrl === resolvedUrl : false;
+  const hasConfig = state.config !== null;
 
-  const config = hasUrl && isCurrent ? state.config : fallbackConfig;
-  const error = hasUrl && isCurrent ? state.error : null;
-  const source = hasUrl && isCurrent ? state.source : "default";
-  const loading = hasUrl && !isCurrent && error === null;
+  // If URL is provided and we don't have config yet and no error, we're loading
+  const loading = hasUrl && !hasConfig && state.error === null;
+
+  // Use remote config if we have it and it's current, otherwise fall back
+  const config: MosqueConfig =
+    hasConfig && isCurrent ? (state.config as MosqueConfig) : fallbackConfig;
+  const error = isCurrent ? state.error : null;
+  const source = hasConfig && isCurrent ? "remote" : "default";
 
   return { config, loading, error, source };
 }
