@@ -60,8 +60,8 @@ export interface MosqueConfig {
 
   // UI content
   adSlots: AdSlot[];
-  announcements_en: string[];
-  announcements_fr: string[];
+  announcementsEn: string[];
+  announcementsFr: string[];
   // Optional promo configuration to control timing of the promo rail
   promo?: PromoConfig;
 
@@ -157,8 +157,8 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     calculationMethod: 0,
     iqamahOffsets: {},
     adSlots: [],
-    announcements_en: [],
-    announcements_fr: [],
+    announcementsEn: [],
+    announcementsFr: [],
     extraPrayers: [],
   },
   // Accessibility defaults: do not alternate prayer card colors by default.
