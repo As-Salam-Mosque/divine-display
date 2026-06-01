@@ -32,8 +32,17 @@ const config: MosqueConfig = {
     {
       id: 1,
       label: "SPONSOR SPACE",
-      image: "/hajj-kids.jpeg",
+      weight: 0,
+    },
+    {
+      id: 2,
+      label: "SPONSOR SPACE",
       weight: 1,
+    },
+    {
+      id: 3,
+      label: "SPONSOR SPACE",
+      weight: 0,
     },
   ],
   promo: { displayDurationMs: 10000, cycleMs: 90000, initialDelayMs: 5000 },
