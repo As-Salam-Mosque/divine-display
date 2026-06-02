@@ -26,11 +26,20 @@ export function useClock(language: Language = "en"): ClockState {
   );
 
   useEffect(() => {
-    const id = setInterval(
-      () => setState(buildClockState(new Date(), language)),
-      1000,
-    );
-    return () => clearInterval(id);
+    // Align with next second boundary to reduce timer jitter on low-end devices
+    const now = new Date();
+    const msToNextSecond = 1000 - now.getMilliseconds();
+
+    const alignTimeoutId = setTimeout(() => {
+      setState(buildClockState(new Date(), language));
+      const intervalId = setInterval(
+        () => setState(buildClockState(new Date(), language)),
+        1000,
+      );
+      return () => clearInterval(intervalId);
+    }, msToNextSecond);
+
+    return () => clearTimeout(alignTimeoutId);
   }, [language]);
 
   return state;

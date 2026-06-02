@@ -88,6 +88,7 @@ button {
     /* PrayerCard alternating backgrounds: analogous hues, equal visual weight */
     --prayer-card-bg-a: #e9f0f8; /* cool blue */
     --prayer-card-bg-b: #e8f3f2; /* blue-teal */
+    --prayer-card-bg-active: #fef3d6; /* warm amber cream */
 }
 
 /* Dark theme overrides */
@@ -118,6 +119,7 @@ button {
     /* PrayerCard alternating backgrounds: analogous hues, equal visual weight */
     --prayer-card-bg-a: #182846; /* deep blue */
     --prayer-card-bg-b: #182e42; /* deep blue-teal */
+    --prayer-card-bg-active: #14110a; /* very dark warm amber */
 }
 
 /* Light theme explicit (mirrors :root for clarity) */
@@ -149,6 +151,7 @@ button {
     /* PrayerCard alternating backgrounds: analogous hues, equal visual weight */
     --prayer-card-bg-a: #e9f0f8; /* cool blue */
     --prayer-card-bg-b: #e8f3f2; /* blue-teal */
+    --prayer-card-bg-active: #fef3d6; /* warm amber cream */
 }
 
 @layer components {
@@ -156,10 +159,9 @@ button {
         border: 1px solid var(--ghost-border-color);
         box-shadow: var(--panel-separation-shadow);
     }
-    .active-glow {
-        /* Use theme-aware variables for glow and border */
-        box-shadow: inset 0 0 20px
-            rgba(var(--primary-rgb), var(--active-glow-alpha));
+    .active-border {
+        border-width: 3px;
+        border-style: solid;
         border-color: var(--primary);
     }
 
@@ -223,6 +225,9 @@ button {
     }
     .bg-prayer-card-b {
         background-color: var(--prayer-card-bg-b) !important;
+    }
+    .bg-prayer-card-active {
+        background-color: var(--prayer-card-bg-active) !important;
     }
     .bg-surface {
         background-color: var(--surface) !important;
@@ -397,13 +402,9 @@ button {
         gap: 0.75rem; /* gap-3 */
     }
 
-    /* Dark-mode active style for prayer card: mirror ClockPanel critical appearance */
+    /* Dark-mode active style for prayer card */
     .dark .prayer-card.dark-active {
-        background-color: var(--background-deep) !important;
-        border-width: 2px;
-        border-style: solid;
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 45px rgba(var(--primary-rgb), 0.6) !important;
+        background-color: var(--prayer-card-bg-active) !important;
     }
     @media (min-width: 640px) {
         .prayer-card-time-section {

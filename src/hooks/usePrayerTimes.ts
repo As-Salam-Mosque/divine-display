@@ -4,23 +4,27 @@ import type {
   PrayerTime,
   PrayerTimesState,
   StatusType,
-  CriticalSignalData,
   MosqueConfig,
 } from "../types";
-import { translations } from "../i18n";
-import { parseTime, addMinutes, formatRemaining } from "../utils/time";
+import { parseTime, addMinutes } from "../utils/time";
+import {
+  type EventType,
+  type NextEvent,
+  EVENT_TYPE_PRIORITY,
+  buildStatusFromEvent,
+  findNextPrayerIndex,
+  findHighlightedIndex,
+} from "../utils/prayerStatus";
 
-const PRAYER_META: Record<
-  string,
-  { arabicName: string; isShuruq?: boolean }
-> = {
-  Fajr: { arabicName: "الفجر" },
-  Shuruq: { arabicName: "الشروق", isShuruq: true },
-  Dhuhr: { arabicName: "الظهر" },
-  Asr: { arabicName: "العصر" },
-  Maghrib: { arabicName: "المغرب" },
-  Isha: { arabicName: "العشاء" },
-};
+const PRAYER_META: Record<string, { arabicName: string; isShuruq?: boolean }> =
+  {
+    Fajr: { arabicName: "الفجر" },
+    Shuruq: { arabicName: "الشروق", isShuruq: true },
+    Dhuhr: { arabicName: "الظهر" },
+    Asr: { arabicName: "العصر" },
+    Maghrib: { arabicName: "المغرب" },
+    Isha: { arabicName: "العشاء" },
+  };
 
 const PRAYER_ORDER: string[] = [
   "Fajr",
@@ -40,6 +44,13 @@ const ALADHAN_KEYS: Record<string, string> = {
   Isha: "Isha",
 };
 
+// Cache for event dates to avoid recalculating every second
+interface EventCache {
+  prayers: PrayerTime[];
+  events: NextEvent[];
+}
+let eventCache: EventCache | null = null;
+
 function todayKey(): string {
   const d = new Date();
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -49,94 +60,19 @@ function cacheKeyForConfig(config: MosqueConfig): string {
   return `prayer-times-${todayKey()}-${config.latitude}-${config.longitude}-${config.calculationMethod}`;
 }
 
-const STATUS_SIGNAL_WINDOW_MS = 60_000;
-
 function normalizeTimeList(times?: string | string[] | null): string[] {
   const list = Array.isArray(times) ? times : times ? [times] : [];
   return list.map((time) => time.trim()).filter(Boolean);
 }
 
-function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
-  return (
-    now.getTime() >= targetDate.getTime() &&
-    now.getTime() < targetDate.getTime() + STATUS_SIGNAL_WINDOW_MS
-  );
-}
-
-type EventType = "iqamah" | "adhan" | "time";
-
-const EVENT_TYPE_PRIORITY: Record<EventType, number> = {
-  adhan: 0,
-  iqamah: 1,
-  time: 2,
-};
-
 function toEventDate(timeStr: string, now: Date): Date {
   const d = parseTime(timeStr.trim());
+  // Cache event dates for 65 seconds to avoid recalculating every second
+  const STATUS_SIGNAL_WINDOW_MS = 60_000;
   if (d.getTime() - now.getTime() < -STATUS_SIGNAL_WINDOW_MS) {
     d.setDate(d.getDate() + 1);
   }
   return d;
-}
-
-function buildStatusFromEvent(
-  prayers: PrayerTime[],
-  nextEvent: { prayerIndex: number; type: EventType; date: Date } | null,
-  now: Date,
-  language: Language,
-): {
-  message: string;
-  type: StatusType;
-  criticalSignal: CriticalSignalData | null;
-} {
-  const t = translations[language];
-  if (!nextEvent) return { message: "", type: "none", criticalSignal: null };
-
-  const p = prayers[nextEvent.prayerIndex];
-  const { type, date } = nextEvent;
-
-  // Critical signal windows
-  if (type === "iqamah" && isWithinSignalWindow(date, now)) {
-    return {
-      message: t.statusIqamahNow(p.name),
-      type: "iqamah-now",
-      criticalSignal: {
-        prayerName: p.name,
-        arabicName: p.arabicName,
-        urgency: "high",
-        subtitle: t.criticalSubtitle,
-      },
-    };
-  }
-
-  if (type === "adhan" && isWithinSignalWindow(date, now)) {
-    return {
-      message: t.statusAdhanNow(p.name),
-      type: "adhan-now",
-      criticalSignal: {
-        prayerName: p.name,
-        arabicName: p.arabicName,
-        urgency: "low",
-        subtitle: t.criticalSubtitle,
-      },
-    };
-  }
-
-  // Non-critical countdowns
-  if (type === "iqamah") {
-    return {
-      message: t.statusIqamah(p.name, formatRemaining(date, now)),
-      type: "iqamah-countdown",
-      criticalSignal: null,
-    };
-  }
-
-  // For adhan or time, show next countdown label
-  return {
-    message: t.statusNext(p.name, formatRemaining(date, now)),
-    type: "next-countdown",
-    criticalSignal: null,
-  };
 }
 
 interface CachedData {
@@ -145,6 +81,11 @@ interface CachedData {
   hijriDate: string;
 }
 
+/**
+ * Hook for managing prayer times with optimized state updates.
+ * Separates static prayer data from dynamic countdown/status information.
+ * This allows the second-by-second updates to be more efficient.
+ */
 export function usePrayerTimes(
   config: MosqueConfig,
   language: Language = "en",
@@ -165,7 +106,7 @@ export function usePrayerTimes(
             activePrayerIndex: null,
             nextPrayerIndex: null,
             statusMessage: "",
-            statusType: "none" as StatusType,
+            statusType: "none",
             criticalSignal: null,
             loading: false,
             error: null,
@@ -181,68 +122,66 @@ export function usePrayerTimes(
       activePrayerIndex: null,
       nextPrayerIndex: null,
       statusMessage: "",
-      statusType: "none",
+      statusType: "none" as StatusType,
       criticalSignal: null,
       loading: true,
       error: null,
     };
   });
 
-  const deriveDynamic = useCallback(
-    (prayers: PrayerTime[]) => {
-      const now = new Date();
-      const events: { prayerIndex: number; type: EventType; date: Date }[] = [];
-      const addEvent = (prayerIndex: number, type: EventType, time: string) => {
-        events.push({ prayerIndex, type, date: toEventDate(time, now) });
-      };
+  // Build events list once when prayers load (not on every tick)
+  const buildEventsList = useCallback((prayers: PrayerTime[]) => {
+    const now = new Date();
+    const events: NextEvent[] = [];
+    const addEvent = (prayerIndex: number, type: EventType, time: string) => {
+      events.push({ prayerIndex, type, date: toEventDate(time, now) });
+    };
 
-      for (let i = 0; i < prayers.length; i++) {
-        const p = prayers[i];
-        if (p.displayOnly) continue;
+    for (let i = 0; i < prayers.length; i++) {
+      const p = prayers[i];
+      if (p.displayOnly) continue;
 
-        if (p.iqamah) addEvent(i, "iqamah", p.iqamah);
+      if (p.iqamah) addEvent(i, "iqamah", p.iqamah);
 
-        if (p.adhan) {
-          addEvent(i, "adhan", p.adhan);
-        } else {
-          normalizeTimeList(p.times).forEach((time) =>
-            addEvent(i, "time", time),
-          );
-        }
+      if (p.adhan) {
+        addEvent(i, "adhan", p.adhan);
+      } else {
+        normalizeTimeList(p.times).forEach((time) => addEvent(i, "time", time));
       }
+    }
 
-      // Pick the soonest event by sorting events by their absolute Date
-      events.sort(
-        (a, b) =>
-          a.date.getTime() -
-          b.date.getTime() +
-          EVENT_TYPE_PRIORITY[a.type] -
-          EVENT_TYPE_PRIORITY[b.type],
-      );
+    // Sort events by time and priority
+    events.sort(
+      (a, b) =>
+        a.date.getTime() -
+        b.date.getTime() +
+        EVENT_TYPE_PRIORITY[a.type] -
+        EVENT_TYPE_PRIORITY[b.type],
+    );
+
+    eventCache = { prayers, events };
+    return events;
+  }, []);
+
+  // Update dynamic status every second (lightweight operation)
+  const updateDynamicStatus = useCallback(
+    (prayers: PrayerTime[], events: NextEvent[]) => {
+      const now = new Date();
       const nextEvent = events.length ? events[0] : null;
-      const nextPrayerEvent =
-        events.find((event) => event.type !== "iqamah") ?? null;
-      const nextIndex = nextPrayerEvent
-        ? nextPrayerEvent.prayerIndex
-        : prayers.length
-          ? 0
-          : null;
-
+      const nextIndex = findNextPrayerIndex(nextEvent, events, prayers.length);
       const status = buildStatusFromEvent(prayers, nextEvent, now, language);
-
-      // Determine highlighted index: by default use the prayer associated with the next event.
-      // Preserve previous behavior: during iqamah-now the current prayer is starting — highlight the next prayer instead
-      const highlightedIndex =
-        status.type === "iqamah-now"
-          ? nextIndex
-          : (nextEvent?.prayerIndex ?? nextIndex);
+      const highlightedIndex = findHighlightedIndex(
+        status.statusType,
+        nextEvent?.prayerIndex ?? null,
+        nextIndex,
+      );
 
       setState((prev) => ({
         ...prev,
         activePrayerIndex: highlightedIndex,
         nextPrayerIndex: nextIndex,
-        statusMessage: status.message,
-        statusType: status.type,
+        statusMessage: status.statusMessage,
+        statusType: status.statusType,
         criticalSignal: status.criticalSignal,
       }));
     },
@@ -259,6 +198,8 @@ export function usePrayerTimes(
     // If lazy initializer already loaded valid cache for this config, skip fetch
     if (!hasFetchedRef.current && !state.loading && state.prayers.length > 0) {
       hasFetchedRef.current = true;
+      // Still build events cache from initial data
+      buildEventsList(state.prayers);
       return;
     }
 
@@ -283,6 +224,7 @@ export function usePrayerTimes(
         localStorage.setItem(cacheKey, JSON.stringify(cacheData));
 
         const prayers = buildPrayers(timings, config);
+        const events = buildEventsList(prayers);
         setState((prev) => ({
           ...prev,
           prayers,
@@ -290,7 +232,8 @@ export function usePrayerTimes(
           loading: false,
           error: null,
         }));
-        deriveDynamic(prayers);
+        // Update status once for immediate display
+        updateDynamicStatus(prayers, events);
       })
       .catch((err) => {
         setState((prev) => ({
@@ -303,16 +246,18 @@ export function usePrayerTimes(
     // if the lazy initializer already populated the cache. They are intentionally
     // excluded to avoid refetching on every state update.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, deriveDynamic]);
+  }, [config, buildEventsList, updateDynamicStatus]);
 
   // Poll every second to keep the status message countdown live
+  // This only updates dynamic status, not prayer data
   useEffect(() => {
-    if (!state.prayers.length) return;
-    const tick = () => deriveDynamic(state.prayers);
+    if (!state.prayers.length || !eventCache) return;
+    const tick = () =>
+      updateDynamicStatus(eventCache!.prayers, eventCache!.events);
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [state.prayers, deriveDynamic]);
+  }, [state.prayers.length, updateDynamicStatus]);
 
   return state;
 }

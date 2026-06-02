@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
@@ -25,6 +26,139 @@ function MosqueSilhouette() {
     />
   );
 }
+
+interface ClockDisplayProps {
+  clock: ClockState;
+  is24h: boolean;
+}
+
+// Memoized clock display — only re-renders when time actually changes
+const ClockDisplay = memo(
+  ({ clock, is24h }: ClockDisplayProps) => (
+    <div
+      className="clock-panel__time flex items-baseline gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
+      aria-label={`${is24h ? clock.hours24 : clock.hours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
+      role="timer"
+    >
+      <span className="font-clock-display leading-none">
+        {is24h ? clock.hours24 : clock.hours}:{clock.minutes}
+      </span>
+      <div className="relative flex items-start leading-none">
+        <span className="text-xl sm:text-2xl md:text-5xl lg:text-6xl xl:text-7xl tv:text-8xl text-primary font-bold leading-tight">
+          :{clock.seconds}
+        </span>
+        {!is24h && (
+          <span className="absolute top-[-0.9em] right-0 whitespace-nowrap text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-primary font-semibold leading-none">
+            {clock.ampm}
+          </span>
+        )}
+      </div>
+    </div>
+  ),
+  (prev, next) =>
+    prev.clock.hours === next.clock.hours &&
+    prev.clock.hours24 === next.clock.hours24 &&
+    prev.clock.minutes === next.clock.minutes &&
+    prev.clock.seconds === next.clock.seconds &&
+    prev.clock.ampm === next.clock.ampm &&
+    prev.is24h === next.is24h,
+);
+
+ClockDisplay.displayName = "ClockDisplay";
+
+interface MosqueInfoProps {
+  promoActive: boolean;
+}
+
+// Static mosque branding — only re-renders when settings change
+const MosqueInfo = memo(({ promoActive }: MosqueInfoProps) => {
+  const { settings } = useSettings();
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center mb-1 md:mb-2 lg:mb-3",
+        promoActive && "md:items-start",
+      )}
+    >
+      <div
+        className={cn(
+          "flex flex-col items-center mb-1 md:mb-2",
+          promoActive && "md:items-start",
+        )}
+      >
+        <span
+          className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl mb-1 md:mb-2"
+          aria-hidden="true"
+        >
+          mosque
+        </span>
+        <h1 className="font-headline-md text-base md:text-2xl lg:text-4xl xl:text-5xl tv:text-6xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
+          {settings.mosque?.name}
+        </h1>
+        <p className="font-label-caps text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-text-muted">
+          {settings.mosque?.city}
+        </p>
+      </div>
+    </div>
+  );
+});
+
+MosqueInfo.displayName = "MosqueInfo";
+
+interface CalendarRowProps {
+  clock: ClockState;
+  hijriDate: string;
+  promoActive: boolean;
+}
+
+// Calendar dates — only re-renders when date changes (once per day)
+const CalendarRow = memo(
+  ({ clock, hijriDate, promoActive }: CalendarRowProps) => {
+    const { settings } = useSettings();
+    const t = useT(settings.language);
+    return (
+      <div className="clock-panel__dates flex items-center gap-2 md:gap-4 lg:gap-5">
+        <div
+          className={cn(
+            "flex flex-col items-center",
+            promoActive && "md:items-start",
+          )}
+        >
+          <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
+            {clock.gregorianDate}
+          </span>
+          <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
+            {clock.dayName}
+          </span>
+        </div>
+        <div
+          className="w-px h-5 md:h-8 lg:h-12 bg-primary-20"
+          aria-hidden="true"
+        />
+        <div
+          className={cn(
+            "flex flex-col items-center",
+            promoActive && "md:items-start",
+          )}
+        >
+          <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
+            {hijriDate || "—"}
+          </span>
+          <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
+            {t.hijri}
+          </span>
+        </div>
+      </div>
+    );
+  },
+  (prev, next) =>
+    prev.clock.gregorianDate === next.clock.gregorianDate &&
+    prev.clock.dayName === next.clock.dayName &&
+    prev.hijriDate === next.hijriDate &&
+    prev.promoActive === next.promoActive,
+);
+
+CalendarRow.displayName = "CalendarRow";
 
 export function ClockPanel({
   clock,
@@ -98,90 +232,20 @@ export function ClockPanel({
             )}
           >
             {/* Mosque Branding */}
-            <div
-              className={cn(
-                "flex flex-col items-center mb-1 md:mb-2 lg:mb-3",
-                promoActive && "md:items-start",
-              )}
-            >
-              <div
-                className={cn(
-                  "flex flex-col items-center mb-1 md:mb-2",
-                  promoActive && "md:items-start",
-                )}
-              >
-                <span
-                  className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl mb-1 md:mb-2"
-                  aria-hidden="true"
-                >
-                  mosque
-                </span>
-                <h1 className="font-headline-md text-base md:text-2xl lg:text-4xl xl:text-5xl tv:text-6xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
-                  {settings.mosque?.name}
-                </h1>
-                <p className="font-label-caps text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-text-muted">
-                  {settings.mosque?.city}
-                </p>
-              </div>
+            <MosqueInfo promoActive={promoActive} />
 
-              {/* Calendar Row */}
-              <div className="clock-panel__dates flex items-center gap-2 md:gap-4 lg:gap-5">
-                <div
-                  className={cn(
-                    "flex flex-col items-center",
-                    promoActive && "md:items-start",
-                  )}
-                >
-                  <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
-                    {clock.gregorianDate}
-                  </span>
-                  <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
-                    {clock.dayName}
-                  </span>
-                </div>
-                <div
-                  className="w-px h-5 md:h-8 lg:h-12 bg-primary-20"
-                  aria-hidden="true"
-                />
-                <div
-                  className={cn(
-                    "flex flex-col items-center",
-                    promoActive && "md:items-start",
-                  )}
-                >
-                  <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
-                    {hijriDate || "—"}
-                  </span>
-                  <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
-                    {t.hijri}
-                  </span>
-                </div>
-              </div>
-            </div>
+            {/* Calendar Row */}
+            <CalendarRow
+              clock={clock}
+              hijriDate={hijriDate}
+              promoActive={promoActive}
+            />
 
             {/* Time Display */}
             <h2 className="font-label-caps font-bold text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-primary tracking-wide md:tracking-wider z-10 mb-0.5 md:mb-1 lg:mb-1.5">
               {t.currentTime}
             </h2>
-            <div
-              className="clock-panel__time flex items-baseline gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
-              aria-label={`${displayHours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
-              role="timer"
-            >
-              <span className="font-clock-display leading-none">
-                {displayHours}:{clock.minutes}
-              </span>
-              <div className="relative flex items-start leading-none">
-                <span className="text-xl sm:text-2xl md:text-5xl lg:text-6xl xl:text-7xl tv:text-8xl text-primary font-bold leading-tight">
-                  :{clock.seconds}
-                </span>
-                {!is24h && (
-                  <span className="absolute top-[-0.9em] right-0 whitespace-nowrap text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-primary font-semibold leading-none">
-                    {clock.ampm}
-                  </span>
-                )}
-              </div>
-            </div>
+            <ClockDisplay clock={clock} is24h={is24h} />
 
             {/* Status Pill */}
             {statusMessage && (
