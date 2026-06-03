@@ -111,7 +111,7 @@ export function PrayerCard({
       className={cn(
         "prayer-card rounded-xl ghost-border flex flex-1 h-full min-w-0 w-full overflow-hidden",
         isActive
-          ? "bg-surface-panel ghost-border active-glow dark-active z-30 overflow-visible"
+          ? "bg-prayer-card-active active-border dark-active z-30 overflow-visible"
           : backgroundVariant === "a"
             ? "bg-prayer-card-a"
             : "bg-prayer-card-b",

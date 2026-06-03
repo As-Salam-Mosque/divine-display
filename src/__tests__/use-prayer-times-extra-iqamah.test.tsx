@@ -55,8 +55,8 @@ function createConfig(overrides: Partial<MosqueConfig>): MosqueConfig {
       Isha: 0,
     },
     adSlots: [],
-    announcements_en: [],
-    announcements_fr: [],
+    announcementsEn: [],
+    announcementsFr: [],
     extraPrayers: [],
     ...overrides,
   };

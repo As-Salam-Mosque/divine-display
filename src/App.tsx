@@ -59,7 +59,7 @@ function Display() {
               className={cn(
                 "relative w-full h-auto max-h-full [--promo-rail-width:50%] md:flex md:items-stretch",
                 promoActive &&
-                  "md:transition-all md:duration-900 md:flex-row md:justify-between",
+                  "md:transition-all md:duration-1000 md:flex-row md:justify-between",
               )}
             >
               <div className="flex-1 flex items-center justify-center w-full h-auto">

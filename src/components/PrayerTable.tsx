@@ -61,7 +61,7 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
       )}
     >
       <ul
-        className="grid w-full min-h-full gap-2 py-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(160px,1fr))]"
+        className="grid w-full min-h-full gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(160px,1fr))]"
         aria-label="Prayer times"
       >
         {prayers.map((prayer, index) => {

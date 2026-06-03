@@ -10,10 +10,10 @@ function AdSlotCard({ slot }: { slot: AdSlot }) {
   const hasImage = Boolean(slot.image);
   const { imgRef, bgCss, handleImageLoad } = useDominantColor();
 
-  return (
+  const card = (
     <div
       className={cn(
-        "flex-1 min-h-0 max-h-full rounded-xl text-center overflow-hidden relative flex flex-col items-center justify-center",
+        "flex-1 min-h-0 rounded-xl text-center overflow-hidden relative flex flex-col items-center justify-center",
         hasImage
           ? "ghost-border"
           : "bg-surface-panel ghost-border p-5 lg:p-6 xl:p-7 tv:p-8",
@@ -49,6 +49,21 @@ function AdSlotCard({ slot }: { slot: AdSlot }) {
       )}
     </div>
   );
+
+  if (slot.link) {
+    return (
+      <a
+        href={slot.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex-1 min-h-0 flex flex-col focus-ring rounded-xl no-underline hover:opacity-90 transition-opacity"
+      >
+        {card}
+      </a>
+    );
+  }
+
+  return card;
 }
 
 interface AdRailProps {
@@ -61,7 +76,7 @@ export function AdRail({ slots }: AdRailProps) {
 
   return (
     <aside
-      className="hidden lg:flex flex-col gap-2 lg:gap-3 tv:gap-stage-gap h-full min-h-0 w-full justify-self-stretch overflow-hidden"
+      className="hidden lg:flex flex-col gap-2 lg:gap-3 tv:gap-stage-gap h-full w-full justify-self-stretch overflow-hidden"
       aria-label={t.communitySponsors}
     >
       <div className="flex justify-between items-center px-3 lg:px-4 shrink-0">
@@ -69,9 +84,11 @@ export function AdRail({ slots }: AdRailProps) {
           {t.communitySponsors}
         </span>
       </div>
-      {slots.map((slot) => (
-        <AdSlotCard key={slot.id} slot={slot} />
-      ))}
+      <div className="flex-1 min-h-0 flex flex-col gap-2 lg:gap-3 tv:gap-stage-gap">
+        {slots.map((slot) => (
+          <AdSlotCard key={slot.id} slot={slot} />
+        ))}
+      </div>
     </aside>
   );
 }

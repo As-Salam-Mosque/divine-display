@@ -6,6 +6,11 @@ import { useSettings } from "../context/SettingsContext";
  * The title (before the dash) is rendered bold; the rest is normal weight.
  */
 function AnnouncementItem({ text }: { text: string }) {
+  // Defensive check to ensure text is a string
+  if (typeof text !== "string" || !text.trim()) {
+    return null;
+  }
+
   const dashIndex = text.indexOf(" — ");
   if (dashIndex === -1) {
     return <p>{text}</p>;
@@ -27,10 +32,11 @@ export function AnnouncementTicker() {
   const t = useT(settings.language);
   const announcements =
     settings.language === "fr"
-      ? settings.mosque.announcements_fr
-      : settings.mosque.announcements_en;
+      ? settings.mosque.announcementsFr
+      : settings.mosque.announcementsEn;
 
-  if (announcements.length === 0) return null;
+  // Handle missing or invalid announcements array
+  if (!Array.isArray(announcements) || announcements.length === 0) return null;
 
   // Duplicate items so the marquee loops seamlessly
   const items = [...announcements, ...announcements];

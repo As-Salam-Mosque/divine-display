@@ -20,29 +20,38 @@ const config: MosqueConfig = {
     Isha: 0,
   },
   extraPrayers: [
-    {
-      name: "Khutbah",
-      arabicName: "خطبة",
-      adhan: null,
-      iqamah: null,
-      times: ["13:00", "14:00"],
-    },
+    // {
+    //   name: "Khutbah",
+    //   arabicName: "خطبة",
+    //   adhan: null,
+    //   iqamah: null,
+    //   times: ["13:00", "14:00"],
+    // },
   ],
   adSlots: [
     {
       id: 1,
       label: "SPONSOR SPACE",
-      image: "/hajj-kids.jpeg",
+      weight: 0,
+    },
+    {
+      id: 2,
+      label: "SPONSOR SPACE",
       weight: 1,
+    },
+    {
+      id: 3,
+      label: "SPONSOR SPACE",
+      weight: 0,
     },
   ],
   promo: { displayDurationMs: 10000, cycleMs: 90000, initialDelayMs: 5000 },
-  announcements_en: [
+  announcementsEn: [
     "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2:10PM (English)",
     "Quran Halaqah — Weekly Quran circle every Saturday after 3PM in the main hall.",
     "See all out events at assalam.info/services",
   ],
-  announcements_fr: [
+  announcementsFr: [
     "Khutbah du vendredi — Le Sheikh Ali dirigera le khutbah à 13h (Arabe) et 14h10 (Anglais)",
     "Halaqah du Coran — Halaqah du Coran chaque samedi après 15h dans la salle principale.",
     "Consultez tous nos événements sur assalam.info/services",
