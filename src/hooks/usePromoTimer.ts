@@ -79,9 +79,7 @@ export function usePromoTimer({
       return;
     }
 
-    const candidates = slots.filter(
-      (s) => !!s.image && (s.weight ?? 0) > 0,
-    );
+    const candidates = slots.filter((s) => !!s.image && (s.weight ?? 0) > 0);
     if (candidates.length === 0) {
       reset();
       return;
@@ -92,6 +90,12 @@ export function usePromoTimer({
     const initialDelay = promoConfig?.initialDelayMs ?? 15_000;
 
     const runCycle = () => {
+      // If the tab is hidden, postpone starting the animation until it's visible again
+      if (typeof document !== "undefined" && document.hidden) {
+        timers.cycle = window.setTimeout(runCycle, 1000);
+        return;
+      }
+
       const chosen = pickWeightedSlot(candidates);
       setCurrentSlot(chosen);
       setPhase("enter");
