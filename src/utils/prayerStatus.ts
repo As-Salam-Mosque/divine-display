@@ -20,7 +20,7 @@ export const EVENT_TYPE_PRIORITY: Record<EventType, number> = {
   time: 2,
 };
 
-const STATUS_SIGNAL_WINDOW_MS = 60_000;
+export const STATUS_SIGNAL_WINDOW_MS = 60_000;
 
 export function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
   return (

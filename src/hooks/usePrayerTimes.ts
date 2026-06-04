@@ -11,6 +11,7 @@ import {
   type EventType,
   type NextEvent,
   EVENT_TYPE_PRIORITY,
+  STATUS_SIGNAL_WINDOW_MS,
   buildStatusFromEvent,
   findNextPrayerIndex,
   findHighlightedIndex,
@@ -67,8 +68,6 @@ function normalizeTimeList(times?: string | string[] | null): string[] {
 
 function toEventDate(timeStr: string, now: Date): Date {
   const d = parseTime(timeStr.trim());
-  // Cache event dates for 65 seconds to avoid recalculating every second
-  const STATUS_SIGNAL_WINDOW_MS = 60_000;
   if (d.getTime() - now.getTime() < -STATUS_SIGNAL_WINDOW_MS) {
     d.setDate(d.getDate() + 1);
   }
@@ -167,7 +166,12 @@ export function usePrayerTimes(
   const updateDynamicStatus = useCallback(
     (prayers: PrayerTime[], events: NextEvent[]) => {
       const now = new Date();
-      const nextEvent = events.length ? events[0] : null;
+      // Find the first event that is still active (within signal window) or upcoming.
+      // This ensures stale past events don't block the iqamah or next prayer events.
+      const nextEvent =
+        events.find(
+          (e) => now.getTime() < e.date.getTime() + STATUS_SIGNAL_WINDOW_MS,
+        ) ?? null;
       const nextIndex = findNextPrayerIndex(nextEvent, events, prayers.length);
       const status = buildStatusFromEvent(prayers, nextEvent, now, language);
       const highlightedIndex = findHighlightedIndex(
