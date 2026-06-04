@@ -49,7 +49,7 @@ export function PromoRail({
   return (
     <aside
       className={cn(
-        "hidden md:block md:absolute md:top-0 md:right-0 md:w-(--promo-rail-width) pl-1 md:pl-2 md:h-full z-10 transform transition-all duration-2000 ease-out",
+        "hidden md:block md:absolute md:top-0 md:right-0 md:w-(--promo-rail-width) pl-1 md:pl-2 md:h-full z-10 transform transition-all duration-500 ease-out",
         slideState,
       )}
       aria-label={promoAlt || undefined}
