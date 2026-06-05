@@ -218,8 +218,7 @@ export function ClockPanel({
         <div
           className={cn(
             "z-10 w-full max-h-full flex flex-col items-center justify-center gap-2 md:gap-3 lg:gap-4",
-            promoActive &&
-              "md:transition-all md:duration-900 md:flex-row md:items-stretch md:justify-between",
+            promoActive && "md:flex-row md:items-stretch md:justify-between",
           )}
         >
           {/* Main Display / Left Column */}
@@ -227,7 +226,7 @@ export function ClockPanel({
             className={cn(
               "flex flex-col min-w-0",
               promoActive
-                ? "promo-compact md:transition-all md:duration-900 md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
+                ? "promo-compact md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
                 : "items-center w-full",
             )}
           >
