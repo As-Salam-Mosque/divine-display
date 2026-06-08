@@ -20,13 +20,14 @@ const config: MosqueConfig = {
     Isha: 0,
   },
   extraPrayers: [
-    // {
-    //   name: "Khutbah",
-    //   arabicName: "خطبة",
-    //   adhan: null,
-    //   iqamah: null,
-    //   times: ["13:00", "14:00"],
-    // },
+    {
+      name: "Khutbah",
+      arabicName: "خطبة",
+      adhan: null,
+      iqamah: null,
+      times: ["13:00", "14:00"],
+      displayOnly: false,
+    },
   ],
   adSlots: [
     {
