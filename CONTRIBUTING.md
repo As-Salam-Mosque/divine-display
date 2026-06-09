@@ -11,6 +11,24 @@ npm run dev
 # then open http://localhost:5173 (or the URL Vite prints)
 ```
 
+### With API-based configuration (optional)
+
+To use configuration from the `divine-display-backend` API:
+
+```bash
+# Terminal 1: Start backend (see ../divine-display-backend/SETUP.md)
+cd ../divine-display-backend
+uvicorn app.main:app --reload
+
+# Terminal 2: Start frontend with backend URL
+VITE_BACKEND_URL=http://localhost:8000 npm run dev
+
+# Terminal 3: Visit the app with a mosque slug in the URL
+# http://localhost:5173/assalam
+```
+
+For complete setup instructions, see `../divine-display-backend/SETUP.md`.
+
 ## Build & preview
 
 Type-check and build production assets, then preview the production build locally:
@@ -30,7 +48,9 @@ npm run lint
 
 The repository includes a suggested type-checked ESLint configuration. See `./.eslintrc` or `eslint.config.js` for details.
 
-## Configuration (single entry point)
+## Configuration
+
+### Option 1: Local configuration (default)
 
 Edit `mosque.config.ts` to adjust runtime behavior. The exported `MosqueConfig` controls:
 
@@ -41,10 +61,43 @@ Edit `mosque.config.ts` to adjust runtime behavior. The exported `MosqueConfig` 
 - `announcements` for the marquee
 - `mosque` metadata (name, city)
 
+### Option 2: API-based configuration (via divine-display-backend)
+
+You can fetch configuration from the `divine-display-backend` API instead of using the local `mosque.config.ts`. This is useful for dynamic configuration without rebuilds.
+
+**Setup:**
+
+1. Set the backend API base URL via environment variable:
+
+```bash
+VITE_BACKEND_URL=http://localhost:8000
+```
+
+2. Access the app with the mosque slug in the URL pathname:
+
+```
+http://localhost:5173/al-masjid
+```
+
+The app will:
+1. Extract the slug from the URL pathname (e.g., `al-masjid` from `/al-masjid`)
+2. Fetch the mosque configuration from `GET /api/v1/mosques?name=<slug>` (no authentication required)
+3. Extract the `configuration` object from the response
+4. Use it as the runtime config (fallback to `mosque.config.ts` if the fetch fails)
+
+The configuration is fetched on startup and re-fetched every 30 minutes. The fetch is non-blocking; the app displays the cached or fallback configuration while loading.
+
+**Note:** If `VITE_BACKEND_URL` is not set, or if the URL has no slug, the app will fall back to the local `mosque.config.ts` configuration.
+
 ## Runtime data flow
 
+- `useMosqueConfig(options?)`
+  - If `VITE_BACKEND_URL` is set and the URL contains a slug (pathname like `/al-masjid`), fetches configuration from the API endpoint `GET /api/v1/mosques?name=<slug>`.
+  - Otherwise, uses the static `mosque.config.ts` (or a URL from `VITE_MOSQUE_CONFIG_URL`).
+  - Returns the configuration with a loading state; falls back to `mosque.config.ts` if the fetch fails.
+
 - `usePrayerTimes(config)`
-  - Fetches `https://api.aladhan.com/v1/timings/{date}` using values from `mosque.config.ts`.
+  - Fetches `https://api.aladhan.com/v1/timings/{date}` using the mosque's coordinates and `calculationMethod`.
   - Caches the day's timings to `localStorage` (one entry per date).
   - Derives `activePrayerIndex` and `nextPrayerIndex` and computes a status string every second.
   - Handles the special `Shuruq` case where `adhan` and `iqamah` are `null`.

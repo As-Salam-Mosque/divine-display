@@ -3,6 +3,7 @@ import type { MosqueConfig, MosqueConfigState } from "../types";
 import fallbackConfig from "../../mosque.config";
 
 const DEFAULT_CONFIG_URL = import.meta.env.VITE_MOSQUE_CONFIG_URL || "";
+const DEFAULT_API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "";
 
 interface InternalConfigState {
   config: MosqueConfig | null;
@@ -10,10 +11,31 @@ interface InternalConfigState {
   sourceUrl: string | null;
 }
 
+export interface UseMosqueConfigOptions {
+  /** URL to fetch config from. If provided, takes precedence over apiBase + slug. */
+  url?: string;
+  /** Base URL of the API (e.g., "http://localhost:8000") */
+  apiBase?: string;
+  /** Mosque slug to fetch from API. Used if apiBase is provided. */
+  slug?: string;
+}
+
 export function useMosqueConfig(
-  url: string = DEFAULT_CONFIG_URL,
+  options?: UseMosqueConfigOptions | string,
 ): MosqueConfigState {
-  const resolvedUrl = url?.trim() || undefined;
+  // Support both legacy string parameter and new options object
+  const opts: UseMosqueConfigOptions =
+    typeof options === "string" ? { url: options } : options || {};
+  const resolvedUrl = opts.url?.trim() || DEFAULT_CONFIG_URL || undefined;
+  const resolvedApiBase =
+    opts.apiBase?.trim() || DEFAULT_API_BASE_URL || undefined;
+  const resolvedSlug = opts.slug?.trim() || undefined;
+
+  // Determine which URL to use: explicit URL takes precedence over API-based fetching
+  const useApi = Boolean(resolvedApiBase && resolvedSlug && !resolvedUrl);
+  const fetchUrl = useApi
+    ? `${resolvedApiBase}/api/v1/mosques?name=${encodeURIComponent(resolvedSlug as string)}`
+    : resolvedUrl;
 
   const [state, setState] = useState<InternalConfigState>(() => ({
     config: null,
@@ -22,7 +44,7 @@ export function useMosqueConfig(
   }));
 
   useEffect(() => {
-    if (!resolvedUrl) return;
+    if (!fetchUrl) return;
 
     let isUnmounted = false;
     let currentController: AbortController | null = null;
@@ -35,7 +57,7 @@ export function useMosqueConfig(
       currentController = new AbortController();
 
       try {
-        const response = await fetch(resolvedUrl, {
+        const response = await fetch(fetchUrl, {
           signal: currentController.signal,
         });
         if (!response.ok) {
@@ -43,12 +65,18 @@ export function useMosqueConfig(
             `Config request failed: ${response.status} ${response.statusText}`,
           );
         }
-        const config = (await response.json()) as MosqueConfig;
+
+        // If fetching from the API, extract configuration from the response
+        const data = (await response.json()) as Record<string, unknown>;
+        const config = useApi
+          ? (data.configuration as unknown as MosqueConfig)
+          : (data as unknown as MosqueConfig);
+
         if (!isUnmounted) {
           setState({
             config,
             error: null,
-            sourceUrl: resolvedUrl,
+            sourceUrl: fetchUrl,
           });
         }
       } catch (err: unknown) {
@@ -58,7 +86,7 @@ export function useMosqueConfig(
           setState({
             config: null,
             error: String(err),
-            sourceUrl: resolvedUrl,
+            sourceUrl: fetchUrl,
           });
         }
       } finally {
@@ -77,14 +105,14 @@ export function useMosqueConfig(
       if (currentController) currentController.abort();
       clearInterval(intervalId);
     };
-  }, [resolvedUrl]);
+  }, [fetchUrl, useApi]);
 
-  const hasUrl = Boolean(resolvedUrl);
-  const isCurrent = resolvedUrl ? state.sourceUrl === resolvedUrl : false;
+  const hasFetchUrl = Boolean(fetchUrl);
+  const isCurrent = fetchUrl ? state.sourceUrl === fetchUrl : false;
   const hasConfig = state.config !== null;
 
   // If URL is provided and we don't have config yet and no error, we're loading
-  const loading = hasUrl && !hasConfig && state.error === null;
+  const loading = hasFetchUrl && !hasConfig && state.error === null;
 
   // Use remote config if we have it and it's current, otherwise fall back
   const config: MosqueConfig =
