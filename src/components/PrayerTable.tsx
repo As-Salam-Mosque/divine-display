@@ -24,7 +24,7 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
 
     const updateScrollable = () => {
       const nextIsScrollable =
-        container.scrollHeight > container.clientHeight + 1;
+        container.scrollWidth > container.clientWidth + 1;
 
       setIsScrollable((currentIsScrollable) =>
         currentIsScrollable === nextIsScrollable
@@ -57,11 +57,11 @@ export function PrayerTable({ prayers, activePrayerIndex }: PrayerTableProps) {
       className={cn(
         "prayer-table-scroll-region h-full min-h-0 overflow-visible",
         isScrollable &&
-          "prayer-table-scroll-region--active overflow-y-scroll overflow-x-hidden",
+          "lg:prayer-table-scroll-region--active lg:overflow-x-scroll lg:overflow-y-hidden",
       )}
     >
       <ul
-        className="grid w-full min-h-full gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(160px,1fr))]"
+        className="grid min-h-full gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(160px,1fr))] lg:grid-flow-col lg:auto-cols-[minmax(160px,1fr)] lg:flex-nowrap"
         aria-label="Prayer times"
       >
         {prayers.map((prayer, index) => {

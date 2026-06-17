@@ -135,7 +135,7 @@ export default function App() {
   // Otherwise, fall back to VITE_MOSQUE_CONFIG_URL or local config
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
-  const mosqueSlug = pathSegments[0] || "assalam"; // Default to "assalam" if no slug is present. Temporary.
+  const mosqueSlug = pathSegments[0];
 
   const { config } = useMosqueConfig(
     backendUrl && mosqueSlug
