@@ -111,27 +111,12 @@ export function buildStatusFromEvent(
  * Find the next prayer index (ignoring iqamah countdown)
  */
 export function findNextPrayerIndex(
-  nextEvent: NextEvent | null,
   events: NextEvent[],
   prayerCount: number,
 ): number | null {
-  if (!nextEvent) return prayerCount > 0 ? 0 : null;
-
-  // If nextEvent is not iqamah, return its prayerIndex
-  if (nextEvent.type !== "iqamah") return nextEvent.prayerIndex;
-
-  // Otherwise, find the first event after nextEvent.date which is not iqamah
-  const nextIndex = events.findIndex(
-    (event) => event.type !== "iqamah" && event.date > nextEvent.date
-  );
-
-  if (nextIndex === -1) {
-    return prayerCount > 0 ? 0 : null;
-  }
-
-  return events[nextIndex].prayerIndex;
+  const nextPrayerEvent = events.find((event) => event.type !== "iqamah");
+  return nextPrayerEvent?.prayerIndex ?? (prayerCount > 0 ? 0 : null);
 }
-
 
 /**
  * Determine which prayer to highlight

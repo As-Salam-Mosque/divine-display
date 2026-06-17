@@ -64,16 +64,14 @@ describe("usePrayerTimes next index derivation", () => {
     const now = new Date();
     const pad = (n: number) => String(n).padStart(2, "0");
 
-    const minus30 = new Date(now.getTime() - 30 * 60_000);
-    const plus3h = new Date(now.getTime() + 3 * 60 * 60_000);
-
+    // Set prayer times dynamically spaced relative to now
     const timings = {
-      Fajr: "05:00",
-      Sunrise: "06:20",
-      Dhuhr: `${pad(minus30.getHours())}:${pad(minus30.getMinutes())}`,
-      Asr: `${pad(plus3h.getHours())}:${pad(plus3h.getMinutes())}`,
-      Maghrib: "18:10",
-      Isha: "19:30",
+      Fajr: `${pad(new Date(now.getTime() - 90 * 60_000).getHours())}:${pad(new Date(now.getTime() - 90 * 60_000).getMinutes())}`,
+      Sunrise: `${pad(new Date(now.getTime() - 60 * 60_000).getHours())}:${pad(new Date(now.getTime() - 60 * 60_000).getMinutes())}`,
+      Dhuhr: `${pad(new Date(now.getTime() - 30 * 60_000).getHours())}:${pad(new Date(now.getTime() - 30 * 60_000).getMinutes())}`,
+      Asr: `${pad(new Date(now.getTime() + 30 * 60_000).getHours())}:${pad(new Date(now.getTime() + 30 * 60_000).getMinutes())}`,
+      Maghrib: `${pad(new Date(now.getTime() + 120 * 60_000).getHours())}:${pad(new Date(now.getTime() + 120 * 60_000).getMinutes())}`,
+      Isha: `${pad(new Date(now.getTime() + 180 * 60_000).getHours())}:${pad(new Date(now.getTime() + 180 * 60_000).getMinutes())}`,
     };
 
     const apiResponse = {

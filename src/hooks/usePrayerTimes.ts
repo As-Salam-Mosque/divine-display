@@ -172,7 +172,7 @@ export function usePrayerTimes(
         events.find(
           (e) => now.getTime() < e.date.getTime() + STATUS_SIGNAL_WINDOW_MS,
         ) ?? null;
-      const nextIndex = findNextPrayerIndex(nextEvent, events, prayers.length);
+      const nextIndex = findNextPrayerIndex(events, prayers.length);
       const status = buildStatusFromEvent(prayers, nextEvent, now, language);
       const highlightedIndex = findHighlightedIndex(
         status.statusType,
