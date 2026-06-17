@@ -9,11 +9,13 @@ import { AdRail } from "../components/AdRail";
 import { AnnouncementTicker } from "../components/AnnouncementTicker";
 import { SettingsPanel } from "../components/SettingsPanel";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
+import { useT } from "../i18n";
 import { cn } from "../utils/cn";
 import type { AppSettings } from "../types";
 
 function Display() {
   const { settings } = useSettings();
+  const t = useT(settings.language);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const clock = useClock(settings.language);
@@ -39,7 +41,7 @@ function Display() {
         href="#prayer-times"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-100 focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg focus:font-semibold"
       >
-        Skip to prayer times
+        {t.skipToPrayerTimes}
       </a>
 
       <main
@@ -81,7 +83,7 @@ function Display() {
             <div
               className="basis-[35%] min-h-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3"
               aria-busy="true"
-              aria-label="Loading prayer times"
+              aria-label={t.loadingPrayerTimes}
             >
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
