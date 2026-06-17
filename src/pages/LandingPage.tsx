@@ -98,7 +98,9 @@ export function LandingPage() {
             <div>
               <h1 className="mb-6 text-5xl leading-tight font-bold lg:text-7xl">
                 {t.landing.heroTitleLead} <br />
-                <span className="text-primary italic">{t.landing.heroTitleHighlight}</span>
+                <span className="text-primary italic">
+                  {t.landing.heroTitleHighlight}
+                </span>
               </h1>
               <p className="mb-8 max-w-xl text-lg text-text-muted">
                 {t.landing.heroDescription}
@@ -111,7 +113,7 @@ export function LandingPage() {
                   {t.landing.heroJoin}
                 </a>
                 <a
-                  href="/?name=assalam"
+                  href="/?name=''"
                   className="rounded-lg border border-primary-25 px-8 py-4 font-semibold text-primary transition-colors hover:bg-primary-10 focus-ring"
                 >
                   {t.landing.liveDemo}
@@ -142,7 +144,9 @@ export function LandingPage() {
               <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
                 {t.landing.perspective}
               </span>
-              <h2 className="mb-4 text-4xl font-bold lg:text-5xl">{t.landing.ourVision}</h2>
+              <h2 className="mb-4 text-4xl font-bold lg:text-5xl">
+                {t.landing.ourVision}
+              </h2>
               <p className="text-lg text-text-muted">
                 {t.landing.visionDescription}
               </p>
@@ -177,7 +181,9 @@ export function LandingPage() {
                 <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
                   {t.landing.capabilities}
                 </span>
-                <h2 className="text-4xl font-bold lg:text-5xl">{t.landing.premiumFeatures}</h2>
+                <h2 className="text-4xl font-bold lg:text-5xl">
+                  {t.landing.premiumFeatures}
+                </h2>
               </div>
             </div>
 
@@ -221,7 +227,9 @@ export function LandingPage() {
                 {t.landing.forCommunities}
               </span>
               <h3 className="mb-4 text-4xl font-bold">{t.landing.mosque}</h3>
-              <p className="mb-7 text-lg text-text-muted">{t.landing.mosqueDescription}</p>
+              <p className="mb-7 text-lg text-text-muted">
+                {t.landing.mosqueDescription}
+              </p>
               <a
                 href="#contact"
                 className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring"
@@ -234,8 +242,12 @@ export function LandingPage() {
               <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
                 {t.landing.forPartners}
               </span>
-              <h3 className="mb-4 text-4xl font-bold">{t.landing.businessPartner}</h3>
-              <p className="mb-7 text-lg text-text-muted">{t.landing.businessDescription}</p>
+              <h3 className="mb-4 text-4xl font-bold">
+                {t.landing.businessPartner}
+              </h3>
+              <p className="mb-7 text-lg text-text-muted">
+                {t.landing.businessDescription}
+              </p>
               <a
                 href="#contact"
                 className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring"
@@ -251,21 +263,12 @@ export function LandingPage() {
         id="contact"
         className="scroll-mt-24 border-t border-outline-variant bg-background-deep px-5 py-16 md:px-8"
       >
-        <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-4">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-3">
           <div>
             <p className="mb-4 text-2xl font-semibold text-primary">
               {t.landing.brand}
             </p>
             <p className="text-text-muted">{t.landing.footerDescription}</p>
-          </div>
-
-          <div>
-            <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-              {t.landing.company}
-            </p>
-            <p className="text-text-muted">{t.landing.navAbout}</p>
-            <p className="mt-2 text-text-muted">{t.landing.navFeatures}</p>
-            <p className="mt-2 text-text-muted">{t.landing.sitemap}</p>
           </div>
 
           <div>
@@ -281,9 +284,8 @@ export function LandingPage() {
             <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-primary uppercase">
               {t.landing.contact}
             </p>
-            <p className="text-text-muted">salam@divinedisplay.ca</p>
-            <p className="mt-2 text-text-muted">+1 (416) 555-0128</p>
-            <p className="mt-2 text-text-muted">Toronto, ON, Canada</p>
+            <p className="text-text-muted">assalam@divinedisplay.ca</p>
+            <p className="mt-2 text-text-muted">Montréal, ON, Canada</p>
           </div>
         </div>
       </footer>
