@@ -111,7 +111,6 @@ export function buildStatusFromEvent(
  * Find the next prayer index (ignoring iqamah countdown)
  */
 export function findNextPrayerIndex(
-  _nextEvent: NextEvent | null,
   events: NextEvent[],
   prayerCount: number,
 ): number | null {

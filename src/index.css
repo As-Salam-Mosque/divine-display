@@ -155,6 +155,29 @@ button {
 }
 
 @layer components {
+    .gold-button {
+        background-color: var(--primary);
+        color: var(--background-deep);
+        transition:
+            background-color 0.2s ease-in-out,
+            transform 0.2s ease-in-out;
+    }
+
+    .gold-button:hover {
+        background-color: rgba(var(--primary-rgb), 0.86);
+        transform: translateY(-1px);
+    }
+
+    .flat-card {
+        background-color: var(--surface-panel);
+        border: 1px solid rgba(var(--primary-rgb), 0.1);
+        transition: border-color 0.3s ease;
+    }
+
+    .flat-card:hover {
+        border-color: var(--primary);
+    }
+
     .ghost-border {
         border: 1px solid var(--ghost-border-color);
         box-shadow: var(--panel-separation-shadow);
