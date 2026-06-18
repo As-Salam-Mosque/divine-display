@@ -285,7 +285,7 @@ export function LandingPage() {
               {t.landing.contact}
             </p>
             <p className="text-text-muted">assalam@divinedisplay.ca</p>
-            <p className="mt-2 text-text-muted">Montréal, ON, Canada</p>
+            <p className="mt-2 text-text-muted">Montréal, CA, Canada</p>
           </div>
         </div>
       </footer>
