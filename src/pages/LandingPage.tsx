@@ -261,7 +261,7 @@ export function LandingPage() {
 
       <footer
         id="contact"
-        className="scroll-mt-24 border-t border-outline-variant bg-background-deep px-5 py-16 md:px-8"
+        className="scroll-mt-24 border-t border-outline-variant bg-background-deep px-5 pt-20 pb-96 md:px-8"
       >
         <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-3">
           <div>
@@ -285,7 +285,7 @@ export function LandingPage() {
               {t.landing.contact}
             </p>
             <p className="text-text-muted">assalam@divinedisplay.ca</p>
-            <p className="mt-2 text-text-muted">Montréal, CA, Canada</p>
+            <p className="mt-2 text-text-muted">Montréal, Canada</p>
           </div>
         </div>
       </footer>
