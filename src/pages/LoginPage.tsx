@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { AuthBrandHeader } from "../components/auth/AuthBrandHeader";
 import { AuthCard } from "../components/auth/AuthCard";
@@ -19,7 +19,7 @@ const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
 export function LoginPage() {
   const [, setLocation] = useLocation();
-  const { login } = useAuth();
+  const { login, token, slug: authSlug } = useAuth();
   const { language, setLanguage } = useLanguage();
   const t = useT(language);
 
@@ -28,6 +28,12 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (token && authSlug) {
+      setLocation("/dashboard");
+    }
+  }, [token, authSlug, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
