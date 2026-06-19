@@ -9,6 +9,7 @@ import { AdRail } from "../components/AdRail";
 import { AnnouncementTicker } from "../components/AnnouncementTicker";
 import { SettingsPanel } from "../components/SettingsPanel";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
+import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
 import type { AppSettings } from "../types";
@@ -128,7 +129,8 @@ interface ClockPageProps {
   mosqueName: string;
 }
 
-export function ClockPage({ mosqueName }: ClockPageProps) {
+function ClockPageContent({ mosqueName }: ClockPageProps) {
+  const { language } = useLanguage();
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
 
   const { config } = useMosqueConfig(
@@ -137,14 +139,14 @@ export function ClockPage({ mosqueName }: ClockPageProps) {
 
   const defaultSettings = useMemo<AppSettings>(
     () => ({
-      language: "en",
+      language,
       timeFormat: "12h",
       showSponsors: true,
       theme: "dark",
       mosque: config,
       alternatePrayerCardColors: false,
     }),
-    [config],
+    [language, config],
   );
 
   return (
@@ -152,4 +154,8 @@ export function ClockPage({ mosqueName }: ClockPageProps) {
       <Display />
     </SettingsProvider>
   );
+}
+
+export function ClockPage(props: ClockPageProps) {
+  return <ClockPageContent {...props} />;
 }

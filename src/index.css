@@ -510,6 +510,21 @@ button {
     }
 }
 
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.2;
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.2;
+    }
+}
+
 @keyframes marquee {
     0% {
         transform: translateX(100%);
