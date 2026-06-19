@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { LandingHeaderBar } from "../components/LandingHeaderBar";
+import { SkipLink } from "../components/common/SkipLink";
 import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
 
@@ -72,12 +73,7 @@ export function LandingPage() {
       lang={language}
       className="dark min-h-screen bg-background-deep text-on-surface font-body-md"
     >
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-100 focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg focus:font-semibold"
-      >
-        {t.landing.skipToMain}
-      </a>
+      <SkipLink href="#main-content" label={t.landing.skipToMain} />
       <LandingHeaderBar
         primaryNavLabel={t.landing.primaryNav}
         brand={t.landing.brand}
@@ -106,17 +102,17 @@ export function LandingPage() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <button
-                  onClick={() => setLocation("#partners")}
+                  onClick={() => setLocation("/register")}
                   className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring bg-none border-none cursor-pointer"
                 >
                   {t.landing.heroJoin}
                 </button>
-                <button
-                  onClick={() => setLocation("/?name='")}
+                <a
+                  href="/?name=''"
                   className="rounded-lg border border-primary-25 px-8 py-4 font-semibold text-primary transition-colors hover:bg-primary-10 focus-ring bg-none cursor-pointer"
                 >
                   {t.landing.liveDemo}
-                </button>
+                </a>
               </div>
             </div>
 

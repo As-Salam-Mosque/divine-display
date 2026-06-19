@@ -13,10 +13,8 @@
         Arial, "Noto Sans", sans-serif;
 }
 
-/* Apply default body font (matches old UI) */
 body {
     font-family: var(--font-body);
-    background-color: var(--background-deep);
     color: var(--on-surface);
 }
 
