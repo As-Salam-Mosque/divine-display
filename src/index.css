@@ -13,10 +13,23 @@
         Arial, "Noto Sans", sans-serif;
 }
 
-/* Apply default body font (matches old UI) */
+html,
+body,
+#root {
+    min-height: 100%;
+}
+
+html {
+    background-color: #060a1a;
+}
+
+html:has(.light) {
+    background-color: var(--background-deep);
+}
+
 body {
     font-family: var(--font-body);
-    background-color: var(--background-deep);
+    background-color: inherit;
     color: var(--on-surface);
 }
 
@@ -507,6 +520,21 @@ button {
 @layer utilities {
     .animate-marquee {
         animation: marquee 240s linear infinite;
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.2;
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.2;
     }
 }
 

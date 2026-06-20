@@ -8,7 +8,9 @@ import { PrayerTable } from "../components/PrayerTable";
 import { AdRail } from "../components/AdRail";
 import { AnnouncementTicker } from "../components/AnnouncementTicker";
 import { SettingsPanel } from "../components/SettingsPanel";
+import { SkipLink } from "../components/common/SkipLink";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
+import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
 import type { AppSettings } from "../types";
@@ -37,12 +39,7 @@ function Display() {
           : "light bg-background-deep text-on-surface",
       )}
     >
-      <a
-        href="#prayer-times"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-100 focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg focus:font-semibold"
-      >
-        {t.skipToPrayerTimes}
-      </a>
+      <SkipLink href="#prayer-times" label={t.skipToPrayerTimes} />
 
       <main
         className="flex-1 grid grid-cols-1 gap-2 md:gap-3 tv:gap-stage-gap p-2 md:p-3 lg:p-5 tv:p-panel-padding lg:overflow-hidden lg:grid-cols-[minmax(0,1fr)_var(--adrail-width)]"
@@ -128,7 +125,8 @@ interface ClockPageProps {
   mosqueName: string;
 }
 
-export function ClockPage({ mosqueName }: ClockPageProps) {
+function ClockPageContent({ mosqueName }: ClockPageProps) {
+  const { language } = useLanguage();
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
 
   const { config } = useMosqueConfig(
@@ -137,14 +135,14 @@ export function ClockPage({ mosqueName }: ClockPageProps) {
 
   const defaultSettings = useMemo<AppSettings>(
     () => ({
-      language: "en",
+      language,
       timeFormat: "12h",
       showSponsors: true,
       theme: "dark",
       mosque: config,
       alternatePrayerCardColors: false,
     }),
-    [config],
+    [language, config],
   );
 
   return (
@@ -152,4 +150,8 @@ export function ClockPage({ mosqueName }: ClockPageProps) {
       <Display />
     </SettingsProvider>
   );
+}
+
+export function ClockPage(props: ClockPageProps) {
+  return <ClockPageContent {...props} />;
 }

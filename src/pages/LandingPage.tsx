@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useLocation } from "wouter";
 import { LandingHeaderBar } from "../components/LandingHeaderBar";
+import { SkipLink } from "../components/common/SkipLink";
+import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
-import type { Language } from "../types";
 
 export function LandingPage() {
-  const [language, setLanguage] = useState<Language>(() =>
-    navigator.language?.startsWith("fr") ? "fr" : "en",
-  );
+  const [, setLocation] = useLocation();
+  const { language, setLanguage } = useLanguage();
   const t = useT(language);
 
   const navItems = [
@@ -73,12 +73,7 @@ export function LandingPage() {
       lang={language}
       className="dark min-h-screen bg-background-deep text-on-surface font-body-md"
     >
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-100 focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg focus:font-semibold"
-      >
-        {t.landing.skipToMain}
-      </a>
+      <SkipLink href="#main-content" label={t.landing.skipToMain} />
       <LandingHeaderBar
         primaryNavLabel={t.landing.primaryNav}
         brand={t.landing.brand}
@@ -106,15 +101,15 @@ export function LandingPage() {
                 {t.landing.heroDescription}
               </p>
               <div className="flex flex-wrap gap-4">
-                <a
-                  href="#partners"
-                  className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring"
+                <button
+                  onClick={() => setLocation("/register")}
+                  className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring bg-none border-none cursor-pointer"
                 >
                   {t.landing.heroJoin}
-                </a>
+                </button>
                 <a
                   href="/?name=''"
-                  className="rounded-lg border border-primary-25 px-8 py-4 font-semibold text-primary transition-colors hover:bg-primary-10 focus-ring"
+                  className="rounded-lg border border-primary-25 px-8 py-4 font-semibold text-primary transition-colors hover:bg-primary-10 focus-ring bg-none cursor-pointer"
                 >
                   {t.landing.liveDemo}
                 </a>
@@ -230,12 +225,12 @@ export function LandingPage() {
               <p className="mb-7 text-lg text-text-muted">
                 {t.landing.mosqueDescription}
               </p>
-              <a
-                href="#contact"
-                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring"
+              <button
+                onClick={() => setLocation("/register")}
+                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring inline-block bg-none border-none cursor-pointer"
               >
                 {t.landing.registerMosque}
-              </a>
+              </button>
             </article>
 
             <article className="ghost-border rounded-2xl bg-surface-panel p-8">
@@ -248,12 +243,12 @@ export function LandingPage() {
               <p className="mb-7 text-lg text-text-muted">
                 {t.landing.businessDescription}
               </p>
-              <a
-                href="#contact"
-                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring"
+              <button
+                onClick={() => setLocation("#contact")}
+                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring bg-none border-none cursor-pointer"
               >
                 {t.landing.contactSales}
-              </a>
+              </button>
             </article>
           </div>
         </section>
