@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { LandingHeaderBar } from "../components/LandingHeaderBar";
+import { LandingHeaderBar } from "../components/HeaderBar";
 import { SkipLink } from "../components/common/SkipLink";
 import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
@@ -77,11 +77,12 @@ export function LandingPage() {
       <LandingHeaderBar
         primaryNavLabel={t.landing.primaryNav}
         brand={t.landing.brand}
-        joinUs={t.landing.joinUs}
+        brandHref="#home"
         languageToggleLabel={t.landing.languageToggle}
         currentLanguage={language}
         onLanguageChange={setLanguage}
         navItems={navItems}
+        action={{ label: t.landing.joinUs, href: "#partners" }}
       />
 
       <main id="main-content" className="pt-20" tabIndex={-1}>
@@ -109,6 +110,7 @@ export function LandingPage() {
                 </button>
                 <a
                   href="/?name=''"
+                  target="_blank"
                   className="rounded-lg border border-primary-25 px-8 py-4 font-semibold text-primary transition-colors hover:bg-primary-10 focus-ring bg-none cursor-pointer"
                 >
                   {t.landing.liveDemo}
@@ -243,12 +245,12 @@ export function LandingPage() {
               <p className="mb-7 text-lg text-text-muted">
                 {t.landing.businessDescription}
               </p>
-              <button
-                onClick={() => setLocation("#contact")}
-                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring bg-none border-none cursor-pointer"
+              <a
+                href="mailto:assalam@divinedisplay.ca?subject=Divine%20Display%20Partnership%20Inquiry"
+                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring inline-block"
               >
                 {t.landing.contactSales}
-              </button>
+              </a>
             </article>
           </div>
         </section>
