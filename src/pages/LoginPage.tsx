@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { AuthBrandHeader } from "../components/auth/AuthBrandHeader";
 import { AuthCard } from "../components/auth/AuthCard";
 import { AuthDividerLabel } from "../components/auth/AuthDividerLabel";
 import { AuthErrorAlert } from "../components/auth/AuthErrorAlert";
 import { AuthFooterAttribution } from "../components/auth/AuthFooterAttribution";
-import { AuthLanguageSwitch } from "../components/auth/AuthLanguageSwitch";
 import { AuthPageShell } from "../components/auth/AuthPageShell";
 import { AuthSubmitButton } from "../components/auth/AuthSubmitButton";
 import { AuthTextField } from "../components/auth/AuthTextField";
+import { LandingHeaderBar } from "../components/HeaderBar";
 import { PasswordField } from "../components/auth/PasswordField";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -68,8 +67,19 @@ export function LoginPage() {
       mainId="login-form"
       skipLabel={t.landing.skipToMain}
     >
-      <AuthLanguageSwitch language={language} onLanguageChange={setLanguage} />
-      <AuthBrandHeader language={language} onHomeClick={() => setLocation("/")} />
+      <LandingHeaderBar
+        primaryNavLabel={t.landing.primaryNav}
+        brand={t.landing.brand}
+        brandHref="/"
+        onBrandClick={() => setLocation("/")}
+        languageToggleLabel={t.landing.languageToggle}
+        currentLanguage={language}
+        onLanguageChange={setLanguage}
+        action={{
+          label: t.register.createAccount,
+          onClick: () => setLocation("/register"),
+        }}
+      />
 
       <AuthCard>
         {error && <AuthErrorAlert message={error} />}
@@ -93,8 +103,12 @@ export function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             isVisible={showPassword}
             onToggleVisibility={() => setShowPassword((v) => !v)}
-            visibleAriaLabel={language === "fr" ? "Afficher le mot de passe" : "Show password"}
-            hiddenAriaLabel={language === "fr" ? "Masquer le mot de passe" : "Hide password"}
+            visibleAriaLabel={
+              language === "fr" ? "Afficher le mot de passe" : "Show password"
+            }
+            hiddenAriaLabel={
+              language === "fr" ? "Masquer le mot de passe" : "Hide password"
+            }
             placeholder="••••••••••••"
             required
             autoComplete="current-password"

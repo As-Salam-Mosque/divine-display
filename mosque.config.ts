@@ -1,14 +1,14 @@
 import type { MosqueConfig } from "./src/types";
 
 const config: MosqueConfig = {
-  name: "MASJID AS-SALAM",
+  name: "AL-MASJID",
   city: "MONTREAL",
-  location: "1177 rue de la Montagne, Montreal QC",
-  website: "https://www.assalam.info",
+  location: "123 rue de l'Islam, Montreal QC",
+  website: "https://www.islam.com",
   capacity: "500",
   openingHours: "See website",
-  email: "info@assalam.info",
-  phone: "+1-514-545-5466",
+  email: "masjid@islam.com",
+  phone: "+1-514-123-4567",
   latitude: 45.497253,
   longitude: -73.573064,
   calculationMethod: 2, // ISNA
