@@ -1,8 +1,11 @@
-import type { AdSlot } from "../types";
+import { useEffect, useMemo, useState } from "react";
+import type { AdRailSlotConfig, AdSlot } from "../types";
 import { useT } from "../i18n";
 import { useSettings } from "../context/SettingsContext";
 import { useDominantColor } from "../hooks/useDominantColor";
 import { cn } from "../utils/cn";
+
+const DEFAULT_DYNAMIC_ROTATION_MS = 10_000;
 
 function AdSlotCard({ slot }: { slot: AdSlot }) {
   const { settings } = useSettings();
@@ -67,12 +70,55 @@ function AdSlotCard({ slot }: { slot: AdSlot }) {
 }
 
 interface AdRailProps {
-  slots: AdSlot[];
+  sponsors: AdSlot[];
+  railSlots: AdRailSlotConfig[];
+  dynamicRotationMs?: number;
 }
 
-export function AdRail({ slots }: AdRailProps) {
+export function AdRail({
+  sponsors,
+  railSlots,
+  dynamicRotationMs = DEFAULT_DYNAMIC_ROTATION_MS,
+}: AdRailProps) {
   const { settings } = useSettings();
   const t = useT(settings.language);
+  const [dynamicTick, setDynamicTick] = useState(0);
+
+  const sponsorById = useMemo(
+    () => new Map(sponsors.map((s) => [s.id, s])),
+    [sponsors],
+  );
+
+  const dynamicCandidates = useMemo(
+    () => sponsors.filter((s) => s.label.trim().length > 0),
+    [sponsors],
+  );
+
+  useEffect(() => {
+    const hasDynamicSlot = railSlots.some((slot) => slot.mode === "dynamic");
+    if (!hasDynamicSlot || dynamicCandidates.length < 2) return;
+
+    const intervalMs = Math.max(1000, dynamicRotationMs);
+    const intervalId = window.setInterval(() => {
+      setDynamicTick((prev) => prev + 1);
+    }, intervalMs);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [railSlots, dynamicCandidates.length, dynamicRotationMs]);
+
+  const resolvedSlots = useMemo(() => {
+    return railSlots.map((slot, slotIndex) => {
+      if (slot.mode === "fixed") {
+        return sponsorById.get(slot.sponsorId ?? -1) ?? null;
+      }
+
+      if (dynamicCandidates.length === 0) return null;
+      const index = (dynamicTick + slotIndex) % dynamicCandidates.length;
+      return dynamicCandidates[index];
+    });
+  }, [railSlots, sponsorById, dynamicCandidates, dynamicTick]);
 
   return (
     <aside
@@ -85,8 +131,11 @@ export function AdRail({ slots }: AdRailProps) {
         </span>
       </div>
       <div className="flex-1 min-h-0 flex flex-col gap-2 lg:gap-3 tv:gap-stage-gap">
-        {slots.map((slot) => (
-          <AdSlotCard key={slot.id} slot={slot} />
+        {resolvedSlots.map((slot, index) => (
+          <AdSlotCard
+            key={`${railSlots[index]?.id ?? index}-${slot?.id ?? "empty"}`}
+            slot={slot ?? { id: railSlots[index]?.id ?? index, label: "SPONSOR SPACE" }}
+          />
         ))}
       </div>
     </aside>
