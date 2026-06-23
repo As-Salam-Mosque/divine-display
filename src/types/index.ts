@@ -32,6 +32,12 @@ export interface AdSlot {
   weight?: number;
 }
 
+export interface AdRailSlotConfig {
+  id: number;
+  mode: "fixed" | "dynamic";
+  sponsorId?: number;
+}
+
 export interface PromoConfig {
   // How long (ms) a promo is displayed
   displayDurationMs?: number;
@@ -59,7 +65,8 @@ export interface MosqueConfig {
   iqamahOffsets: Record<string, number>;
 
   // UI content
-  adSlots: AdSlot[];
+  sponsors: AdSlot[];
+  adRailSlots: AdRailSlotConfig[];
   announcementsEn: string[];
   announcementsFr: string[];
   // Optional promo configuration to control timing of the promo rail
@@ -156,7 +163,8 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     longitude: 0,
     calculationMethod: 0,
     iqamahOffsets: {},
-    adSlots: [],
+    sponsors: [],
+    adRailSlots: [],
     announcementsEn: [],
     announcementsFr: [],
     extraPrayers: [],

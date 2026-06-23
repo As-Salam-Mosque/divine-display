@@ -29,7 +29,7 @@ const config: MosqueConfig = {
       displayOnly: false,
     },
   ],
-  adSlots: [
+  sponsors: [
     {
       id: 1,
       label: "SPONSOR SPACE",
@@ -45,6 +45,11 @@ const config: MosqueConfig = {
       label: "SPONSOR SPACE",
       weight: 0,
     },
+  ],
+  adRailSlots: [
+    { id: 1, mode: "fixed", sponsorId: 1 },
+    { id: 2, mode: "dynamic" },
+    { id: 3, mode: "fixed", sponsorId: 3 },
   ],
   promo: { displayDurationMs: 10000, cycleMs: 90000, initialDelayMs: 5000 },
   announcementsEn: [

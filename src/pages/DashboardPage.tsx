@@ -105,7 +105,7 @@ function configToForm(c: any): FormState {
       prayerName,
       offsetMinutes: String(offsetMinutes),
     })),
-    adSlots: ((c.adSlots as AdSlot[]) || []).map((s) => ({
+    adSlots: ((c.sponsors as AdSlot[]) || []).map((s) => ({
       id: String(s.id),
       label: s.label,
       image: s.image || "",
@@ -164,13 +164,21 @@ function formToConfig(f: FormState): MosqueConfig {
     longitude: parseFloat(f.longitude) || 0,
     calculationMethod: parseInt(f.calculationMethod) || 0,
     iqamahOffsets,
-    adSlots: f.adSlots.map((s) => ({
+    sponsors: f.adSlots.map((s) => ({
       id: parseInt(s.id) || 0,
       label: s.label,
       image: s.image || null,
       link: s.link || null,
       ...(s.weight !== "" ? { weight: parseInt(s.weight) } : {}),
     })),
+    adRailSlots: f.adSlots.map((s) => {
+      const sponsorId = parseInt(s.id) || 0;
+      return {
+        id: sponsorId,
+        mode: "fixed" as const,
+        sponsorId,
+      };
+    }),
     announcementsEn: f.announcementsEn
       .split("\n")
       .map((l) => l.trim())
