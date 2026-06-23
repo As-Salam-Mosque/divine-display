@@ -4,7 +4,13 @@ import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
-import type { MosqueConfig, AdSlot, PrayerTime, PromoConfig } from "../types";
+import type {
+  MosqueConfig,
+  AdRailSlotConfig,
+  AdSlot,
+  PrayerTime,
+  PromoConfig,
+} from "../types";
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
@@ -15,12 +21,18 @@ interface IqamahRow {
   offsetMinutes: string;
 }
 
-interface AdSlotRow {
+interface SponsorRow {
   id: string;
   label: string;
   image: string;
   link: string;
   weight: string;
+}
+
+interface RailSlotRow {
+  id: string;
+  mode: "fixed" | "dynamic";
+  sponsorId: string;
 }
 
 interface ExtraPrayerRow {
@@ -45,7 +57,8 @@ interface FormState {
   longitude: string;
   calculationMethod: string;
   iqamahOffsets: IqamahRow[];
-  adSlots: AdSlotRow[];
+  sponsors: SponsorRow[];
+  adRailSlots: RailSlotRow[];
   announcementsEn: string;
   announcementsFr: string;
   promoEnabled: boolean;
@@ -68,7 +81,8 @@ const EMPTY_FORM: FormState = {
   longitude: "",
   calculationMethod: "0",
   iqamahOffsets: [],
-  adSlots: [],
+  sponsors: [],
+  adRailSlots: [],
   announcementsEn: "",
   announcementsFr: "",
   promoEnabled: false,
@@ -105,12 +119,17 @@ function configToForm(c: any): FormState {
       prayerName,
       offsetMinutes: String(offsetMinutes),
     })),
-    adSlots: ((c.sponsors as AdSlot[]) || []).map((s) => ({
+    sponsors: ((c.sponsors as AdSlot[]) || []).map((s) => ({
       id: String(s.id),
       label: s.label,
       image: s.image || "",
       link: s.link || "",
       weight: s.weight != null ? String(s.weight) : "",
+    })),
+    adRailSlots: ((c.adRailSlots as AdRailSlotConfig[]) || []).map((slot) => ({
+      id: String(slot.id),
+      mode: slot.mode,
+      sponsorId: slot.sponsorId != null ? String(slot.sponsorId) : "",
     })),
     announcementsEn: ((c.announcementsEn as string[]) || []).join("\n"),
     announcementsFr: ((c.announcementsFr as string[]) || []).join("\n"),
@@ -164,21 +183,20 @@ function formToConfig(f: FormState): MosqueConfig {
     longitude: parseFloat(f.longitude) || 0,
     calculationMethod: parseInt(f.calculationMethod) || 0,
     iqamahOffsets,
-    sponsors: f.adSlots.map((s) => ({
+    sponsors: f.sponsors.map((s) => ({
       id: parseInt(s.id) || 0,
       label: s.label,
       image: s.image || null,
       link: s.link || null,
       ...(s.weight !== "" ? { weight: parseInt(s.weight) } : {}),
     })),
-    adRailSlots: f.adSlots.map((s) => {
-      const sponsorId = parseInt(s.id) || 0;
-      return {
-        id: sponsorId,
-        mode: "fixed" as const,
-        sponsorId,
-      };
-    }),
+    adRailSlots: f.adRailSlots.map((slot) => ({
+      id: parseInt(slot.id) || 0,
+      mode: slot.mode,
+      ...(slot.mode === "fixed" && slot.sponsorId !== ""
+        ? { sponsorId: parseInt(slot.sponsorId) || 0 }
+        : {}),
+    })),
     announcementsEn: f.announcementsEn
       .split("\n")
       .map((l) => l.trim())
@@ -522,14 +540,14 @@ export function DashboardPage() {
       return { ...p, iqamahOffsets: rows };
     });
 
-  // ── AdSlot helpers ─────────────────────────────────────────────────────────
-  const addAdSlot = () =>
+  // ── Sponsor helpers ────────────────────────────────────────────────────────
+  const addSponsor = () =>
     setForm((p) => ({
       ...p,
-      adSlots: [
-        ...p.adSlots,
+      sponsors: [
+        ...p.sponsors,
         {
-          id: String(p.adSlots.length),
+          id: String(p.sponsors.length + 1),
           label: "",
           image: "",
           link: "",
@@ -537,16 +555,48 @@ export function DashboardPage() {
         },
       ],
     }));
-  const removeAdSlot = (i: number) =>
+  const removeSponsor = (i: number) =>
     setForm((p) => ({
       ...p,
-      adSlots: p.adSlots.filter((_, idx) => idx !== i),
+      sponsors: p.sponsors.filter((_, idx) => idx !== i),
     }));
-  const setAdSlot = (i: number, field: keyof AdSlotRow, value: string) =>
+  const setSponsor = (i: number, field: keyof SponsorRow, value: string) =>
     setForm((p) => {
-      const rows = [...p.adSlots];
+      const rows = [...p.sponsors];
       rows[i] = { ...rows[i], [field]: value };
-      return { ...p, adSlots: rows };
+      return { ...p, sponsors: rows };
+    });
+
+  // ── Rail slot helpers ─────────────────────────────────────────────────────
+  const addAdRailSlot = () =>
+    setForm((p) => ({
+      ...p,
+      adRailSlots: [
+        ...p.adRailSlots,
+        {
+          id: String(p.adRailSlots.length + 1),
+          mode: "fixed",
+          sponsorId: "",
+        },
+      ],
+    }));
+  const removeAdRailSlot = (i: number) =>
+    setForm((p) => ({
+      ...p,
+      adRailSlots: p.adRailSlots.filter((_, idx) => idx !== i),
+    }));
+  const setAdRailSlot = (
+    i: number,
+    field: keyof RailSlotRow,
+    value: string | RailSlotRow["mode"],
+  ) =>
+    setForm((p) => {
+      const rows = [...p.adRailSlots];
+      rows[i] = { ...rows[i], [field]: value };
+      if (field === "mode" && value === "dynamic") {
+        rows[i].sponsorId = "";
+      }
+      return { ...p, adRailSlots: rows };
     });
 
   // ── ExtraPrayer helpers ────────────────────────────────────────────────────
@@ -711,9 +761,14 @@ export function DashboardPage() {
                   label: t.dashboard.announcements,
                 },
                 {
-                  id: "ad-slots",
+                  id: "sponsors",
                   icon: "storefront",
-                  label: t.dashboard.adSlots,
+                  label: t.dashboard.sponsors,
+                },
+                {
+                  id: "ad-rail-slots",
+                  icon: "view_column",
+                  label: t.dashboard.adRailSlots,
                 },
                 { id: "promo", icon: "timer", label: t.dashboard.promoTiming },
                 {
@@ -1055,26 +1110,26 @@ export function DashboardPage() {
                     </p>
                   </SectionCard>
 
-                  {/* ── 5. Ad Slots ────────────────────────────────────── */}
+                  {/* ── 5. Sponsors ────────────────────────────────────── */}
                   <SectionCard
-                    id="ad-slots"
+                    id="sponsors"
                     icon="storefront"
-                    title={t.dashboard.adSlots}
-                    description={t.dashboard.adSlotsDesc}
+                    title={t.dashboard.sponsors}
+                    description={t.dashboard.sponsorsDesc}
                   >
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-xs text-text-muted">
-                        {form.adSlots.length === 0
-                          ? t.dashboard.noAdSlotsConfigured
-                          : t.dashboard.adSlotCount(form.adSlots.length)}
+                        {form.sponsors.length === 0
+                          ? t.dashboard.noSponsorsConfigured
+                          : t.dashboard.sponsorCount(form.sponsors.length)}
                       </p>
-                      <AddRowBtn onClick={addAdSlot}>
-                        {t.dashboard.addSlot}
+                      <AddRowBtn onClick={addSponsor}>
+                        {t.dashboard.addSponsor}
                       </AddRowBtn>
                     </div>
-                    {form.adSlots.length > 0 && (
+                    {form.sponsors.length > 0 && (
                       <div className="space-y-4">
-                        {form.adSlots.map((slot, i) => (
+                        {form.sponsors.map((slot, i) => (
                           <div
                             key={i}
                             className="rounded-xl p-5 ghost-border bg-surface-container"
@@ -1094,7 +1149,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.id}
                                       onChange={(e) =>
-                                        setAdSlot(i, "id", e.target.value)
+                                        setSponsor(i, "id", e.target.value)
                                       }
                                     />
                                   </Field>
@@ -1107,7 +1162,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.label}
                                       onChange={(e) =>
-                                        setAdSlot(i, "label", e.target.value)
+                                        setSponsor(i, "label", e.target.value)
                                       }
                                       placeholder={
                                         t.dashboard.sponsorNamePlaceholder
@@ -1126,7 +1181,7 @@ export function DashboardPage() {
                                       className={cn(inputCls, "flex-1")}
                                       value={slot.image}
                                       onChange={(e) =>
-                                        setAdSlot(i, "image", e.target.value)
+                                        setSponsor(i, "image", e.target.value)
                                       }
                                       placeholder={t.dashboard.imagePlaceholder}
                                     />
@@ -1153,7 +1208,7 @@ export function DashboardPage() {
                                     <button
                                       type="button"
                                       aria-label={t.dashboard.clearImageLabel}
-                                      onClick={() => setAdSlot(i, "image", "")}
+                                      onClick={() => setSponsor(i, "image", "")}
                                       className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg transition-colors focus-ring text-red-400 hover:bg-red-500/10"
                                       style={{
                                         border: "1px solid rgba(239,68,68,0.3)",
@@ -1177,7 +1232,7 @@ export function DashboardPage() {
                                         if (!file) return;
                                         const reader = new FileReader();
                                         reader.onload = () =>
-                                          setAdSlot(
+                                          setSponsor(
                                             i,
                                             "image",
                                             reader.result as string,
@@ -1200,7 +1255,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.link}
                                       onChange={(e) =>
-                                        setAdSlot(i, "link", e.target.value)
+                                        setSponsor(i, "link", e.target.value)
                                       }
                                       placeholder={
                                         t.dashboard.linkUrlPlaceholder
@@ -1218,7 +1273,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.weight}
                                       onChange={(e) =>
-                                        setAdSlot(i, "weight", e.target.value)
+                                        setSponsor(i, "weight", e.target.value)
                                       }
                                       placeholder={
                                         t.dashboard.rotationWeightPlaceholder
@@ -1227,8 +1282,8 @@ export function DashboardPage() {
                                   </Field>
                                   <div className="pb-0.5">
                                     <RemoveBtn
-                                      onClick={() => removeAdSlot(i)}
-                                      label={t.dashboard.removeSlotLabel}
+                                      onClick={() => removeSponsor(i)}
+                                      label={t.dashboard.removeSponsorLabel}
                                     />
                                   </div>
                                 </div>
@@ -1253,7 +1308,109 @@ export function DashboardPage() {
                     )}
                   </SectionCard>
 
-                  {/* ── 6. Promo Timing ────────────────────────────────── */}
+                  {/* ── 6. Ad Rail Slots ───────────────────────────────── */}
+                  <SectionCard
+                    id="ad-rail-slots"
+                    icon="view_column"
+                    title={t.dashboard.adRailSlots}
+                    description={t.dashboard.adRailSlotsDesc}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs text-text-muted">
+                        {form.adRailSlots.length === 0
+                          ? t.dashboard.noAdRailSlotsConfigured
+                          : t.dashboard.adRailSlotCount(form.adRailSlots.length)}
+                      </p>
+                      <AddRowBtn onClick={addAdRailSlot}>
+                        {t.dashboard.addAdRailSlot}
+                      </AddRowBtn>
+                    </div>
+                    {form.adRailSlots.length > 0 && (
+                      <div className="space-y-4">
+                        {form.adRailSlots.map((slot, i) => (
+                          <div
+                            key={i}
+                            className="rounded-xl p-5 ghost-border bg-surface-container"
+                          >
+                            <div className="grid gap-3 sm:grid-cols-[90px_180px_1fr_auto] sm:items-end">
+                              <Field
+                                id={`ad-rail-id-${i}`}
+                                label={t.dashboard.idLabel}
+                              >
+                                <input
+                                  id={`ad-rail-id-${i}`}
+                                  type="number"
+                                  min="0"
+                                  className={inputCls}
+                                  value={slot.id}
+                                  onChange={(e) =>
+                                    setAdRailSlot(i, "id", e.target.value)
+                                  }
+                                />
+                              </Field>
+                              <Field
+                                id={`ad-rail-mode-${i}`}
+                                label={t.dashboard.slotModeLabel}
+                              >
+                                <select
+                                  id={`ad-rail-mode-${i}`}
+                                  className={selectCls}
+                                  value={slot.mode}
+                                  onChange={(e) =>
+                                    setAdRailSlot(
+                                      i,
+                                      "mode",
+                                      e.target.value as RailSlotRow["mode"],
+                                    )
+                                  }
+                                >
+                                  <option value="fixed">
+                                    {t.dashboard.slotModeFixed}
+                                  </option>
+                                  <option value="dynamic">
+                                    {t.dashboard.slotModeDynamic}
+                                  </option>
+                                </select>
+                              </Field>
+                              <Field
+                                id={`ad-rail-sponsor-${i}`}
+                                label={t.dashboard.linkedSponsorLabel}
+                              >
+                                <select
+                                  id={`ad-rail-sponsor-${i}`}
+                                  className={selectCls}
+                                  value={slot.sponsorId}
+                                  onChange={(e) =>
+                                    setAdRailSlot(i, "sponsorId", e.target.value)
+                                  }
+                                  disabled={slot.mode !== "fixed"}
+                                >
+                                  <option value="">
+                                    {t.dashboard.linkedSponsorPlaceholder}
+                                  </option>
+                                  {form.sponsors
+                                    .filter((s) => s.id.trim() !== "")
+                                    .map((sponsor) => (
+                                      <option key={sponsor.id} value={sponsor.id}>
+                                        {sponsor.label || `#${sponsor.id}`}
+                                      </option>
+                                    ))}
+                                </select>
+                              </Field>
+                              <div className="pb-0.5">
+                                <RemoveBtn
+                                  onClick={() => removeAdRailSlot(i)}
+                                  label={t.dashboard.removeSlotLabel}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </SectionCard>
+
+                  {/* ── 7. Promo Timing ────────────────────────────────── */}
                   <SectionCard
                     id="promo"
                     icon="timer"

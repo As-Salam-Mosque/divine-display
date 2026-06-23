@@ -133,13 +133,19 @@ const fr = {
       "Prière du vendredi à 13h30 — Frères et sœurs bienvenus.\nCollecte de Zakat al-Fitr en cours.",
     announcementsHelp:
       "Chaque ligne devient une annonce défilante. Laissez les deux champs vides pour masquer le défilement.",
-    adSlots: "Emplacements publicitaires",
-    adSlotsDesc:
-      "Images de sponsors communautaires affichées dans le rail droit",
-    noAdSlotsConfigured: "Aucun emplacement de sponsor configuré.",
-    adSlotCount: (count: number) =>
-      `${count} emplacement${count !== 1 ? "s" : ""}`,
-    addSlot: "+ Ajouter un emplacement",
+    sponsors: "Sponsors",
+    sponsorsDesc:
+      "Inventaire des sponsors utilisé par les cartes fixes et dynamiques",
+    noSponsorsConfigured: "Aucun sponsor configuré.",
+    sponsorCount: (count: number) => `${count} sponsor${count !== 1 ? "s" : ""}`,
+    addSponsor: "+ Ajouter un sponsor",
+    adRailSlots: "Cartes du rail publicitaire",
+    adRailSlotsDesc:
+      "Cartes visibles du rail droit configurées en mode fixe ou dynamique",
+    noAdRailSlotsConfigured: "Aucune carte de rail configurée.",
+    adRailSlotCount: (count: number) =>
+      `${count} carte${count !== 1 ? "s" : ""} de rail`,
+    addAdRailSlot: "+ Ajouter une carte",
     idLabel: "ID",
     sponsorNameLabel: "Nom du sponsor",
     sponsorNamePlaceholder: "Sponsor communautaire",
@@ -149,8 +155,14 @@ const fr = {
     clearImageLabel: "Effacer l'image",
     linkUrlLabel: "URL de lien (optionnel)",
     linkUrlPlaceholder: "https://...",
+    slotModeLabel: "Mode de carte",
+    slotModeFixed: "Fixe",
+    slotModeDynamic: "Dynamique",
+    linkedSponsorLabel: "Sponsor lié (mode fixe)",
+    linkedSponsorPlaceholder: "Sélectionnez un sponsor",
     rotationWeightLabel: "Poids de rotation",
     rotationWeightPlaceholder: "1",
+    removeSponsorLabel: "Supprimer le sponsor",
     removeSlotLabel: "Supprimer l'emplacement",
     previewLabel: "Aperçu — {label}",
     adSlotPreview: "Emplacement publicitaire",
