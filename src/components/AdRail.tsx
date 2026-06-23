@@ -4,6 +4,7 @@ import { useT } from "../i18n";
 import { useSettings } from "../context/SettingsContext";
 import { useDominantColor } from "../hooks/useDominantColor";
 import { cn } from "../utils/cn";
+import { getDynamicCandidates, resolveAdRailSlots } from "../utils/adRail";
 
 const DEFAULT_DYNAMIC_ROTATION_MS = 10_000;
 
@@ -84,15 +85,7 @@ export function AdRail({
   const t = useT(settings.language);
   const [dynamicTick, setDynamicTick] = useState(0);
 
-  const sponsorById = useMemo(
-    () => new Map(sponsors.map((s) => [s.id, s])),
-    [sponsors],
-  );
-
-  const dynamicCandidates = useMemo(
-    () => sponsors.filter((s) => s.label.trim().length > 0),
-    [sponsors],
-  );
+  const dynamicCandidates = useMemo(() => getDynamicCandidates(sponsors), [sponsors]);
 
   useEffect(() => {
     const hasDynamicSlot = railSlots.some((slot) => slot.mode === "dynamic");
@@ -109,16 +102,8 @@ export function AdRail({
   }, [railSlots, dynamicCandidates.length, dynamicRotationMs]);
 
   const resolvedSlots = useMemo(() => {
-    return railSlots.map((slot, slotIndex) => {
-      if (slot.mode === "fixed") {
-        return sponsorById.get(slot.sponsorId ?? -1) ?? null;
-      }
-
-      if (dynamicCandidates.length === 0) return null;
-      const index = (dynamicTick + slotIndex) % dynamicCandidates.length;
-      return dynamicCandidates[index];
-    });
-  }, [railSlots, sponsorById, dynamicCandidates, dynamicTick]);
+    return resolveAdRailSlots({ sponsors, railSlots, dynamicTick });
+  }, [sponsors, railSlots, dynamicTick]);
 
   return (
     <aside
@@ -134,7 +119,9 @@ export function AdRail({
         {resolvedSlots.map((slot, index) => (
           <AdSlotCard
             key={`${railSlots[index]?.id ?? index}-${slot?.id ?? "empty"}`}
-            slot={slot ?? { id: railSlots[index]?.id ?? index, label: "SPONSOR SPACE" }}
+            slot={
+              slot ?? { id: railSlots[index]?.id ?? index, label: "SPONSOR SPACE" }
+            }
           />
         ))}
       </div>
