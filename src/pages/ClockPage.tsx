@@ -107,7 +107,6 @@ function Display() {
             <AdRail
               sponsors={settings.mosque.sponsors}
               railSlots={settings.mosque.adRailSlots}
-              dynamicRotationMs={settings.mosque.promo?.displayDurationMs}
             />
           </div>
         )}

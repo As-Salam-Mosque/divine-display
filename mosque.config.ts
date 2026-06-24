@@ -51,6 +51,7 @@ const config: MosqueConfig = {
     { id: 2, mode: "dynamic" },
     { id: 3, mode: "fixed", sponsorId: 3 },
   ],
+  adRailRotationMs: 10000,
   promo: { displayDurationMs: 10000, cycleMs: 90000, initialDelayMs: 5000 },
   announcementsEn: [
     "Friday Khutbah — Sheikh Ali will lead the khutbah at 1PM (Arabic) and 2:10PM (English)",

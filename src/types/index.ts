@@ -67,6 +67,8 @@ export interface MosqueConfig {
   // UI content
   sponsors: AdSlot[];
   adRailSlots: AdRailSlotConfig[];
+  // Dynamic rail slot rotation interval (ms)
+  adRailRotationMs?: number;
   announcementsEn: string[];
   announcementsFr: string[];
   // Optional promo configuration to control timing of the promo rail

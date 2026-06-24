@@ -79,11 +79,15 @@ interface AdRailProps {
 export function AdRail({
   sponsors,
   railSlots,
-  dynamicRotationMs = DEFAULT_DYNAMIC_ROTATION_MS,
+  dynamicRotationMs,
 }: AdRailProps) {
   const { settings } = useSettings();
   const t = useT(settings.language);
   const [dynamicTick, setDynamicTick] = useState(0);
+  const effectiveDynamicRotationMs =
+    dynamicRotationMs ??
+    settings.mosque.adRailRotationMs ??
+    DEFAULT_DYNAMIC_ROTATION_MS;
 
   const dynamicCandidates = useMemo(() => getDynamicCandidates(sponsors), [sponsors]);
 
@@ -91,7 +95,7 @@ export function AdRail({
     const hasDynamicSlot = railSlots.some((slot) => slot.mode === "dynamic");
     if (!hasDynamicSlot || dynamicCandidates.length < 2) return;
 
-    const intervalMs = Math.max(1000, dynamicRotationMs);
+    const intervalMs = Math.max(1000, effectiveDynamicRotationMs);
     const intervalId = window.setInterval(() => {
       setDynamicTick((prev) => prev + 1);
     }, intervalMs);
@@ -99,7 +103,7 @@ export function AdRail({
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [railSlots, dynamicCandidates.length, dynamicRotationMs]);
+  }, [railSlots, dynamicCandidates.length, effectiveDynamicRotationMs]);
 
   const resolvedSlots = useMemo(() => {
     return resolveAdRailSlots({ sponsors, railSlots, dynamicTick });

@@ -141,6 +141,8 @@ const en = {
     addSponsor: "+ Add Sponsor",
     adRailSlots: "Ad Rail Slots",
     adRailSlotsDesc: "Visible right-rail cards configured as fixed or dynamic",
+    adRailRotationMsLabel: "Dynamic Rotation Interval (ms)",
+    adRailRotationMsPlaceholder: "10000",
     noAdRailSlotsConfigured: "No rail slots configured.",
     adRailSlotCount: (count: number) =>
       `${count} rail slot${count !== 1 ? "s" : ""}`,
@@ -168,7 +170,10 @@ const en = {
     promoTiming: "Promo Timing",
     promoTimingDesc:
       "Controls when and how long sponsor promos appear on screen",
+    promoRailSettings: "Promo Rail Settings",
     enablePromoRail: "Enable promo rail rotation",
+    promoToggleOn: "On",
+    promoToggleOff: "Off",
     displayDurationLabel: "Display Duration (ms)",
     displayDurationPlaceholder: "10000",
     cycleIntervalLabel: "Cycle Interval (ms)",

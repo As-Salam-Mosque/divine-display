@@ -59,6 +59,7 @@ interface FormState {
   iqamahOffsets: IqamahRow[];
   sponsors: SponsorRow[];
   adRailSlots: RailSlotRow[];
+  adRailRotationMs: string;
   announcementsEn: string;
   announcementsFr: string;
   promoEnabled: boolean;
@@ -83,6 +84,7 @@ const EMPTY_FORM: FormState = {
   iqamahOffsets: [],
   sponsors: [],
   adRailSlots: [],
+  adRailRotationMs: "",
   announcementsEn: "",
   announcementsFr: "",
   promoEnabled: false,
@@ -131,6 +133,8 @@ function configToForm(c: any): FormState {
       mode: slot.mode,
       sponsorId: slot.sponsorId != null ? String(slot.sponsorId) : "",
     })),
+    adRailRotationMs:
+      c.adRailRotationMs != null ? String(c.adRailRotationMs) : "",
     announcementsEn: ((c.announcementsEn as string[]) || []).join("\n"),
     announcementsFr: ((c.announcementsFr as string[]) || []).join("\n"),
     promoEnabled: !!hasPromo,
@@ -197,6 +201,9 @@ function formToConfig(f: FormState): MosqueConfig {
         ? { sponsorId: parseInt(slot.sponsorId) || 0 }
         : {}),
     })),
+    ...(f.adRailRotationMs !== ""
+      ? { adRailRotationMs: parseInt(f.adRailRotationMs) || 0 }
+      : {}),
     announcementsEn: f.announcementsEn
       .split("\n")
       .map((l) => l.trim())
@@ -361,7 +368,7 @@ function Toggle({
   id: string;
   checked: boolean;
   onChange: (v: boolean) => void;
-  label: string;
+  label?: string;
 }) {
   return (
     <div className="flex items-center gap-3">
@@ -386,13 +393,15 @@ function Toggle({
           )}
         />
       </button>
-      <span
-        className="cursor-pointer select-none text-sm text-on-surface"
-        onClick={() => onChange(!checked)}
-        aria-hidden="true"
-      >
-        {label}
-      </span>
+      {label && (
+        <span
+          className="cursor-pointer select-none text-sm text-on-surface"
+          onClick={() => onChange(!checked)}
+          aria-hidden="true"
+        >
+          {label}
+        </span>
+      )}
     </div>
   );
 }
@@ -1417,14 +1426,48 @@ export function DashboardPage() {
                     title={t.dashboard.promoTiming}
                     description={t.dashboard.promoTimingDesc}
                   >
-                    <Toggle
-                      id="promo-enabled"
-                      checked={form.promoEnabled}
-                      onChange={(v) => update({ promoEnabled: v })}
-                      label={t.dashboard.enablePromoRail}
-                    />
-                    {form.promoEnabled && (
-                      <div className="grid gap-4 sm:grid-cols-3 pt-1">
+                    <Field
+                      id="cfg-ad-rail-rotation"
+                      label={t.dashboard.adRailRotationMsLabel}
+                    >
+                      <input
+                        id="cfg-ad-rail-rotation"
+                        type="number"
+                        min="0"
+                        className={inputCls}
+                        value={form.adRailRotationMs}
+                        onChange={(e) => update({ adRailRotationMs: e.target.value })}
+                        placeholder={t.dashboard.adRailRotationMsPlaceholder}
+                      />
+                    </Field>
+                    <div className="rounded-xl p-4 ghost-border bg-surface-container space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-label-caps text-[10px] md:text-label-caps text-text-muted uppercase tracking-widest">
+                            {t.dashboard.promoRailSettings}
+                          </p>
+                          <p className="text-on-surface">{t.dashboard.enablePromoRail}</p>
+                        </div>
+                        <div className="shrink-0 flex items-center gap-2">
+                          <span className="font-label-caps text-xs tracking-widest text-primary uppercase">
+                            {form.promoEnabled
+                              ? t.dashboard.promoToggleOn
+                              : t.dashboard.promoToggleOff}
+                          </span>
+                          <Toggle
+                            id="promo-enabled"
+                            checked={form.promoEnabled}
+                            onChange={(v) => update({ promoEnabled: v })}
+                            label=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        className={cn(
+                          "grid gap-4 sm:grid-cols-3",
+                          !form.promoEnabled && "opacity-60",
+                        )}
+                      >
                         <Field
                           id="promo-duration"
                           label={t.dashboard.displayDurationLabel}
@@ -1441,6 +1484,7 @@ export function DashboardPage() {
                               })
                             }
                             placeholder={t.dashboard.displayDurationPlaceholder}
+                            disabled={!form.promoEnabled}
                           />
                         </Field>
                         <Field
@@ -1457,6 +1501,7 @@ export function DashboardPage() {
                               update({ promoCycleMs: e.target.value })
                             }
                             placeholder={t.dashboard.cycleIntervalPlaceholder}
+                            disabled={!form.promoEnabled}
                           />
                         </Field>
                         <Field
@@ -1473,10 +1518,11 @@ export function DashboardPage() {
                               update({ promoInitialDelayMs: e.target.value })
                             }
                             placeholder={t.dashboard.initialDelayPlaceholder}
+                            disabled={!form.promoEnabled}
                           />
                         </Field>
                       </div>
-                    )}
+                    </div>
                   </SectionCard>
 
                   {/* ── 7. Extra Prayers ───────────────────────────────── */}

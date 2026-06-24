@@ -142,6 +142,8 @@ const fr = {
     adRailSlots: "Cartes du rail publicitaire",
     adRailSlotsDesc:
       "Cartes visibles du rail droit configurées en mode fixe ou dynamique",
+    adRailRotationMsLabel: "Intervalle de rotation dynamique (ms)",
+    adRailRotationMsPlaceholder: "10000",
     noAdRailSlotsConfigured: "Aucune carte de rail configurée.",
     adRailSlotCount: (count: number) =>
       `${count} carte${count !== 1 ? "s" : ""} de rail`,
@@ -169,7 +171,10 @@ const fr = {
     promoTiming: "Calendrier des promotions",
     promoTimingDesc:
       "Contrôle quand et combien de temps les promos de sponsor apparaissent à l'écran",
+    promoRailSettings: "Paramètres du rail de promotions",
     enablePromoRail: "Activer la rotation du rail de promotions",
+    promoToggleOn: "On",
+    promoToggleOff: "Off",
     displayDurationLabel: "Durée d'affichage (ms)",
     displayDurationPlaceholder: "10000",
     cycleIntervalLabel: "Intervalle de cycle (ms)",
