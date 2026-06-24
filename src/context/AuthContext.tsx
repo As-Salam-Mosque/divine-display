@@ -69,8 +69,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!auth.expiresAt) return;
     const expiresInMs = Date.parse(auth.expiresAt) - Date.now();
     if (!Number.isFinite(expiresInMs) || expiresInMs <= 0) {
-      logout();
-      return;
+      const immediateLogoutId = window.setTimeout(() => {
+        logout();
+      }, 0);
+      return () => window.clearTimeout(immediateLogoutId);
     }
 
     const timeoutId = window.setTimeout(() => {
