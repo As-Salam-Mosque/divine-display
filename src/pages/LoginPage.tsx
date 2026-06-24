@@ -18,7 +18,7 @@ const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
 export function LoginPage() {
   const [, setLocation] = useLocation();
-  const { login, token, slug: authSlug } = useAuth();
+  const { login, isAuthenticated, slug: authSlug } = useAuth();
   const { language, setLanguage } = useLanguage();
   const t = useT(language);
 
@@ -29,10 +29,10 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (token && authSlug) {
+    if (isAuthenticated && authSlug) {
       setLocation("/dashboard");
     }
-  }, [token, authSlug, setLocation]);
+  }, [isAuthenticated, authSlug, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +52,7 @@ export function LoginPage() {
       }
 
       const data = await res.json();
-      login(data.session.sessionToken, data.mosque.slug);
+      login(data.session.sessionToken, data.mosque.slug, data.session.expiresAt);
       setLocation("/dashboard");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t.login.failedToLogin);

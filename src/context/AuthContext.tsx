@@ -1,43 +1,94 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 interface AuthState {
   token: string | null;
   slug: string | null;
+  expiresAt: string | null;
 }
 
 interface AuthContextType extends AuthState {
-  login: (token: string, slug: string) => void;
+  isAuthenticated: boolean;
+  login: (token: string, slug: string, expiresAt: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const STORAGE_KEY = "divine-display-auth";
+
+function isSessionValid(expiresAt: string | null | undefined): boolean {
+  if (!expiresAt) return false;
+  const expiry = Date.parse(expiresAt);
+  if (!Number.isFinite(expiry)) return false;
+  return Date.now() < expiry;
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>(() => {
-    const stored = localStorage.getItem("divine-display-auth");
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored) as AuthState;
+        if (
+          parsed?.token &&
+          parsed?.slug &&
+          parsed?.expiresAt &&
+          isSessionValid(parsed.expiresAt)
+        ) {
+          return parsed;
+        }
+        localStorage.removeItem(STORAGE_KEY);
+        return { token: null, slug: null, expiresAt: null };
       } catch {
-        return { token: null, slug: null };
+        localStorage.removeItem(STORAGE_KEY);
+        return { token: null, slug: null, expiresAt: null };
       }
     }
-    return { token: null, slug: null };
+    return { token: null, slug: null, expiresAt: null };
   });
 
-  const login = (token: string, slug: string) => {
-    const newState = { token, slug };
+  const login = useCallback((token: string, slug: string, expiresAt: string) => {
+    const newState = { token, slug, expiresAt };
     setAuth(newState);
-    localStorage.setItem("divine-display-auth", JSON.stringify(newState));
-  };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+  }, []);
 
-  const logout = () => {
-    setAuth({ token: null, slug: null });
-    localStorage.removeItem("divine-display-auth");
-  };
+  const logout = useCallback(() => {
+    setAuth({ token: null, slug: null, expiresAt: null });
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
+
+  useEffect(() => {
+    if (!auth.expiresAt) return;
+    const expiresInMs = Date.parse(auth.expiresAt) - Date.now();
+    if (!Number.isFinite(expiresInMs) || expiresInMs <= 0) {
+      logout();
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      logout();
+    }, expiresInMs);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [auth.expiresAt, logout]);
+
+  const isAuthenticated = useMemo(
+    () =>
+      Boolean(auth.token && auth.slug && auth.expiresAt) &&
+      isSessionValid(auth.expiresAt),
+    [auth.token, auth.slug, auth.expiresAt],
+  );
 
   return (
-    <AuthContext.Provider value={{ ...auth, login, logout }}>
+    <AuthContext.Provider value={{ ...auth, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

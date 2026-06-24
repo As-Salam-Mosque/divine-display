@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -13,6 +13,71 @@ import type {
 } from "../types";
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
+
+interface ApiValidationIssue {
+  loc?: Array<string | number>;
+  msg?: string;
+}
+
+const TOP_LEVEL_FIELD_ID_MAP: Record<string, string> = {
+  name: "cfg-name",
+  city: "cfg-city",
+  location: "cfg-location",
+  website: "cfg-website",
+  capacity: "cfg-capacity",
+  openingHours: "cfg-hours",
+  email: "cfg-email",
+  phone: "cfg-phone",
+  latitude: "cfg-lat",
+  longitude: "cfg-lng",
+  calculationMethod: "cfg-method",
+  adRailRotationMs: "cfg-ad-rail-rotation",
+  announcementsEn: "cfg-ann-en",
+  announcementsFr: "cfg-ann-fr",
+};
+
+function mapValidationLocToFieldId(loc: Array<string | number>): string | null {
+  const [, scope, field, index, nestedField] = loc;
+  if (scope !== "configuration" || typeof field !== "string") return null;
+
+  if (field in TOP_LEVEL_FIELD_ID_MAP) {
+    return TOP_LEVEL_FIELD_ID_MAP[field];
+  }
+
+  if (field === "iqamahOffsets") return "iq-name-0";
+  if (field === "promo" && typeof index === "string") {
+    if (index === "displayDurationMs") return "promo-duration";
+    if (index === "cycleMs") return "promo-cycle";
+    if (index === "initialDelayMs") return "promo-delay";
+  }
+
+  if (field === "sponsors" && typeof index === "number" && typeof nestedField === "string") {
+    if (nestedField === "id") return `ad-id-${index}`;
+    if (nestedField === "label") return `ad-label-${index}`;
+    if (nestedField === "image") return `ad-image-${index}`;
+    if (nestedField === "link") return `ad-link-${index}`;
+    if (nestedField === "weight") return `ad-weight-${index}`;
+  }
+
+  if (field === "adRailSlots" && typeof index === "number" && typeof nestedField === "string") {
+    if (nestedField === "id") return `ad-rail-id-${index}`;
+    if (nestedField === "mode") return `ad-rail-mode-${index}`;
+    if (nestedField === "sponsorId") return `ad-rail-sponsor-${index}`;
+  }
+
+  if (
+    field === "extraPrayers" &&
+    typeof index === "number" &&
+    typeof nestedField === "string"
+  ) {
+    if (nestedField === "name") return `ep-name-${index}`;
+    if (nestedField === "arabicName") return `ep-arabic-${index}`;
+    if (nestedField === "adhan") return `ep-adhan-${index}`;
+    if (nestedField === "iqamah") return `ep-iqamah-${index}`;
+  }
+
+  return null;
+}
 
 // ── Internal form types ──────────────────────────────────────────────────────
 
@@ -441,7 +506,7 @@ function RemoveBtn({ onClick, label }: { onClick: () => void; label: string }) {
 // ── DashboardPage ────────────────────────────────────────────────────────────
 
 export function DashboardPage() {
-  const { token, slug, logout } = useAuth();
+  const { token, slug, logout, isAuthenticated } = useAuth();
   const [location, setLocation] = useLocation();
   const { language } = useLanguage();
   const t = useT(language);
@@ -454,13 +519,15 @@ export function DashboardPage() {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [fieldErrorIds, setFieldErrorIds] = useState<string[]>([]);
+  const previousFieldErrorIdsRef = useRef<string[]>([]);
   const [savedForm, setSavedForm] = useState<FormState>(EMPTY_FORM);
   const [activeSection, setActiveSection] = useState<string>("mosque-info");
 
   // Auth guard
   useEffect(() => {
-    if (!token || !slug) setLocation("/login");
-  }, [token, slug, setLocation]);
+    if (!isAuthenticated || !slug) setLocation("/login");
+  }, [isAuthenticated, slug, setLocation]);
 
   // Load config on mount (loading initialised as true above)
   useEffect(() => {
@@ -485,10 +552,28 @@ export function DashboardPage() {
       .finally(() => setLoading(false));
   }, [token, slug, t.dashboard.failedToLoadConfiguration]);
 
+  useEffect(() => {
+    const previous = previousFieldErrorIdsRef.current;
+    for (const id of previous) {
+      const element = document.getElementById(id);
+      if (!element) continue;
+      element.classList.remove("ring-2", "ring-red-500/40", "border-red-500");
+    }
+
+    for (const id of fieldErrorIds) {
+      const element = document.getElementById(id);
+      if (!element) continue;
+      element.classList.add("ring-2", "ring-red-500/40", "border-red-500");
+    }
+
+    previousFieldErrorIdsRef.current = fieldErrorIds;
+  }, [fieldErrorIds]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setStatus(null);
+    setFieldErrorIds([]);
     try {
       const res = await fetch(`${API_BASE}/api/v1/mosques/configuration`, {
         method: "PUT",
@@ -500,11 +585,29 @@ export function DashboardPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(
-          (data as { detail?: string }).detail ||
-            t.dashboard.failedToSaveConfiguration,
-        );
+        const detail = (data as { detail?: unknown }).detail;
+        const issues = Array.isArray(detail)
+          ? (detail as ApiValidationIssue[])
+          : [];
+        const mappedFieldIds = issues
+          .map((issue) =>
+            Array.isArray(issue.loc) ? mapValidationLocToFieldId(issue.loc) : null,
+          )
+          .filter((id): id is string => Boolean(id));
+        if (mappedFieldIds.length > 0) {
+          const uniqueFieldIds = [...new Set(mappedFieldIds)];
+          setFieldErrorIds(uniqueFieldIds);
+          const firstErrorField = document.getElementById(uniqueFieldIds[0]);
+          firstErrorField?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        const firstIssueMessage = issues.find((issue) => issue.msg)?.msg;
+        const detailMessage =
+          typeof detail === "string" ? detail : firstIssueMessage;
+
+        throw new Error(detailMessage || t.dashboard.failedToSaveConfiguration);
       }
+      setFieldErrorIds([]);
       setSavedForm(form);
       setStatus({
         type: "success",
@@ -676,7 +779,7 @@ export function DashboardPage() {
   // Suppress unused variable warning for location (kept for type checking)
   void location;
 
-  if (!token || !slug) return null;
+  if (!isAuthenticated || !token || !slug) return null;
 
   return (
     <div className="dark min-h-screen bg-background-deep text-on-surface font-body-md">

@@ -61,7 +61,7 @@ export function RegisterPage() {
       }
 
       const data = await res.json();
-      login(data.session.sessionToken, data.mosque.slug);
+      login(data.session.sessionToken, data.mosque.slug, data.session.expiresAt);
       setLocation("/dashboard");
     } catch (err: unknown) {
       setError(
