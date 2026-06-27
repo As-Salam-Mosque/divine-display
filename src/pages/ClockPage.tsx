@@ -104,7 +104,10 @@ function Display() {
 
         {showAdRail && (
           <div className="min-h-0 h-full overflow-hidden">
-            <AdRail slots={settings.mosque.adSlots} />
+            <AdRail
+              sponsors={settings.mosque.sponsors}
+              railSlots={settings.mosque.adRailSlots}
+            />
           </div>
         )}
       </main>

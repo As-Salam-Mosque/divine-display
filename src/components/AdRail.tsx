@@ -1,8 +1,12 @@
-import type { AdSlot } from "../types";
+import { useEffect, useMemo, useState } from "react";
+import type { AdRailSlotConfig, AdSlot } from "../types";
 import { useT } from "../i18n";
 import { useSettings } from "../context/SettingsContext";
 import { useDominantColor } from "../hooks/useDominantColor";
 import { cn } from "../utils/cn";
+import { getDynamicCandidates, resolveAdRailSlots } from "../utils/adRail";
+
+const DEFAULT_DYNAMIC_ROTATION_MS = 10_000;
 
 function AdSlotCard({ slot }: { slot: AdSlot }) {
   const { settings } = useSettings();
@@ -67,12 +71,43 @@ function AdSlotCard({ slot }: { slot: AdSlot }) {
 }
 
 interface AdRailProps {
-  slots: AdSlot[];
+  sponsors: AdSlot[];
+  railSlots: AdRailSlotConfig[];
+  dynamicRotationMs?: number;
 }
 
-export function AdRail({ slots }: AdRailProps) {
+export function AdRail({
+  sponsors,
+  railSlots,
+  dynamicRotationMs,
+}: AdRailProps) {
   const { settings } = useSettings();
   const t = useT(settings.language);
+  const [dynamicTick, setDynamicTick] = useState(0);
+  const effectiveDynamicRotationMs =
+    dynamicRotationMs ??
+    settings.mosque.adRailRotationMs ??
+    DEFAULT_DYNAMIC_ROTATION_MS;
+
+  const dynamicCandidates = useMemo(() => getDynamicCandidates(sponsors), [sponsors]);
+
+  useEffect(() => {
+    const hasDynamicSlot = railSlots.some((slot) => slot.mode === "dynamic");
+    if (!hasDynamicSlot || dynamicCandidates.length < 2) return;
+
+    const intervalMs = Math.max(1000, effectiveDynamicRotationMs);
+    const intervalId = window.setInterval(() => {
+      setDynamicTick((prev) => prev + 1);
+    }, intervalMs);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [railSlots, dynamicCandidates.length, effectiveDynamicRotationMs]);
+
+  const resolvedSlots = useMemo(() => {
+    return resolveAdRailSlots({ sponsors, railSlots, dynamicTick });
+  }, [sponsors, railSlots, dynamicTick]);
 
   return (
     <aside
@@ -85,8 +120,13 @@ export function AdRail({ slots }: AdRailProps) {
         </span>
       </div>
       <div className="flex-1 min-h-0 flex flex-col gap-2 lg:gap-3 tv:gap-stage-gap">
-        {slots.map((slot) => (
-          <AdSlotCard key={slot.id} slot={slot} />
+        {resolvedSlots.map((slot, index) => (
+          <AdSlotCard
+            key={`${railSlots[index]?.id ?? index}-${slot?.id ?? "empty"}`}
+            slot={
+              slot ?? { id: railSlots[index]?.id ?? index, label: "SPONSOR SPACE" }
+            }
+          />
         ))}
       </div>
     </aside>

@@ -1,12 +1,83 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
-import type { MosqueConfig, AdSlot, PrayerTime, PromoConfig } from "../types";
+import type {
+  MosqueConfig,
+  AdRailSlotConfig,
+  AdSlot,
+  PrayerTime,
+  PromoConfig,
+} from "../types";
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
+
+interface ApiValidationIssue {
+  loc?: Array<string | number>;
+  msg?: string;
+}
+
+const TOP_LEVEL_FIELD_ID_MAP: Record<string, string> = {
+  name: "cfg-name",
+  city: "cfg-city",
+  location: "cfg-location",
+  website: "cfg-website",
+  capacity: "cfg-capacity",
+  openingHours: "cfg-hours",
+  email: "cfg-email",
+  phone: "cfg-phone",
+  latitude: "cfg-lat",
+  longitude: "cfg-lng",
+  calculationMethod: "cfg-method",
+  adRailRotationMs: "cfg-ad-rail-rotation",
+  announcementsEn: "cfg-ann-en",
+  announcementsFr: "cfg-ann-fr",
+};
+
+function mapValidationLocToFieldId(loc: Array<string | number>): string | null {
+  const [, scope, field, index, nestedField] = loc;
+  if (scope !== "configuration" || typeof field !== "string") return null;
+
+  if (field in TOP_LEVEL_FIELD_ID_MAP) {
+    return TOP_LEVEL_FIELD_ID_MAP[field];
+  }
+
+  if (field === "iqamahOffsets") return "iq-name-0";
+  if (field === "promo" && typeof index === "string") {
+    if (index === "displayDurationMs") return "promo-duration";
+    if (index === "cycleMs") return "promo-cycle";
+    if (index === "initialDelayMs") return "promo-delay";
+  }
+
+  if (field === "sponsors" && typeof index === "number" && typeof nestedField === "string") {
+    if (nestedField === "id") return `ad-id-${index}`;
+    if (nestedField === "label") return `ad-label-${index}`;
+    if (nestedField === "image") return `ad-image-${index}`;
+    if (nestedField === "link") return `ad-link-${index}`;
+    if (nestedField === "weight") return `ad-weight-${index}`;
+  }
+
+  if (field === "adRailSlots" && typeof index === "number" && typeof nestedField === "string") {
+    if (nestedField === "id") return `ad-rail-id-${index}`;
+    if (nestedField === "mode") return `ad-rail-mode-${index}`;
+    if (nestedField === "sponsorId") return `ad-rail-sponsor-${index}`;
+  }
+
+  if (
+    field === "extraPrayers" &&
+    typeof index === "number" &&
+    typeof nestedField === "string"
+  ) {
+    if (nestedField === "name") return `ep-name-${index}`;
+    if (nestedField === "arabicName") return `ep-arabic-${index}`;
+    if (nestedField === "adhan") return `ep-adhan-${index}`;
+    if (nestedField === "iqamah") return `ep-iqamah-${index}`;
+  }
+
+  return null;
+}
 
 // ── Internal form types ──────────────────────────────────────────────────────
 
@@ -15,12 +86,18 @@ interface IqamahRow {
   offsetMinutes: string;
 }
 
-interface AdSlotRow {
+interface SponsorRow {
   id: string;
   label: string;
   image: string;
   link: string;
   weight: string;
+}
+
+interface RailSlotRow {
+  id: string;
+  mode: "fixed" | "dynamic";
+  sponsorId: string;
 }
 
 interface ExtraPrayerRow {
@@ -45,7 +122,9 @@ interface FormState {
   longitude: string;
   calculationMethod: string;
   iqamahOffsets: IqamahRow[];
-  adSlots: AdSlotRow[];
+  sponsors: SponsorRow[];
+  adRailSlots: RailSlotRow[];
+  adRailRotationMs: string;
   announcementsEn: string;
   announcementsFr: string;
   promoEnabled: boolean;
@@ -68,7 +147,9 @@ const EMPTY_FORM: FormState = {
   longitude: "",
   calculationMethod: "0",
   iqamahOffsets: [],
-  adSlots: [],
+  sponsors: [],
+  adRailSlots: [],
+  adRailRotationMs: "",
   announcementsEn: "",
   announcementsFr: "",
   promoEnabled: false,
@@ -105,13 +186,20 @@ function configToForm(c: any): FormState {
       prayerName,
       offsetMinutes: String(offsetMinutes),
     })),
-    adSlots: ((c.adSlots as AdSlot[]) || []).map((s) => ({
+    sponsors: ((c.sponsors as AdSlot[]) || []).map((s) => ({
       id: String(s.id),
       label: s.label,
       image: s.image || "",
       link: s.link || "",
       weight: s.weight != null ? String(s.weight) : "",
     })),
+    adRailSlots: ((c.adRailSlots as AdRailSlotConfig[]) || []).map((slot) => ({
+      id: String(slot.id),
+      mode: slot.mode,
+      sponsorId: slot.sponsorId != null ? String(slot.sponsorId) : "",
+    })),
+    adRailRotationMs:
+      c.adRailRotationMs != null ? String(c.adRailRotationMs) : "",
     announcementsEn: ((c.announcementsEn as string[]) || []).join("\n"),
     announcementsFr: ((c.announcementsFr as string[]) || []).join("\n"),
     promoEnabled: !!hasPromo,
@@ -164,13 +252,23 @@ function formToConfig(f: FormState): MosqueConfig {
     longitude: parseFloat(f.longitude) || 0,
     calculationMethod: parseInt(f.calculationMethod) || 0,
     iqamahOffsets,
-    adSlots: f.adSlots.map((s) => ({
+    sponsors: f.sponsors.map((s) => ({
       id: parseInt(s.id) || 0,
       label: s.label,
       image: s.image || null,
       link: s.link || null,
       ...(s.weight !== "" ? { weight: parseInt(s.weight) } : {}),
     })),
+    adRailSlots: f.adRailSlots.map((slot) => ({
+      id: parseInt(slot.id) || 0,
+      mode: slot.mode,
+      ...(slot.mode === "fixed" && slot.sponsorId !== ""
+        ? { sponsorId: parseInt(slot.sponsorId) || 0 }
+        : {}),
+    })),
+    ...(f.adRailRotationMs !== ""
+      ? { adRailRotationMs: parseInt(f.adRailRotationMs) || 0 }
+      : {}),
     announcementsEn: f.announcementsEn
       .split("\n")
       .map((l) => l.trim())
@@ -335,7 +433,7 @@ function Toggle({
   id: string;
   checked: boolean;
   onChange: (v: boolean) => void;
-  label: string;
+  label?: string;
 }) {
   return (
     <div className="flex items-center gap-3">
@@ -360,13 +458,15 @@ function Toggle({
           )}
         />
       </button>
-      <span
-        className="cursor-pointer select-none text-sm text-on-surface"
-        onClick={() => onChange(!checked)}
-        aria-hidden="true"
-      >
-        {label}
-      </span>
+      {label && (
+        <span
+          className="cursor-pointer select-none text-sm text-on-surface"
+          onClick={() => onChange(!checked)}
+          aria-hidden="true"
+        >
+          {label}
+        </span>
+      )}
     </div>
   );
 }
@@ -406,7 +506,7 @@ function RemoveBtn({ onClick, label }: { onClick: () => void; label: string }) {
 // ── DashboardPage ────────────────────────────────────────────────────────────
 
 export function DashboardPage() {
-  const { token, slug, logout } = useAuth();
+  const { token, slug, logout, isAuthenticated } = useAuth();
   const [location, setLocation] = useLocation();
   const { language } = useLanguage();
   const t = useT(language);
@@ -419,13 +519,15 @@ export function DashboardPage() {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [fieldErrorIds, setFieldErrorIds] = useState<string[]>([]);
+  const previousFieldErrorIdsRef = useRef<string[]>([]);
   const [savedForm, setSavedForm] = useState<FormState>(EMPTY_FORM);
   const [activeSection, setActiveSection] = useState<string>("mosque-info");
 
   // Auth guard
   useEffect(() => {
-    if (!token || !slug) setLocation("/login");
-  }, [token, slug, setLocation]);
+    if (!isAuthenticated || !slug) setLocation("/login");
+  }, [isAuthenticated, slug, setLocation]);
 
   // Load config on mount (loading initialised as true above)
   useEffect(() => {
@@ -450,10 +552,28 @@ export function DashboardPage() {
       .finally(() => setLoading(false));
   }, [token, slug, t.dashboard.failedToLoadConfiguration]);
 
+  useEffect(() => {
+    const previous = previousFieldErrorIdsRef.current;
+    for (const id of previous) {
+      const element = document.getElementById(id);
+      if (!element) continue;
+      element.classList.remove("ring-2", "ring-red-500/40", "border-red-500");
+    }
+
+    for (const id of fieldErrorIds) {
+      const element = document.getElementById(id);
+      if (!element) continue;
+      element.classList.add("ring-2", "ring-red-500/40", "border-red-500");
+    }
+
+    previousFieldErrorIdsRef.current = fieldErrorIds;
+  }, [fieldErrorIds]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setStatus(null);
+    setFieldErrorIds([]);
     try {
       const res = await fetch(`${API_BASE}/api/v1/mosques/configuration`, {
         method: "PUT",
@@ -465,11 +585,29 @@ export function DashboardPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(
-          (data as { detail?: string }).detail ||
-            t.dashboard.failedToSaveConfiguration,
-        );
+        const detail = (data as { detail?: unknown }).detail;
+        const issues = Array.isArray(detail)
+          ? (detail as ApiValidationIssue[])
+          : [];
+        const mappedFieldIds = issues
+          .map((issue) =>
+            Array.isArray(issue.loc) ? mapValidationLocToFieldId(issue.loc) : null,
+          )
+          .filter((id): id is string => Boolean(id));
+        if (mappedFieldIds.length > 0) {
+          const uniqueFieldIds = [...new Set(mappedFieldIds)];
+          setFieldErrorIds(uniqueFieldIds);
+          const firstErrorField = document.getElementById(uniqueFieldIds[0]);
+          firstErrorField?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        const firstIssueMessage = issues.find((issue) => issue.msg)?.msg;
+        const detailMessage =
+          typeof detail === "string" ? detail : firstIssueMessage;
+
+        throw new Error(detailMessage || t.dashboard.failedToSaveConfiguration);
       }
+      setFieldErrorIds([]);
       setSavedForm(form);
       setStatus({
         type: "success",
@@ -514,14 +652,14 @@ export function DashboardPage() {
       return { ...p, iqamahOffsets: rows };
     });
 
-  // ── AdSlot helpers ─────────────────────────────────────────────────────────
-  const addAdSlot = () =>
+  // ── Sponsor helpers ────────────────────────────────────────────────────────
+  const addSponsor = () =>
     setForm((p) => ({
       ...p,
-      adSlots: [
-        ...p.adSlots,
+      sponsors: [
+        ...p.sponsors,
         {
-          id: String(p.adSlots.length),
+          id: String(p.sponsors.length + 1),
           label: "",
           image: "",
           link: "",
@@ -529,16 +667,48 @@ export function DashboardPage() {
         },
       ],
     }));
-  const removeAdSlot = (i: number) =>
+  const removeSponsor = (i: number) =>
     setForm((p) => ({
       ...p,
-      adSlots: p.adSlots.filter((_, idx) => idx !== i),
+      sponsors: p.sponsors.filter((_, idx) => idx !== i),
     }));
-  const setAdSlot = (i: number, field: keyof AdSlotRow, value: string) =>
+  const setSponsor = (i: number, field: keyof SponsorRow, value: string) =>
     setForm((p) => {
-      const rows = [...p.adSlots];
+      const rows = [...p.sponsors];
       rows[i] = { ...rows[i], [field]: value };
-      return { ...p, adSlots: rows };
+      return { ...p, sponsors: rows };
+    });
+
+  // ── Rail slot helpers ─────────────────────────────────────────────────────
+  const addAdRailSlot = () =>
+    setForm((p) => ({
+      ...p,
+      adRailSlots: [
+        ...p.adRailSlots,
+        {
+          id: String(p.adRailSlots.length + 1),
+          mode: "fixed",
+          sponsorId: "",
+        },
+      ],
+    }));
+  const removeAdRailSlot = (i: number) =>
+    setForm((p) => ({
+      ...p,
+      adRailSlots: p.adRailSlots.filter((_, idx) => idx !== i),
+    }));
+  const setAdRailSlot = (
+    i: number,
+    field: keyof RailSlotRow,
+    value: string | RailSlotRow["mode"],
+  ) =>
+    setForm((p) => {
+      const rows = [...p.adRailSlots];
+      rows[i] = { ...rows[i], [field]: value };
+      if (field === "mode" && value === "dynamic") {
+        rows[i].sponsorId = "";
+      }
+      return { ...p, adRailSlots: rows };
     });
 
   // ── ExtraPrayer helpers ────────────────────────────────────────────────────
@@ -609,7 +779,7 @@ export function DashboardPage() {
   // Suppress unused variable warning for location (kept for type checking)
   void location;
 
-  if (!token || !slug) return null;
+  if (!isAuthenticated || !token || !slug) return null;
 
   return (
     <div className="dark min-h-screen bg-background-deep text-on-surface font-body-md">
@@ -703,9 +873,14 @@ export function DashboardPage() {
                   label: t.dashboard.announcements,
                 },
                 {
-                  id: "ad-slots",
+                  id: "sponsors",
                   icon: "storefront",
-                  label: t.dashboard.adSlots,
+                  label: t.dashboard.sponsors,
+                },
+                {
+                  id: "ad-rail-slots",
+                  icon: "view_column",
+                  label: t.dashboard.adRailSlots,
                 },
                 { id: "promo", icon: "timer", label: t.dashboard.promoTiming },
                 {
@@ -1047,26 +1222,26 @@ export function DashboardPage() {
                     </p>
                   </SectionCard>
 
-                  {/* ── 5. Ad Slots ────────────────────────────────────── */}
+                  {/* ── 5. Sponsors ────────────────────────────────────── */}
                   <SectionCard
-                    id="ad-slots"
+                    id="sponsors"
                     icon="storefront"
-                    title={t.dashboard.adSlots}
-                    description={t.dashboard.adSlotsDesc}
+                    title={t.dashboard.sponsors}
+                    description={t.dashboard.sponsorsDesc}
                   >
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-xs text-text-muted">
-                        {form.adSlots.length === 0
-                          ? t.dashboard.noAdSlotsConfigured
-                          : t.dashboard.adSlotCount(form.adSlots.length)}
+                        {form.sponsors.length === 0
+                          ? t.dashboard.noSponsorsConfigured
+                          : t.dashboard.sponsorCount(form.sponsors.length)}
                       </p>
-                      <AddRowBtn onClick={addAdSlot}>
-                        {t.dashboard.addSlot}
+                      <AddRowBtn onClick={addSponsor}>
+                        {t.dashboard.addSponsor}
                       </AddRowBtn>
                     </div>
-                    {form.adSlots.length > 0 && (
+                    {form.sponsors.length > 0 && (
                       <div className="space-y-4">
-                        {form.adSlots.map((slot, i) => (
+                        {form.sponsors.map((slot, i) => (
                           <div
                             key={i}
                             className="rounded-xl p-5 ghost-border bg-surface-container"
@@ -1086,7 +1261,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.id}
                                       onChange={(e) =>
-                                        setAdSlot(i, "id", e.target.value)
+                                        setSponsor(i, "id", e.target.value)
                                       }
                                     />
                                   </Field>
@@ -1099,7 +1274,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.label}
                                       onChange={(e) =>
-                                        setAdSlot(i, "label", e.target.value)
+                                        setSponsor(i, "label", e.target.value)
                                       }
                                       placeholder={
                                         t.dashboard.sponsorNamePlaceholder
@@ -1118,7 +1293,7 @@ export function DashboardPage() {
                                       className={cn(inputCls, "flex-1")}
                                       value={slot.image}
                                       onChange={(e) =>
-                                        setAdSlot(i, "image", e.target.value)
+                                        setSponsor(i, "image", e.target.value)
                                       }
                                       placeholder={t.dashboard.imagePlaceholder}
                                     />
@@ -1145,7 +1320,7 @@ export function DashboardPage() {
                                     <button
                                       type="button"
                                       aria-label={t.dashboard.clearImageLabel}
-                                      onClick={() => setAdSlot(i, "image", "")}
+                                      onClick={() => setSponsor(i, "image", "")}
                                       className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg transition-colors focus-ring text-red-400 hover:bg-red-500/10"
                                       style={{
                                         border: "1px solid rgba(239,68,68,0.3)",
@@ -1169,7 +1344,7 @@ export function DashboardPage() {
                                         if (!file) return;
                                         const reader = new FileReader();
                                         reader.onload = () =>
-                                          setAdSlot(
+                                          setSponsor(
                                             i,
                                             "image",
                                             reader.result as string,
@@ -1192,7 +1367,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.link}
                                       onChange={(e) =>
-                                        setAdSlot(i, "link", e.target.value)
+                                        setSponsor(i, "link", e.target.value)
                                       }
                                       placeholder={
                                         t.dashboard.linkUrlPlaceholder
@@ -1210,7 +1385,7 @@ export function DashboardPage() {
                                       className={inputCls}
                                       value={slot.weight}
                                       onChange={(e) =>
-                                        setAdSlot(i, "weight", e.target.value)
+                                        setSponsor(i, "weight", e.target.value)
                                       }
                                       placeholder={
                                         t.dashboard.rotationWeightPlaceholder
@@ -1219,8 +1394,8 @@ export function DashboardPage() {
                                   </Field>
                                   <div className="pb-0.5">
                                     <RemoveBtn
-                                      onClick={() => removeAdSlot(i)}
-                                      label={t.dashboard.removeSlotLabel}
+                                      onClick={() => removeSponsor(i)}
+                                      label={t.dashboard.removeSponsorLabel}
                                     />
                                   </div>
                                 </div>
@@ -1245,21 +1420,157 @@ export function DashboardPage() {
                     )}
                   </SectionCard>
 
-                  {/* ── 6. Promo Timing ────────────────────────────────── */}
+                  {/* ── 6. Ad Rail Slots ───────────────────────────────── */}
+                  <SectionCard
+                    id="ad-rail-slots"
+                    icon="view_column"
+                    title={t.dashboard.adRailSlots}
+                    description={t.dashboard.adRailSlotsDesc}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs text-text-muted">
+                        {form.adRailSlots.length === 0
+                          ? t.dashboard.noAdRailSlotsConfigured
+                          : t.dashboard.adRailSlotCount(form.adRailSlots.length)}
+                      </p>
+                      <AddRowBtn onClick={addAdRailSlot}>
+                        {t.dashboard.addAdRailSlot}
+                      </AddRowBtn>
+                    </div>
+                    {form.adRailSlots.length > 0 && (
+                      <div className="space-y-4">
+                        {form.adRailSlots.map((slot, i) => (
+                          <div
+                            key={i}
+                            className="rounded-xl p-5 ghost-border bg-surface-container"
+                          >
+                            <div className="grid gap-3 sm:grid-cols-[90px_180px_1fr_auto] sm:items-end">
+                              <Field
+                                id={`ad-rail-id-${i}`}
+                                label={t.dashboard.idLabel}
+                              >
+                                <input
+                                  id={`ad-rail-id-${i}`}
+                                  type="number"
+                                  min="0"
+                                  className={inputCls}
+                                  value={slot.id}
+                                  onChange={(e) =>
+                                    setAdRailSlot(i, "id", e.target.value)
+                                  }
+                                />
+                              </Field>
+                              <Field
+                                id={`ad-rail-mode-${i}`}
+                                label={t.dashboard.slotModeLabel}
+                              >
+                                <select
+                                  id={`ad-rail-mode-${i}`}
+                                  className={selectCls}
+                                  value={slot.mode}
+                                  onChange={(e) =>
+                                    setAdRailSlot(
+                                      i,
+                                      "mode",
+                                      e.target.value as RailSlotRow["mode"],
+                                    )
+                                  }
+                                >
+                                  <option value="fixed">
+                                    {t.dashboard.slotModeFixed}
+                                  </option>
+                                  <option value="dynamic">
+                                    {t.dashboard.slotModeDynamic}
+                                  </option>
+                                </select>
+                              </Field>
+                              <Field
+                                id={`ad-rail-sponsor-${i}`}
+                                label={t.dashboard.linkedSponsorLabel}
+                              >
+                                <select
+                                  id={`ad-rail-sponsor-${i}`}
+                                  className={selectCls}
+                                  value={slot.sponsorId}
+                                  onChange={(e) =>
+                                    setAdRailSlot(i, "sponsorId", e.target.value)
+                                  }
+                                  disabled={slot.mode !== "fixed"}
+                                >
+                                  <option value="">
+                                    {t.dashboard.linkedSponsorPlaceholder}
+                                  </option>
+                                  {form.sponsors
+                                    .filter((s) => s.id.trim() !== "")
+                                    .map((sponsor) => (
+                                      <option key={sponsor.id} value={sponsor.id}>
+                                        {sponsor.label || `#${sponsor.id}`}
+                                      </option>
+                                    ))}
+                                </select>
+                              </Field>
+                              <div className="pb-0.5">
+                                <RemoveBtn
+                                  onClick={() => removeAdRailSlot(i)}
+                                  label={t.dashboard.removeSlotLabel}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </SectionCard>
+
+                  {/* ── 7. Promo Timing ────────────────────────────────── */}
                   <SectionCard
                     id="promo"
                     icon="timer"
                     title={t.dashboard.promoTiming}
                     description={t.dashboard.promoTimingDesc}
                   >
-                    <Toggle
-                      id="promo-enabled"
-                      checked={form.promoEnabled}
-                      onChange={(v) => update({ promoEnabled: v })}
-                      label={t.dashboard.enablePromoRail}
-                    />
-                    {form.promoEnabled && (
-                      <div className="grid gap-4 sm:grid-cols-3 pt-1">
+                    <Field
+                      id="cfg-ad-rail-rotation"
+                      label={t.dashboard.adRailRotationMsLabel}
+                    >
+                      <input
+                        id="cfg-ad-rail-rotation"
+                        type="number"
+                        min="0"
+                        className={inputCls}
+                        value={form.adRailRotationMs}
+                        onChange={(e) => update({ adRailRotationMs: e.target.value })}
+                        placeholder={t.dashboard.adRailRotationMsPlaceholder}
+                      />
+                    </Field>
+                    <div className="rounded-xl p-4 ghost-border bg-surface-container space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-label-caps text-[10px] md:text-label-caps text-text-muted uppercase tracking-widest">
+                            {t.dashboard.promoRailSettings}
+                          </p>
+                          <p className="text-on-surface">{t.dashboard.enablePromoRail}</p>
+                        </div>
+                        <div className="shrink-0 flex items-center gap-2">
+                          <span className="font-label-caps text-xs tracking-widest text-primary uppercase">
+                            {form.promoEnabled
+                              ? t.dashboard.promoToggleOn
+                              : t.dashboard.promoToggleOff}
+                          </span>
+                          <Toggle
+                            id="promo-enabled"
+                            checked={form.promoEnabled}
+                            onChange={(v) => update({ promoEnabled: v })}
+                            label=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        className={cn(
+                          "grid gap-4 sm:grid-cols-3",
+                          !form.promoEnabled && "opacity-60",
+                        )}
+                      >
                         <Field
                           id="promo-duration"
                           label={t.dashboard.displayDurationLabel}
@@ -1276,6 +1587,7 @@ export function DashboardPage() {
                               })
                             }
                             placeholder={t.dashboard.displayDurationPlaceholder}
+                            disabled={!form.promoEnabled}
                           />
                         </Field>
                         <Field
@@ -1292,6 +1604,7 @@ export function DashboardPage() {
                               update({ promoCycleMs: e.target.value })
                             }
                             placeholder={t.dashboard.cycleIntervalPlaceholder}
+                            disabled={!form.promoEnabled}
                           />
                         </Field>
                         <Field
@@ -1308,10 +1621,11 @@ export function DashboardPage() {
                               update({ promoInitialDelayMs: e.target.value })
                             }
                             placeholder={t.dashboard.initialDelayPlaceholder}
+                            disabled={!form.promoEnabled}
                           />
                         </Field>
                       </div>
-                    )}
+                    </div>
                   </SectionCard>
 
                   {/* ── 7. Extra Prayers ───────────────────────────────── */}

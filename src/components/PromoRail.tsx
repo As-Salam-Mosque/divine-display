@@ -16,7 +16,7 @@ export function PromoRail({
   const { settings } = useSettings();
 
   const { phase, currentSlot } = usePromoTimer({
-    slots: settings.mosque?.adSlots ?? [],
+    slots: settings.mosque?.sponsors ?? [],
     promoConfig: settings.mosque?.promo,
     enabled: settings.showSponsors,
   });
