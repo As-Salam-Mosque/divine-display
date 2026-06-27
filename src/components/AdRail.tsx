@@ -122,7 +122,7 @@ export function AdRail({
       <div className="flex-1 min-h-0 flex flex-col gap-2 lg:gap-3 tv:gap-stage-gap">
         {resolvedSlots.map((slot, index) => (
           <AdSlotCard
-            key={`${railSlots[index]?.id ?? index}-${slot?.id ?? "empty"}`}
+            key={railSlots[index]?.id ?? index}
             slot={
               slot ?? { id: railSlots[index]?.id ?? index, label: "SPONSOR SPACE" }
             }
