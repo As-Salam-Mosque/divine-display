@@ -33,6 +33,41 @@ describe("resolveAdRailSlots", () => {
     expect(tick0[2]?.id).not.toBe(tick1[2]?.id);
   });
 
+  it("keeps dynamic slots unique across the rail", () => {
+    const resolved = resolveAdRailSlots({ sponsors, railSlots, dynamicTick: 0 });
+    expect(resolved[1]?.id).not.toBe(resolved[2]?.id);
+  });
+
+  it("prevents dynamic slots from duplicating fixed slots", () => {
+    const singleDynamic: AdRailSlotConfig[] = [
+      { id: 1, mode: "fixed", sponsorId: 1 },
+      { id: 2, mode: "dynamic" },
+    ];
+    const resolved = resolveAdRailSlots({
+      sponsors,
+      railSlots: singleDynamic,
+      dynamicTick: 0,
+    });
+    expect(resolved[0]?.id).toBe(1);
+    expect(resolved[1]?.id).not.toBe(1);
+  });
+
+  it("returns null when no unique dynamic candidate is available", () => {
+    const oneSponsor: AdSlot[] = [{ id: 1, label: "Sponsor A", weight: 1 }];
+    const duplicateRiskSlots: AdRailSlotConfig[] = [
+      { id: 1, mode: "fixed", sponsorId: 1 },
+      { id: 2, mode: "dynamic" },
+    ];
+    const resolved = resolveAdRailSlots({
+      sponsors: oneSponsor,
+      railSlots: duplicateRiskSlots,
+      dynamicTick: 0,
+    });
+
+    expect(resolved[0]?.id).toBe(1);
+    expect(resolved[1]).toBeNull();
+  });
+
   it("returns null for fixed slots linked to missing sponsors", () => {
     const missingFixed: AdRailSlotConfig[] = [
       { id: 10, mode: "fixed", sponsorId: 999 },
