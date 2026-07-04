@@ -45,4 +45,43 @@ describe("resolveAdRailSlots", () => {
 
     expect(resolved[0]).toBeNull();
   });
+
+  it("never resolves the same sponsor in multiple slots at once", () => {
+    const duplicateRiskSlots: AdRailSlotConfig[] = [
+      { id: 1, mode: "fixed", sponsorId: 1 },
+      { id: 2, mode: "dynamic" },
+      { id: 3, mode: "dynamic" },
+      { id: 4, mode: "dynamic" },
+    ];
+
+    const resolved = resolveAdRailSlots({
+      sponsors,
+      railSlots: duplicateRiskSlots,
+      dynamicTick: 0,
+    });
+
+    const assignedSponsorIds = resolved
+      .map((slot) => slot?.id ?? null)
+      .filter((id): id is number => id != null);
+
+    expect(new Set(assignedSponsorIds).size).toBe(assignedSponsorIds.length);
+  });
+
+  it("drops duplicate fixed assignments instead of rendering duplicates", () => {
+    const conflictingFixed: AdRailSlotConfig[] = [
+      { id: 1, mode: "fixed", sponsorId: 2 },
+      { id: 2, mode: "fixed", sponsorId: 2 },
+      { id: 3, mode: "dynamic" },
+    ];
+
+    const resolved = resolveAdRailSlots({
+      sponsors,
+      railSlots: conflictingFixed,
+      dynamicTick: 0,
+    });
+
+    expect(resolved[0]?.id).toBe(2);
+    expect(resolved[1]).toBeNull();
+    expect(resolved[2]?.id).toBe(3);
+  });
 });
