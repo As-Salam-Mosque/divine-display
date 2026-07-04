@@ -946,7 +946,7 @@ export function DashboardPage() {
                 </span>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate>
+              <form onSubmit={handleSubmit} noValidate className="pb-28">
                 <div className="space-y-8 max-w-5xl mx-auto">
                   {/* ── 1. Mosque Information ──────────────────────────── */}
                   <SectionCard
@@ -1439,85 +1439,115 @@ export function DashboardPage() {
                     </div>
                     {form.adRailSlots.length > 0 && (
                       <div className="space-y-4">
-                        {form.adRailSlots.map((slot, i) => (
-                          <div
-                            key={i}
-                            className="rounded-xl p-5 ghost-border bg-surface-container"
-                          >
-                            <div className="grid gap-3 sm:grid-cols-[90px_180px_1fr_auto] sm:items-end">
-                              <Field
-                                id={`ad-rail-id-${i}`}
-                                label={t.dashboard.idLabel}
-                              >
-                                <input
+                        {form.adRailSlots.map((slot, i) => {
+                          const selectedInOtherFixedSlots = new Set(
+                            form.adRailSlots
+                              .filter(
+                                (otherSlot, otherIndex) =>
+                                  otherIndex !== i &&
+                                  otherSlot.mode === "fixed" &&
+                                  otherSlot.sponsorId.trim() !== "",
+                              )
+                              .map((otherSlot) => otherSlot.sponsorId),
+                          );
+
+                          return (
+                            <div
+                              key={i}
+                              className="rounded-xl p-5 ghost-border bg-surface-container"
+                            >
+                              <div className="grid gap-3 sm:grid-cols-[90px_180px_1fr_auto] sm:items-end">
+                                <Field
                                   id={`ad-rail-id-${i}`}
-                                  type="number"
-                                  min="0"
-                                  className={inputCls}
-                                  value={slot.id}
-                                  onChange={(e) =>
-                                    setAdRailSlot(i, "id", e.target.value)
-                                  }
-                                />
-                              </Field>
-                              <Field
-                                id={`ad-rail-mode-${i}`}
-                                label={t.dashboard.slotModeLabel}
-                              >
-                                <select
+                                  label={t.dashboard.idLabel}
+                                >
+                                  <input
+                                    id={`ad-rail-id-${i}`}
+                                    type="number"
+                                    min="0"
+                                    className={inputCls}
+                                    value={slot.id}
+                                    onChange={(e) =>
+                                      setAdRailSlot(i, "id", e.target.value)
+                                    }
+                                  />
+                                </Field>
+                                <Field
                                   id={`ad-rail-mode-${i}`}
-                                  className={selectCls}
-                                  value={slot.mode}
-                                  onChange={(e) =>
-                                    setAdRailSlot(
-                                      i,
-                                      "mode",
-                                      e.target.value as RailSlotRow["mode"],
-                                    )
-                                  }
+                                  label={t.dashboard.slotModeLabel}
                                 >
-                                  <option value="fixed">
-                                    {t.dashboard.slotModeFixed}
-                                  </option>
-                                  <option value="dynamic">
-                                    {t.dashboard.slotModeDynamic}
-                                  </option>
-                                </select>
-                              </Field>
-                              <Field
-                                id={`ad-rail-sponsor-${i}`}
-                                label={t.dashboard.linkedSponsorLabel}
-                              >
-                                <select
+                                  <select
+                                    id={`ad-rail-mode-${i}`}
+                                    className={selectCls}
+                                    value={slot.mode}
+                                    onChange={(e) =>
+                                      setAdRailSlot(
+                                        i,
+                                        "mode",
+                                        e.target.value as RailSlotRow["mode"],
+                                      )
+                                    }
+                                  >
+                                    <option value="fixed">
+                                      {t.dashboard.slotModeFixed}
+                                    </option>
+                                    <option value="dynamic">
+                                      {t.dashboard.slotModeDynamic}
+                                    </option>
+                                  </select>
+                                </Field>
+                                <Field
                                   id={`ad-rail-sponsor-${i}`}
-                                  className={selectCls}
-                                  value={slot.sponsorId}
-                                  onChange={(e) =>
-                                    setAdRailSlot(i, "sponsorId", e.target.value)
-                                  }
-                                  disabled={slot.mode !== "fixed"}
+                                  label={t.dashboard.linkedSponsorLabel}
                                 >
-                                  <option value="">
-                                    {t.dashboard.linkedSponsorPlaceholder}
-                                  </option>
-                                  {form.sponsors
-                                    .filter((s) => s.id.trim() !== "")
-                                    .map((sponsor) => (
-                                      <option key={sponsor.id} value={sponsor.id}>
-                                        {sponsor.label || `#${sponsor.id}`}
-                                      </option>
-                                    ))}
-                                </select>
-                              </Field>
-                              <div className="pb-0.5">
-                                <RemoveBtn
-                                  onClick={() => removeAdRailSlot(i)}
-                                  label={t.dashboard.removeSlotLabel}
-                                />
+                                  <select
+                                    id={`ad-rail-sponsor-${i}`}
+                                    className={cn(
+                                      selectCls,
+                                      slot.mode !== "fixed" &&
+                                        "cursor-not-allowed bg-background-deep/40 text-text-muted opacity-60",
+                                    )}
+                                    value={slot.sponsorId}
+                                    onChange={(e) =>
+                                      setAdRailSlot(i, "sponsorId", e.target.value)
+                                    }
+                                    disabled={slot.mode !== "fixed"}
+                                  >
+                                    <option value="">
+                                      {t.dashboard.linkedSponsorPlaceholder}
+                                    </option>
+                                    {form.sponsors
+                                      .filter((sponsor) => sponsor.id.trim() !== "")
+                                      .map((sponsor) => {
+                                        const isTakenInAnotherFixedSlot =
+                                          sponsor.id !== slot.sponsorId &&
+                                          selectedInOtherFixedSlots.has(sponsor.id);
+
+                                        return (
+                                          <option
+                                            key={sponsor.id}
+                                            value={sponsor.id}
+                                            disabled={
+                                              slot.mode === "fixed" &&
+                                              isTakenInAnotherFixedSlot
+                                            }
+                                          >
+                                            {sponsor.label || `#${sponsor.id}`}
+                                          </option>
+                                        );
+                                      })}
+                                  </select>
+                                </Field>
+                                <div className="pb-0.5">
+                                  <RemoveBtn
+                                    onClick={() => removeAdRailSlot(i)}
+                                    label={t.dashboard.removeSlotLabel}
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </SectionCard>
@@ -1829,81 +1859,87 @@ export function DashboardPage() {
 
                 {/* ── Sticky save bar ────────────────────────────────────── */}
                 <div
-                  className="sticky bottom-0 mt-8 w-full py-4 bg-background-deep"
+                  className="fixed inset-x-0 bottom-0 z-50 bg-background-deep"
                   style={{ borderTop: "1px solid var(--ghost-border-color)" }}
                 >
-                  {status && (
-                    <div
-                      role={status.type === "error" ? "alert" : "status"}
-                      aria-live={
-                        status.type === "error" ? "assertive" : "polite"
-                      }
-                      aria-atomic="true"
-                      className={cn(
-                        "mb-3 px-4 py-2.5 rounded-lg text-sm flex items-center gap-2",
-                        status.type === "success"
-                          ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-                          : "bg-red-500/10 border border-red-500/30 text-red-400",
-                      )}
-                    >
-                      <span
-                        className="material-symbols-outlined shrink-0"
-                        style={{ fontSize: 18 }}
-                        aria-hidden="true"
-                      >
-                        {status.type === "success" ? "check_circle" : "error"}
-                      </span>
-                      {status.message}
-                    </div>
-                  )}
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-xs text-text-muted hidden sm:block">
-                      {t.dashboard.changesApplyImmediately}
-                    </p>
-                    <div className="flex items-center gap-3 ml-auto">
-                      {hasChanges && !saving && (
-                        <button
-                          type="button"
-                          onClick={() => setForm(savedForm)}
-                          className="px-4 py-2.5 rounded-lg text-sm text-text-muted hover:text-on-surface hover:bg-surface-container ghost-border transition-colors focus-ring"
-                        >
-                          {t.dashboard.discardLabel}
-                        </button>
-                      )}
-                      <button
-                        type="submit"
-                        disabled={saving || !hasChanges}
-                        className={cn(
-                          "gold-button rounded-lg px-6 py-3 font-semibold text-sm",
-                          "flex items-center gap-2 whitespace-nowrap transition-opacity",
-                          (saving || !hasChanges) &&
-                            "opacity-50 cursor-not-allowed",
-                        )}
-                      >
-                        {saving ? (
-                          <>
+                  <div className="w-full px-6 lg:px-8 lg:pl-56">
+                    <div className="max-w-5xl mx-auto py-4 relative">
+                      {status && (
+                        <div className="absolute bottom-[calc(100%+0.5rem)] left-0 right-0">
+                          <div
+                            role={status.type === "error" ? "alert" : "status"}
+                            aria-live={
+                              status.type === "error" ? "assertive" : "polite"
+                            }
+                            aria-atomic="true"
+                            className={cn(
+                              "px-4 py-2.5 rounded-lg text-sm flex items-center gap-2",
+                              status.type === "success"
+                                ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                                : "bg-red-500/10 border border-red-500/30 text-red-400",
+                            )}
+                          >
                             <span
-                              className="material-symbols-outlined motion-safe:animate-spin"
+                              className="material-symbols-outlined shrink-0"
                               style={{ fontSize: 18 }}
                               aria-hidden="true"
                             >
-                              sync
+                              {status.type === "success" ? "check_circle" : "error"}
                             </span>
-                            {t.dashboard.savingLabel}
-                          </>
-                        ) : (
-                          <>
-                            <span
-                              className="material-symbols-outlined"
-                              style={{ fontSize: 18 }}
-                              aria-hidden="true"
+                            {status.message}
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-xs text-text-muted hidden sm:block">
+                          {t.dashboard.changesApplyImmediately}
+                        </p>
+                        <div className="flex items-center gap-3 ml-auto">
+                          {hasChanges && !saving && (
+                            <button
+                              type="button"
+                              onClick={() => setForm(savedForm)}
+                              className="px-4 py-2.5 rounded-lg text-sm text-text-muted hover:text-on-surface hover:bg-surface-container ghost-border transition-colors focus-ring"
                             >
-                              save
-                            </span>
-                            {t.dashboard.saveConfigurationLabel}
-                          </>
-                        )}
-                      </button>
+                              {t.dashboard.discardLabel}
+                            </button>
+                          )}
+                          <button
+                            type="submit"
+                            disabled={saving || !hasChanges}
+                            className={cn(
+                              "gold-button rounded-lg px-6 py-3 font-semibold text-sm",
+                              "flex items-center gap-2 whitespace-nowrap transition-opacity",
+                              (saving || !hasChanges) &&
+                                "opacity-50 cursor-not-allowed",
+                            )}
+                          >
+                            {saving ? (
+                              <>
+                                <span
+                                  className="material-symbols-outlined motion-safe:animate-spin"
+                                  style={{ fontSize: 18 }}
+                                  aria-hidden="true"
+                                >
+                                  sync
+                                </span>
+                                {t.dashboard.savingLabel}
+                              </>
+                            ) : (
+                              <>
+                                <span
+                                  className="material-symbols-outlined"
+                                  style={{ fontSize: 18 }}
+                                  aria-hidden="true"
+                                >
+                                  save
+                                </span>
+                                {t.dashboard.saveConfigurationLabel}
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
