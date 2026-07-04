@@ -24,6 +24,17 @@ import {
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
+const DASHBOARD_SECTION_IDS = [
+  "mosque-info",
+  "location",
+  "iqamah",
+  "announcements",
+  "sponsors",
+  "ad-rail-slots",
+  "promo",
+  "extra-prayers",
+] as const;
+
 interface ApiValidationIssue {
   loc?: Array<string | number>;
   msg?: string;
@@ -87,6 +98,52 @@ export function DashboardPage() {
 
     previousFieldErrorIdsRef.current = fieldErrorIds;
   }, [fieldErrorIds]);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const offsetTop = 140;
+
+    const updateActiveSectionFromScroll = () => {
+      const sections = DASHBOARD_SECTION_IDS.map((id) =>
+        document.getElementById(id),
+      ).filter((section): section is HTMLElement => Boolean(section));
+
+      if (sections.length === 0) return;
+
+      let currentSectionId = sections[0].id;
+      for (const section of sections) {
+        const sectionTop = section.getBoundingClientRect().top;
+        if (sectionTop <= offsetTop) {
+          currentSectionId = section.id;
+          continue;
+        }
+        break;
+      }
+
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 16;
+      if (nearBottom) {
+        currentSectionId = sections[sections.length - 1].id;
+      }
+
+      setActiveSection((prev) =>
+        prev === currentSectionId ? prev : currentSectionId,
+      );
+    };
+
+    updateActiveSectionFromScroll();
+    window.addEventListener("scroll", updateActiveSectionFromScroll, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateActiveSectionFromScroll);
+
+    return () => {
+      window.removeEventListener("scroll", updateActiveSectionFromScroll);
+      window.removeEventListener("resize", updateActiveSectionFromScroll);
+    };
+  }, [loading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

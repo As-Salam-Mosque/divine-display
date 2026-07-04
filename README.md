@@ -28,6 +28,12 @@ npm ci   # use in CI
 npm install
 ```
 
+3. Raspberry Pi kiosk install:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/As-Salam-Mosque/divine-display/main/scripts/install.sh | bash
+```
+
 For developer instructions (start dev server, build, lint, testing tips, architecture, and contribution workflow) see `CONTRIBUTING.md`.
 
 ## License
