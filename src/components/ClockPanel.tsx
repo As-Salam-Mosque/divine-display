@@ -93,7 +93,7 @@ const MosqueInfo = memo(({ promoActive }: MosqueInfoProps) => {
           <img
             src={logo}
             alt={`${settings.mosque?.name || "Mosque"} logo`}
-            className="h-8 md:h-12 lg:h-16 xl:h-20 tv:h-24 w-auto max-w-[220px] md:max-w-[260px] lg:max-w-[320px] xl:max-w-[380px] tv:max-w-[440px] object-contain mb-1 md:mb-2"
+            className="h-8 md:h-12 lg:h-16 xl:h-20 tv:h-24 w-auto max-w-55 md:max-w-65 lg:max-w-[320px] xl:max-w-95 tv:max-w-[440px] object-contain mb-1 md:mb-2"
           />
         ) : (
           <span
