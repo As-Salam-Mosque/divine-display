@@ -50,7 +50,11 @@ interface DashboardFormSectionsProps {
   update: (patch: Partial<FormState>) => void;
   addIqamah: () => void;
   removeIqamah: (index: number) => void;
-  setIqamah: (index: number, field: "prayerName" | "offsetMinutes", value: string) => void;
+  setIqamah: (
+    index: number,
+    field: "prayerName" | "offsetMinutes",
+    value: string,
+  ) => void;
   addSponsor: () => void;
   removeSponsor: (index: number) => void;
   setSponsor: (index: number, field: keyof SponsorRow, value: string) => void;
@@ -193,6 +197,77 @@ export function DashboardFormSections({
             placeholder={t.openingHoursPlaceholder}
           />
         </Field>
+        <Field id="cfg-logo" label={t.logoLabel}>
+          <div className="flex items-center gap-2">
+            <input
+              id="cfg-logo"
+              className={cn(inputCls, "flex-1")}
+              value={form.logo}
+              onChange={(e) => update({ logo: e.target.value })}
+              placeholder={t.logoPlaceholder}
+            />
+            <button
+              type="button"
+              aria-label={t.uploadLogoLabel}
+              onClick={() =>
+                (
+                  document.getElementById(
+                    "cfg-logo-file",
+                  ) as HTMLInputElement | null
+                )?.click()
+              }
+              className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg ghost-border bg-surface-container hover:bg-primary/10 hover:border-primary/30 transition-colors focus-ring"
+            >
+              <span
+                className="material-symbols-outlined text-text-muted"
+                style={{ fontSize: 18 }}
+                aria-hidden="true"
+              >
+                upload
+              </span>
+            </button>
+            <button
+              type="button"
+              aria-label={t.clearLogoLabel}
+              onClick={() => update({ logo: "" })}
+              className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg transition-colors focus-ring text-red-400 hover:bg-red-500/10"
+              style={{ border: "1px solid rgba(239,68,68,0.3)" }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: 18 }}
+                aria-hidden="true"
+              >
+                delete
+              </span>
+            </button>
+            {form.logo &&
+              (form.logo.startsWith("data:") ||
+                form.logo.startsWith("http")) && (
+                <span
+                  className="material-symbols-outlined text-emerald-400"
+                  style={{ fontSize: 20 }}
+                  aria-hidden="true"
+                >
+                  check_circle
+                </span>
+              )}
+            <input
+              id="cfg-logo-file"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => update({ logo: reader.result as string });
+                reader.readAsDataURL(file);
+                e.target.value = "";
+              }}
+            />
+          </div>
+        </Field>
       </SectionCard>
 
       {/* ── 2. Location & Calculation ──────────────────────── */}
@@ -269,9 +344,7 @@ export function DashboardFormSections({
                     id={`iq-name-${i}`}
                     className={inputCls}
                     value={row.prayerName}
-                    onChange={(e) =>
-                      setIqamah(i, "prayerName", e.target.value)
-                    }
+                    onChange={(e) => setIqamah(i, "prayerName", e.target.value)}
                     placeholder={t.prayerNamePlaceholder}
                   />
                 </Field>
@@ -459,7 +532,10 @@ export function DashboardFormSections({
                           placeholder={t.linkUrlPlaceholder}
                         />
                       </Field>
-                      <Field id={`ad-weight-${i}`} label={t.rotationWeightLabel}>
+                      <Field
+                        id={`ad-weight-${i}`}
+                        label={t.rotationWeightLabel}
+                      >
                         <input
                           id={`ad-weight-${i}`}
                           type="number"
@@ -654,7 +730,10 @@ export function DashboardFormSections({
             </div>
           </div>
           <div
-            className={cn("grid gap-4 sm:grid-cols-3", !form.promoEnabled && "opacity-60")}
+            className={cn(
+              "grid gap-4 sm:grid-cols-3",
+              !form.promoEnabled && "opacity-60",
+            )}
           >
             <Field id="promo-duration" label={t.displayDurationLabel}>
               <input

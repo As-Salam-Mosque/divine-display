@@ -108,6 +108,11 @@ const en = {
     phonePlaceholder: "+1 (514) 000-0000",
     openingHoursLabel: "Opening Hours",
     openingHoursPlaceholder: "Daily 05:00 – 23:00",
+    logoLabel: "Mosque Logo",
+    logoPlaceholder: "https://... or upload →",
+    uploadLogoLabel: "Upload logo",
+    clearLogoLabel: "Clear logo",
+    logoPreviewAlt: "Mosque logo preview",
     locationCalculation: "Location & Calculation",
     locationCalculationDesc:
       "Coordinates and AlAdhan method used for automatic prayer times",

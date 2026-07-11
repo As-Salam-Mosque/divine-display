@@ -1,11 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { configToForm, formToConfig, mapValidationLocToFieldId } from "../utils/dashboardForm";
+import {
+  configToForm,
+  formToConfig,
+  mapValidationLocToFieldId,
+} from "../utils/dashboardForm";
 
 describe("dashboardForm utils", () => {
   it("maps validation locations to dashboard field IDs", () => {
-    expect(
-      mapValidationLocToFieldId(["body", "configuration", "name"]),
-    ).toBe("cfg-name");
+    expect(mapValidationLocToFieldId(["body", "configuration", "name"])).toBe(
+      "cfg-name",
+    );
+    expect(mapValidationLocToFieldId(["body", "configuration", "logo"])).toBe(
+      "cfg-logo",
+    );
     expect(
       mapValidationLocToFieldId([
         "body",
@@ -30,27 +37,36 @@ describe("dashboardForm utils", () => {
     const form = configToForm({
       name: "Masjid",
       city: "Montreal",
+      logo: "https://example.com/logo.png",
       latitude: 45.5,
       longitude: -73.6,
       calculationMethod: 2,
       iqamahOffsets: { Fajr: 25 },
-      sponsors: [{ id: 10, label: "Sponsor A", image: null, link: null, weight: 2 }],
+      sponsors: [
+        { id: 10, label: "Sponsor A", image: null, link: null, weight: 2 },
+      ],
       adRailSlots: [{ id: 1, mode: "fixed", sponsorId: 10 }],
       announcementsEn: ["A", "B"],
       announcementsFr: ["C"],
       promo: { displayDurationMs: 10000, cycleMs: 60000, initialDelayMs: 5000 },
-      extraPrayers: [{
-        name: "Jumuah",
-        arabicName: "الجمعة",
-        adhan: "13:00",
-        iqamah: "13:30",
-        displayOnly: false,
-        times: ["13:30", "14:30"],
-      }],
+      extraPrayers: [
+        {
+          name: "Jumuah",
+          arabicName: "الجمعة",
+          adhan: "13:00",
+          iqamah: "13:30",
+          displayOnly: false,
+          times: ["13:30", "14:30"],
+        },
+      ],
     });
 
     expect(form.name).toBe("Masjid");
-    expect(form.iqamahOffsets[0]).toEqual({ prayerName: "Fajr", offsetMinutes: "25" });
+    expect(form.logo).toBe("https://example.com/logo.png");
+    expect(form.iqamahOffsets[0]).toEqual({
+      prayerName: "Fajr",
+      offsetMinutes: "25",
+    });
     expect(form.sponsors[0].id).toBe("10");
     expect(form.adRailSlots[0].sponsorId).toBe("10");
     expect(form.announcementsEn).toBe("A\nB");
@@ -66,6 +82,7 @@ describe("dashboardForm utils", () => {
       website: "https://example.com",
       capacity: "500",
       openingHours: "Daily",
+      logo: "https://example.com/logo.png",
       email: "test@example.com",
       phone: "123",
       latitude: "45.5",
@@ -102,8 +119,13 @@ describe("dashboardForm utils", () => {
     expect(config.latitude).toBe(45.5);
     expect(config.iqamahOffsets).toEqual({ Fajr: 20 });
     expect(config.sponsors[1].weight).toBe(2);
-    expect(config.adRailSlots[0]).toEqual({ id: 1, mode: "fixed", sponsorId: 2 });
+    expect(config.adRailSlots[0]).toEqual({
+      id: 1,
+      mode: "fixed",
+      sponsorId: 2,
+    });
     expect(config.adRailSlots[1]).toEqual({ id: 2, mode: "dynamic" });
+    expect(config.logo).toBe("https://example.com/logo.png");
     expect(config.announcementsEn).toEqual(["One", "Two"]);
     expect(config.promo?.displayDurationMs).toBe(8000);
   });

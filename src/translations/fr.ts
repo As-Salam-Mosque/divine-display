@@ -105,6 +105,11 @@ const fr = {
     phonePlaceholder: "+1 (514) 000-0000",
     openingHoursLabel: "Heures d'ouverture",
     openingHoursPlaceholder: "Quotidien 05h00 – 23h00",
+    logoLabel: "Logo de la mosquée",
+    logoPlaceholder: "https://... ou téléchargement →",
+    uploadLogoLabel: "Télécharger le logo",
+    clearLogoLabel: "Effacer le logo",
+    logoPreviewAlt: "Aperçu du logo de la mosquée",
     locationCalculation: "Localisation et calcul",
     locationCalculationDesc:
       "Coordonnées et méthode AlAdhan utilisées pour les horaires automatiques",
