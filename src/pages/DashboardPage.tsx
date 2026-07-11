@@ -63,8 +63,17 @@ export function DashboardPage() {
     if (!token || !slug) return;
     const failMsg = t.failedToLoadConfiguration;
 
-    fetch(`${API_BASE}/api/v1/mosques?name=${encodeURIComponent(slug)}`)
+    fetch(`${API_BASE}/api/v1/mosques?name=${encodeURIComponent(slug)}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          logout();
+          setLocation("/login");
+          throw new Error("unauthorized");
+        }
         if (!res.ok) throw new Error(failMsg);
         return res.json();
       })
@@ -73,14 +82,15 @@ export function DashboardPage() {
         setForm(loaded);
         setSavedForm(loaded);
       })
-      .catch((err: unknown) =>
+      .catch((err: unknown) => {
+        if (err instanceof Error && err.message === "unauthorized") return;
         setStatus({
           type: "error",
           message: err instanceof Error ? err.message : failMsg,
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
-  }, [token, slug, t.failedToLoadConfiguration]);
+  }, [token, slug, logout, setLocation, t.failedToLoadConfiguration]);
 
   useEffect(() => {
     const previous = previousFieldErrorIdsRef.current;
@@ -170,7 +180,9 @@ export function DashboardPage() {
 
         const mappedFieldIds = issues
           .map((issue) =>
-            Array.isArray(issue.loc) ? mapValidationLocToFieldId(issue.loc) : null,
+            Array.isArray(issue.loc)
+              ? mapValidationLocToFieldId(issue.loc)
+              : null,
           )
           .filter((id): id is string => Boolean(id));
 
@@ -178,7 +190,10 @@ export function DashboardPage() {
           const uniqueFieldIds = [...new Set(mappedFieldIds)];
           setFieldErrorIds(uniqueFieldIds);
           const firstErrorField = document.getElementById(uniqueFieldIds[0]);
-          firstErrorField?.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstErrorField?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }
 
         const firstIssueMessage = issues.find((issue) => issue.msg)?.msg;
@@ -212,7 +227,10 @@ export function DashboardPage() {
   const addIqamah = () =>
     setForm((p) => ({
       ...p,
-      iqamahOffsets: [...p.iqamahOffsets, { prayerName: "", offsetMinutes: "0" }],
+      iqamahOffsets: [
+        ...p.iqamahOffsets,
+        { prayerName: "", offsetMinutes: "0" },
+      ],
     }));
 
   const removeIqamah = (i: number) =>

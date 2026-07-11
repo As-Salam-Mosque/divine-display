@@ -31,7 +31,7 @@ const en = {
   loadingMosqueConfiguration: "Loading mosque configuration…",
   mosqueNotFoundTitle: "Mosque not found",
   mosqueNotFoundMessage: (name: string) =>
-    `No configuration was found for \"${name}\".`,
+    `No configuration was found for "${name}".`,
   // status messages
   statusAdhanNow: (name: string) => `Adhan for ${name} — come to prayer`,
   statusIqamahNow: (name: string) => `Iqamah for ${name} — come to prayer`,

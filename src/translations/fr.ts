@@ -26,7 +26,7 @@ const fr = {
   loadingMosqueConfiguration: "Chargement de la configuration de la mosquée…",
   mosqueNotFoundTitle: "Mosquée introuvable",
   mosqueNotFoundMessage: (name: string) =>
-    `Aucune configuration n’a été trouvée pour \"${name}\".`,
+    `Aucune configuration n’a été trouvée pour "${name}".`,
   statusAdhanNow: (name: string) => `Adhan de ${name} — venez à la prière`,
   statusIqamahNow: (name: string) => `Iqama de ${name} — venez à la prière`,
   criticalSubtitle: "Venez à la prière",

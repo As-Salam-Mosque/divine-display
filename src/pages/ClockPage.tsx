@@ -140,6 +140,18 @@ function ClockPageContent({ mosqueName }: ClockPageProps) {
       : undefined,
   );
 
+  const defaultSettings = useMemo<AppSettings>(
+    () => ({
+      language,
+      timeFormat: "12h",
+      showSponsors: true,
+      theme: "dark",
+      mosque: config,
+      alternatePrayerCardColors: false,
+    }),
+    [language, config],
+  );
+
   if (hasRequestedName) {
     if (loading) {
       return (
@@ -170,18 +182,6 @@ function ClockPageContent({ mosqueName }: ClockPageProps) {
       );
     }
   }
-
-  const defaultSettings = useMemo<AppSettings>(
-    () => ({
-      language,
-      timeFormat: "12h",
-      showSponsors: true,
-      theme: "dark",
-      mosque: config,
-      alternatePrayerCardColors: false,
-    }),
-    [language, config],
-  );
 
   return (
     <SettingsProvider defaults={defaultSettings}>
