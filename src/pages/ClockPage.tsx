@@ -130,11 +130,46 @@ interface ClockPageProps {
 
 function ClockPageContent({ mosqueName }: ClockPageProps) {
   const { language } = useLanguage();
+  const t = useT(language);
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+  const hasRequestedName = mosqueName.trim().length > 0;
 
-  const { config } = useMosqueConfig(
-    backendUrl ? { apiBase: backendUrl, slug: mosqueName } : undefined,
+  const { config, loading, error, source } = useMosqueConfig(
+    hasRequestedName && backendUrl
+      ? { apiBase: backendUrl, slug: mosqueName }
+      : undefined,
   );
+
+  if (hasRequestedName) {
+    if (loading) {
+      return (
+        <main className="min-h-screen bg-background-deep text-on-surface flex items-center justify-center p-6">
+          <p className="text-lg font-body-md" role="status" aria-live="polite">
+            {t.loadingMosqueConfiguration}
+          </p>
+        </main>
+      );
+    }
+
+    if (source !== "remote" || error) {
+      return (
+        <main className="min-h-screen bg-background-deep text-on-surface flex items-center justify-center p-6">
+          <section
+            className="max-w-xl w-full bg-surface-panel ghost-border rounded-xl p-6 md:p-8"
+            role="alert"
+            aria-live="assertive"
+          >
+            <h1 className="font-headline-md text-primary mb-3">
+              {t.mosqueNotFoundTitle}
+            </h1>
+            <p className="font-body-md text-on-surface/90">
+              {t.mosqueNotFoundMessage(mosqueName)}
+            </p>
+          </section>
+        </main>
+      );
+    }
+  }
 
   const defaultSettings = useMemo<AppSettings>(
     () => ({

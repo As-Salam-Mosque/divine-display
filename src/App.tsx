@@ -8,11 +8,15 @@ import { AuthProvider } from "./context/AuthContext";
 import { LanguageProvider } from "./context/LanguageContext";
 
 function RootRoute() {
-  const mosqueName = new URLSearchParams(window.location.search)
-    .get("name")
-    ?.trim();
+  const rawName = new URLSearchParams(window.location.search).get("name");
+  if (rawName === null) return <LandingPage />;
 
-  return mosqueName ? <ClockPage mosqueName={mosqueName} /> : <LandingPage />;
+  const mosqueName = rawName
+    .trim()
+    .replace(/^(['"])(.*)\1$/, "$2")
+    .trim();
+
+  return <ClockPage mosqueName={mosqueName} />;
 }
 
 export default function App() {

@@ -28,6 +28,10 @@ const en = {
   hijri: "HIJRI",
   skipToPrayerTimes: "Skip to prayer times",
   loadingPrayerTimes: "Loading prayer times",
+  loadingMosqueConfiguration: "Loading mosque configuration…",
+  mosqueNotFoundTitle: "Mosque not found",
+  mosqueNotFoundMessage: (name: string) =>
+    `No configuration was found for \"${name}\".`,
   // status messages
   statusAdhanNow: (name: string) => `Adhan for ${name} — come to prayer`,
   statusIqamahNow: (name: string) => `Iqamah for ${name} — come to prayer`,
@@ -137,7 +141,8 @@ const en = {
     sponsors: "Sponsors",
     sponsorsDesc: "Sponsor inventory used by fixed and dynamic rail cards",
     noSponsorsConfigured: "No sponsors configured.",
-    sponsorCount: (count: number) => `${count} sponsor${count !== 1 ? "s" : ""}`,
+    sponsorCount: (count: number) =>
+      `${count} sponsor${count !== 1 ? "s" : ""}`,
     addSponsor: "+ Add Sponsor",
     adRailSlots: "Ad Rail Slots",
     adRailSlotsDesc: "Visible right-rail cards configured as fixed or dynamic",

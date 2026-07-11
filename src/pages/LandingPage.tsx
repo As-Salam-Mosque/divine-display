@@ -109,7 +109,7 @@ export function LandingPage() {
                   {t.landing.heroJoin}
                 </button>
                 <a
-                  href="/?name=''"
+                  href="/?name="
                   target="_blank"
                   className="rounded-lg border border-primary-25 px-8 py-4 font-semibold text-primary transition-colors hover:bg-primary-10 focus-ring bg-none cursor-pointer"
                 >

@@ -99,7 +99,7 @@ function Toggle({
       onClick={() => onChange(!checked)}
       className="flex items-center justify-between w-full group focus-ring rounded-lg p-1"
     >
-      <span className="text-sm text-on-surface group-hover:text-primary group-focus-visible:text-primary transition-colors">
+      <span className="flex-1 text-left text-sm text-on-surface group-hover:text-primary group-focus-visible:text-primary transition-colors">
         {label}
       </span>
       <span

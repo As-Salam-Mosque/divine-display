@@ -23,6 +23,10 @@ const fr = {
   hijri: "HÉGIRE",
   skipToPrayerTimes: "Aller aux horaires de prière",
   loadingPrayerTimes: "Chargement des horaires de prière",
+  loadingMosqueConfiguration: "Chargement de la configuration de la mosquée…",
+  mosqueNotFoundTitle: "Mosquée introuvable",
+  mosqueNotFoundMessage: (name: string) =>
+    `Aucune configuration n’a été trouvée pour \"${name}\".`,
   statusAdhanNow: (name: string) => `Adhan de ${name} — venez à la prière`,
   statusIqamahNow: (name: string) => `Iqama de ${name} — venez à la prière`,
   criticalSubtitle: "Venez à la prière",
@@ -137,7 +141,8 @@ const fr = {
     sponsorsDesc:
       "Inventaire des sponsors utilisé par les cartes fixes et dynamiques",
     noSponsorsConfigured: "Aucun sponsor configuré.",
-    sponsorCount: (count: number) => `${count} sponsor${count !== 1 ? "s" : ""}`,
+    sponsorCount: (count: number) =>
+      `${count} sponsor${count !== 1 ? "s" : ""}`,
     addSponsor: "+ Ajouter un sponsor",
     adRailSlots: "Cartes du rail publicitaire",
     adRailSlotsDesc:
