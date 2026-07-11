@@ -36,6 +36,3 @@ curl -fsSL https://raw.githubusercontent.com/As-Salam-Mosque/divine-display/main
 
 For developer instructions (start dev server, build, lint, testing tips, architecture, and contribution workflow) see `CONTRIBUTING.md`.
 
-## License
-
-This repository does not include a license file by default. Add a `LICENSE` file if you intend to open source the project.
