@@ -73,6 +73,9 @@ interface MosqueInfoProps {
 // Static mosque branding — only re-renders when settings change
 const MosqueInfo = memo(({ promoActive }: MosqueInfoProps) => {
   const { settings } = useSettings();
+  const logo = settings.mosque?.logo?.trim() || "";
+  const hasLogo = logo.length > 0;
+
   return (
     <div
       className={cn(
@@ -86,12 +89,20 @@ const MosqueInfo = memo(({ promoActive }: MosqueInfoProps) => {
           promoActive && "md:items-start",
         )}
       >
-        <span
-          className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl mb-1 md:mb-2"
-          aria-hidden="true"
-        >
-          mosque
-        </span>
+        {hasLogo ? (
+          <img
+            src={logo}
+            alt={`${settings.mosque?.name || "Mosque"} logo`}
+            className="h-8 md:h-12 lg:h-16 xl:h-20 tv:h-24 w-auto max-w-55 md:max-w-65 lg:max-w-[320px] xl:max-w-95 tv:max-w-[440px] object-contain mb-1 md:mb-2"
+          />
+        ) : (
+          <span
+            className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl mb-1 md:mb-2"
+            aria-hidden="true"
+          >
+            mosque
+          </span>
+        )}
         <h1 className="font-headline-md text-base md:text-2xl lg:text-4xl xl:text-5xl tv:text-6xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
           {settings.mosque?.name}
         </h1>

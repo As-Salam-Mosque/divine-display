@@ -37,6 +37,7 @@ export interface FormState {
   website: string;
   capacity: string;
   openingHours: string;
+  logo: string;
   email: string;
   phone: string;
   latitude: string;
@@ -67,6 +68,7 @@ export const EMPTY_FORM: FormState = {
   website: "",
   capacity: "",
   openingHours: "",
+  logo: "",
   email: "",
   phone: "",
   latitude: "",

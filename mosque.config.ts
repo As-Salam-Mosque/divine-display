@@ -7,6 +7,7 @@ const config: MosqueConfig = {
   website: "https://www.islam.com",
   capacity: "500",
   openingHours: "See website",
+  logo: "",
   email: "masjid@islam.com",
   phone: "+1-514-123-4567",
   latitude: 45.497253,

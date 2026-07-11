@@ -1,10 +1,5 @@
 export type PrayerName =
-  | "Fajr"
-  | "Shuruq"
-  | "Dhuhr"
-  | "Asr"
-  | "Maghrib"
-  | "Isha";
+  "Fajr" | "Shuruq" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
 
 // Relaxed PrayerTime: allow arbitrary names (string) so extra/admin prayers
 // can reuse the same type as canonical prayers without a separate ExtraPrayer.
@@ -55,6 +50,7 @@ export interface MosqueConfig {
   website: string;
   capacity: string;
   openingHours: string;
+  logo: string;
   email: string;
   phone: string;
 
@@ -100,11 +96,7 @@ export interface ClockState {
 }
 
 export type StatusType =
-  | "none"
-  | "adhan-now"
-  | "iqamah-now"
-  | "iqamah-countdown"
-  | "next-countdown";
+  "none" | "adhan-now" | "iqamah-now" | "iqamah-countdown" | "next-countdown";
 
 /** Structured data for the critical (adhan-now / iqamah-now) display state. */
 export interface CriticalSignalData {
@@ -159,6 +151,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
     website: "assalam.info",
     capacity: "",
     openingHours: "",
+    logo: "",
     email: "",
     phone: "",
     latitude: 0,
