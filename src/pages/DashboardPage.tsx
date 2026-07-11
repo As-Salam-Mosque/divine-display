@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -55,6 +55,12 @@ export function DashboardPage() {
   const [savedForm, setSavedForm] = useState<FormState>(EMPTY_FORM);
   const [activeSection, setActiveSection] = useState<string>("mosque-info");
 
+  const handleUnauthorized = useCallback(() => {
+    logout();
+    setLocation("/login");
+    throw new Error("unauthorized");
+  }, [logout, setLocation]);
+
   useEffect(() => {
     if (!isAuthenticated || !slug) setLocation("/login");
   }, [isAuthenticated, slug, setLocation]);
@@ -70,9 +76,7 @@ export function DashboardPage() {
     })
       .then((res) => {
         if (res.status === 401 || res.status === 403) {
-          logout();
-          setLocation("/login");
-          throw new Error("unauthorized");
+          handleUnauthorized();
         }
         if (!res.ok) throw new Error(failMsg);
         return res.json();
@@ -90,7 +94,7 @@ export function DashboardPage() {
         });
       })
       .finally(() => setLoading(false));
-  }, [token, slug, logout, setLocation, t.failedToLoadConfiguration]);
+  }, [token, slug, handleUnauthorized, t.failedToLoadConfiguration]);
 
   useEffect(() => {
     const previous = previousFieldErrorIdsRef.current;
@@ -171,6 +175,10 @@ export function DashboardPage() {
         body: JSON.stringify({ configuration: formToConfig(form) }),
       });
 
+      if (res.status === 401 || res.status === 403) {
+        handleUnauthorized();
+      }
+
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         const detail = (data as { detail?: unknown }).detail;
@@ -211,6 +219,7 @@ export function DashboardPage() {
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: unknown) {
+      if (err instanceof Error && err.message === "unauthorized") return;
       setStatus({
         type: "error",
         message:
