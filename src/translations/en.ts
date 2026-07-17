@@ -291,6 +291,7 @@ const en = {
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     adPolicy: "Ad Policy",
+    license: "License",
     contact: "Contact",
   },
 };

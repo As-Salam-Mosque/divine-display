@@ -294,6 +294,7 @@ const fr = {
     privacyPolicy: "Politique de confidentialité",
     termsOfService: "Conditions d'utilisation",
     adPolicy: "Politique publicitaire",
+    license: "Licence",
     contact: "Contact",
   },
 };

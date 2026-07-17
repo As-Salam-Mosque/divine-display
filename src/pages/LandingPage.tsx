@@ -246,7 +246,7 @@ export function LandingPage() {
                 {t.landing.businessDescription}
               </p>
               <a
-                href="mailto:assalam@divinedisplay.ca?subject=Divine%20Display%20Partnership%20Inquiry"
+                href="mailto:divine-display@snake.mozmail.com?subject=Divine%20Display%20Partnership%20Inquiry"
                 className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring inline-block"
               >
                 {t.landing.contactSales}
@@ -272,17 +272,85 @@ export function LandingPage() {
             <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-primary uppercase">
               {t.landing.legal}
             </p>
-            <p className="text-text-muted">{t.landing.privacyPolicy}</p>
-            <p className="mt-2 text-text-muted">{t.landing.termsOfService}</p>
-            <p className="mt-2 text-text-muted">{t.landing.adPolicy}</p>
+            <a
+              href="/PRIVACY.md"
+              download
+              className="block text-text-muted transition-colors hover:text-primary focus-ring"
+            >
+              {t.landing.privacyPolicy}
+            </a>
+            <a
+              href="/TERMS.md"
+              download
+              className="mt-2 block text-text-muted transition-colors hover:text-primary focus-ring"
+            >
+              {t.landing.termsOfService}
+            </a>
+            <a
+              href="/AD_POLICY.md"
+              download
+              className="mt-2 block text-text-muted transition-colors hover:text-primary focus-ring"
+            >
+              {t.landing.adPolicy}
+            </a>
+            <a
+              href="/LICENSE"
+              download
+              className="mt-2 block text-text-muted transition-colors hover:text-primary focus-ring"
+            >
+              {t.landing.license}
+            </a>
           </div>
 
           <div>
             <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-primary uppercase">
               {t.landing.contact}
             </p>
-            <p className="text-text-muted">assalam@divinedisplay.ca</p>
-            <p className="mt-2 text-text-muted">Montréal, Canada</p>
+
+            <div className="flex flex-col gap-3">
+              <a
+                href="https://github.com/As-Salam-Mosque/divine-display"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub repository"
+                className="inline-flex items-center gap-2 text-text-muted transition-colors hover:text-primary focus-ring"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M12 2C6.477 2 2 6.596 2 12.267c0 4.537 2.865 8.387 6.839 9.745.5.094.682-.222.682-.493 0-.244-.009-.89-.014-1.747-2.782.617-3.37-1.389-3.37-1.389-.454-1.19-1.11-1.507-1.11-1.507-.908-.637.069-.624.069-.624 1.004.072 1.532 1.057 1.532 1.057.892 1.566 2.341 1.114 2.91.852.091-.666.35-1.114.636-1.37-2.22-.26-4.555-1.14-4.555-5.07 0-1.12.39-2.036 1.029-2.754-.103-.261-.446-1.31.098-2.73 0 0 .84-.275 2.75 1.052A9.36 9.36 0 0 1 12 6.84a9.36 9.36 0 0 1 2.504.35c1.909-1.327 2.748-1.052 2.748-1.052.546 1.42.203 2.469.1 2.73.64.718 1.027 1.634 1.027 2.754 0 3.94-2.338 4.807-4.566 5.062.359.318.678.946.678 1.907 0 1.376-.012 2.485-.012 2.823 0 .273.18.592.688.492C19.138 20.65 22 16.802 22 12.267 22 6.596 17.523 2 12 2Z" />
+                </svg>
+                <span>Divine Display</span>
+              </a>
+
+              <a
+                href="mailto:divine-display@snake.mozmail.com"
+                aria-label="Email divine-display"
+                className="inline-flex items-center gap-2 text-text-muted transition-colors hover:text-primary focus-ring"
+              >
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  mail
+                </span>
+                <span>divine-display@snake.mozmail.com</span>
+              </a>
+
+              <a
+                href="https://github.com/As-Salam-Mosque/divine-display/issues"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Report issues"
+                className="inline-flex items-center gap-2 text-text-muted transition-colors hover:text-primary focus-ring"
+              >
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  bug_report
+                </span>
+                <span>Report an issue</span>
+              </a>
+            </div>
           </div>
         </div>
       </footer>
