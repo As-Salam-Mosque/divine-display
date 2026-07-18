@@ -6,7 +6,7 @@
 
 Divine Display is open-source software (licensed under the [Mozilla Public License 2.0](LICENSE)): a prayer-time display screen (this repository, [`divine-display`](https://github.com/As-Salam-Mosque/divine-display)) paired with a configuration API (`divine-display-backend`) that mosques and Islamic centers self-host or subscribe to in order to manage their own display.
 
-This Privacy Policy covers this specific hosted instance of Divine Display — the website you are currently on, where mosques can register for a display and businesses can become sponsors. If you deploy your own separate instance, update the identifying details throughout this document (and the placeholders still marked `[BRACKETED]`) to match your own deployment before publishing it.
+This Privacy Policy covers this specific hosted instance of Divine Display — the website you are currently on, where mosques can register for a display and businesses can become sponsors. If you deploy your own separate instance, update the identifying details throughout this document to match your own deployment before publishing it.
 
 Throughout this document, "we," "our," and "us" refer to **Divine Display**, and "the Service" refers to this website, the prayer-time display it produces, and its administration dashboard.
 
@@ -84,8 +84,8 @@ We rely on the following third-party services to operate the Service:
 | [AlAdhan API](https://aladhan.com/prayer-times-api) | Calculates daily prayer times | Mosque's latitude/longitude and calculation method (no personal or viewer data) |
 | Google Fonts | Serves the Inter and Material Symbols fonts used in the UI | Visitor IP address (per Google's standard web serving; see [Google's Privacy Policy](https://policies.google.com/privacy)) |
 | GitHub | Hosts the open-source source code, and receives any issues you file publicly | Whatever you choose to include in an issue or pull request |
-| [HOSTING PROVIDER, e.g. Railway, Render, a VPS] | Hosts the backend API and database | All data described in this policy, at rest |
-| [IMAGE HOST, if logos/sponsor images are hosted externally] | Serves logo and sponsor images referenced by URL in the configuration | Visitor IP address when images are requested |
+| Render | Hosts the backend API and database | All data described in this policy, at rest |
+<!--| [IMAGE HOST, if logos/sponsor images are hosted externally] | Serves logo and sponsor images referenced by URL in the configuration | Visitor IP address when images are requested |-->
 
 Each third-party service has its own privacy policy governing how it handles data. We do not use analytics, advertising trackers, or social media pixels.
 
@@ -93,7 +93,7 @@ Each third-party service has its own privacy policy governing how it handles dat
 
 - **Passwords** are hashed using PBKDF2-HMAC-SHA256 with a random 16-byte salt and 210,000 iterations before being stored. We never store or log plaintext passwords.
 - **Session tokens** are cryptographically random and stored server-side only as a SHA-256 hash. Sessions expire automatically after 7 days.
-- **Configuration data** is stored as structured data in our database, hosted at **[HOSTING PROVIDER / REGION]**.
+- **Configuration data** is stored as structured data in our database, hosted on **Render**.
 - We recommend administrators access the dashboard over HTTPS/TLS; production deployments should always be served over TLS.
 - Only the authenticated mosque administrator (via a valid bearer session token) can update that mosque's password or configuration. Reading a mosque's public configuration (for display purposes) does not require authentication, by design — it is meant to be shown publicly.
 
@@ -134,7 +134,7 @@ If you or your organization are located in the EEA/UK or California, and applica
 
 ## International Data Transfers
 
-If you access the Service from outside **[COUNTRY/REGION where the backend is hosted]**, your configuration data may be transferred to and stored in that country. By using the Service, you consent to this transfer.
+If you access the Service from outside **Canada**, your configuration data may be transferred to and stored in that country. By using the Service, you consent to this transfer.
 
 ## Children's Privacy
 

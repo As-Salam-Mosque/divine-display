@@ -6,7 +6,7 @@
 
 Divine Display is open-source software (see [LICENSE](LICENSE)): a prayer-time display screen (this repository, [`divine-display`](https://github.com/As-Salam-Mosque/divine-display)) paired with a configuration API (`divine-display-backend`) that mosques and Islamic centers self-host or subscribe to in order to manage their own display.
 
-These Terms of Service ("Terms") govern this specific hosted instance of Divine Display — the website you are currently on, where mosques can register for a display and businesses can partner as sponsors. If you deploy your own separate instance, replace the identifying details throughout this document (and fill in the remaining `[BRACKETED]` placeholders, such as governing law) to match your own deployment before publishing it.
+These Terms of Service ("Terms") govern this specific hosted instance of Divine Display — the website you are currently on, where mosques can register for a display and businesses can partner as sponsors. If you deploy your own separate instance, replace the identifying details throughout this document to match your own deployment before publishing it.
 
 Throughout this document, "we," "our," and "us" refer to **Divine Display**, and "the Service" refers to this website, the prayer-time display it produces, and its administration dashboard. "You" refers to anyone who views the display, holds a mosque administrator account, or inquires as a business partner.
 
@@ -112,11 +112,11 @@ If you believe Content on the Service infringes your copyright, contact us at **
 
 **[This is a personal, self-hosted instance of Divine Display. Fill in the laws of the jurisdiction where you, the operator, are located or established.]**
 
-The validity of these Terms and the rights, obligations, and relations of the parties under these Terms will be construed and determined under and in accordance with the laws of **[JURISDICTION]**, without regard to conflicts of law principles.
+The validity of these Terms and the rights, obligations, and relations of the parties under these Terms will be construed and determined under and in accordance with the laws of **Quebec**, without regard to conflicts of law principles.
 
 ## Jurisdiction
 
-You expressly agree that exclusive jurisdiction for any dispute with the Service, or relating to your use of it, resides in the courts of **[JURISDICTION]**, and you consent to the exercise of personal jurisdiction in the courts located in **[CITY, JURISDICTION]** in connection with any such dispute. You further agree that you and we will not commence against the other a class action, class arbitration, or other representative action or proceeding.
+You expressly agree that exclusive jurisdiction for any dispute with the Service, or relating to your use of it, resides in the courts of **Quebec**, and you consent to the exercise of personal jurisdiction in the courts located in **Montreal, Quebec** in connection with any such dispute. You further agree that you and we will not commence against the other a class action, class arbitration, or other representative action or proceeding.
 
 ## Termination
 
