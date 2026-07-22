@@ -273,6 +273,7 @@ const fr = {
     featureUpdatesTitle: "Mises à jour continues",
     featureUpdatesDescription:
       "De nouvelles fonctionnalités et du contenu religieux sont ajoutés en continu sans coût supplémentaire.",
+    ecosystem: "Écosystème",
     partnersHeading: "La confiance des communautés et des partenaires",
     partnersSubheading:
       "Renforcer les écosystèmes locaux grâce à une communication numérique centrée sur la mosquée.",
