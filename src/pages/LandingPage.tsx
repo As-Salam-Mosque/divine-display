@@ -99,9 +99,7 @@ export function LandingPage() {
           <div className="mx-auto grid w-full max-w-7xl items-center gap-10 lg:grid-cols-2">
             <div className="relative">
               <div className="absolute -top-16 -left-16 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
-              <span className="mb-4 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-                {t.landing.heroEyebrow}
-              </span>
+              <span className="eyebrow-label mb-4">{t.landing.heroEyebrow}</span>
               <h1 className="mb-6 text-5xl leading-tight font-bold lg:text-7xl">
                 {t.landing.heroTitleLead} <br />
                 <span className="text-primary italic">
@@ -144,7 +142,7 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="relative hidden lg:block">
+            <div className="relative">
               <div className="overflow-hidden rounded-2xl border border-outline-variant shadow-[0_0_30px_rgba(233,193,118,0.15)]">
                 <img
                   src="/screenshot.png"
@@ -164,9 +162,7 @@ export function LandingPage() {
         >
           <div className="mx-auto w-full max-w-7xl">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-                {t.landing.perspective}
-              </span>
+              <span className="eyebrow-label mb-2">{t.landing.perspective}</span>
               <h2 className="mb-4 text-4xl font-bold lg:text-5xl">
                 {t.landing.ourVision}
               </h2>
@@ -179,7 +175,7 @@ export function LandingPage() {
               {visionItems.map((item) => (
                 <article
                   key={item.title}
-                  className="flat-card ghost-border rounded-xl p-8 text-center"
+                  className="flat-card ghost-border rounded-2xl p-8 text-center"
                 >
                   <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-outline-variant bg-background-deep">
                     <span
@@ -200,9 +196,7 @@ export function LandingPage() {
         <section id="features" className="scroll-mt-24 px-5 py-20 md:px-8">
           <div className="mx-auto w-full max-w-7xl">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-                {t.landing.capabilities}
-              </span>
+              <span className="eyebrow-label mb-2">{t.landing.capabilities}</span>
               <h2 className="text-4xl font-bold lg:text-5xl">
                 {t.landing.premiumFeatures}
               </h2>
@@ -212,7 +206,7 @@ export function LandingPage() {
               {featureItems.map((item) => (
                 <article
                   key={item.title}
-                  className="flat-card ghost-border rounded-xl p-8 text-center"
+                  className="flat-card ghost-border rounded-2xl p-8 text-center"
                 >
                   <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-outline-variant bg-background-deep">
                     <span
@@ -235,9 +229,7 @@ export function LandingPage() {
           className="scroll-mt-24 border-t border-outline-variant bg-surface-container px-5 py-20 md:px-8"
         >
           <div className="mx-auto mb-12 w-full max-w-3xl text-center">
-            <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-              {t.landing.ecosystem}
-            </span>
+            <span className="eyebrow-label mb-2">{t.landing.ecosystem}</span>
             <h2 className="text-3xl font-bold md:text-4xl">
               {t.landing.partnersHeading}
             </h2>
@@ -247,7 +239,7 @@ export function LandingPage() {
           </div>
           <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-2">
             <article className="ghost-border rounded-2xl bg-surface-panel p-8">
-              <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
+              <span className="eyebrow-label mb-2">
                 {t.landing.forCommunities}
               </span>
               <h3 className="mb-4 text-4xl font-bold">{t.landing.mosque}</h3>
@@ -263,9 +255,7 @@ export function LandingPage() {
             </article>
 
             <article className="ghost-border rounded-2xl bg-surface-panel p-8">
-              <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-                {t.landing.forPartners}
-              </span>
+              <span className="eyebrow-label mb-2">{t.landing.forPartners}</span>
               <h3 className="mb-4 text-4xl font-bold">
                 {t.landing.businessPartner}
               </h3>
@@ -296,9 +286,7 @@ export function LandingPage() {
           </div>
 
           <div>
-            <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-              {t.landing.legal}
-            </p>
+            <p className="eyebrow-label mb-4">{t.landing.legal}</p>
             <a
               href="/PRIVACY.md"
               download
@@ -330,9 +318,7 @@ export function LandingPage() {
           </div>
 
           <div>
-            <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-              {t.landing.contact}
-            </p>
+            <p className="eyebrow-label mb-4">{t.landing.contact}</p>
 
             <div className="flex flex-col gap-3">
               <a
