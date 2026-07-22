@@ -233,6 +233,7 @@ const fr = {
     navContact: "Contact",
     languageToggle: "Langue",
     joinUs: "Rejoignez-nous",
+    heroEyebrow: "Affichage des horaires de prière",
     heroTitleLead: "Élevez la présence de",
     heroTitleHighlight: "votre mosquée.",
     heroDescription:
