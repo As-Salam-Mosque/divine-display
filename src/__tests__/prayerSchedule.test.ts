@@ -4,6 +4,7 @@ import {
   isWeekdayAbbr,
   toISODateLocal,
   isScheduledToday,
+  isDisplayOnly,
 } from "../utils/prayerSchedule";
 
 // 2024-01-05 is a Friday (index 5); 2024-01-08 is a Monday (index 1).
@@ -64,5 +65,31 @@ describe("prayerSchedule utils", () => {
   it("does not match unrelated weekdays or dates", () => {
     expect(isScheduledToday(["mon"], A_FRIDAY)).toBe(false);
     expect(isScheduledToday(["2024-03-20"], A_FRIDAY)).toBe(false);
+  });
+});
+
+describe("isDisplayOnly", () => {
+  it("is never display-only when `schedule` is undefined (base prayers)", () => {
+    expect(isDisplayOnly(undefined, A_FRIDAY)).toBe(false);
+  });
+
+  it("is display-only when `schedule` is an empty array (unconfigured extras)", () => {
+    expect(isDisplayOnly([], A_FRIDAY)).toBe(true);
+  });
+
+  it("is not display-only when `schedule` matches today's weekday", () => {
+    expect(isDisplayOnly(["fri"], A_FRIDAY)).toBe(false);
+  });
+
+  it("is display-only when `schedule` names a different weekday", () => {
+    expect(isDisplayOnly(["fri"], A_MONDAY)).toBe(true);
+  });
+
+  it("is not display-only when `schedule` matches today's exact date", () => {
+    expect(isDisplayOnly(["2024-01-05"], A_FRIDAY)).toBe(false);
+  });
+
+  it("is display-only when `schedule` names a different date", () => {
+    expect(isDisplayOnly(["2024-01-05"], A_MONDAY)).toBe(true);
   });
 });

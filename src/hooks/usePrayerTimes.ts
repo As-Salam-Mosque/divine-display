@@ -7,7 +7,7 @@ import type {
   MosqueConfig,
 } from "../types";
 import { parseTime, addMinutes } from "../utils/time";
-import { isScheduledToday } from "../utils/prayerSchedule";
+import { isDisplayOnly } from "../utils/prayerSchedule";
 import {
   type EventType,
   type NextEvent,
@@ -139,7 +139,7 @@ export function usePrayerTimes(
 
     for (let i = 0; i < prayers.length; i++) {
       const p = prayers[i];
-      if (p.displayOnly) continue;
+      if (isDisplayOnly(p.schedule, now)) continue;
 
       if (p.iqamah) addEvent(i, "iqamah", p.iqamah);
 
@@ -270,7 +270,6 @@ export function usePrayerTimes(
 function buildPrayers(
   timings: Record<string, string>,
   config: MosqueConfig,
-  now: Date = new Date(),
 ): PrayerTime[] {
   // Build canonical daily prayers. Upstream data may append admin-defined
   // `extraPrayers` (e.g. khutbahs) which are merged below.
@@ -319,10 +318,9 @@ function buildPrayers(
       adhan: e.adhan,
       iqamah,
       times: e.times,
-      schedule: e.schedule,
-      // Display-only by default; automatically active on days matching
-      // `schedule` (weekly weekday abbreviations and/or one-off ISO dates).
-      displayOnly: !isScheduledToday(e.schedule, now),
+      // Always defined (possibly empty) so `isDisplayOnly` can tell extras
+      // apart from base prayers, which never set `schedule` at all.
+      schedule: e.schedule ?? [],
     };
   });
 

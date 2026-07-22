@@ -2,7 +2,11 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 import { type MosqueConfig, DEFAULT_APP_SETTINGS } from "../types";
-import { WEEKDAY_ABBR, toISODateLocal } from "../utils/prayerSchedule";
+import {
+  WEEKDAY_ABBR,
+  toISODateLocal,
+  isDisplayOnly,
+} from "../utils/prayerSchedule";
 
 const MOCK_TIMINGS = {
   Fajr: "05:00",
@@ -123,7 +127,7 @@ describe("usePrayerTimes extra prayer schedule", () => {
 
     const extra = result.current.prayers.find((p) => p.name === "Khutbah");
     expect(extra).toBeDefined();
-    expect(extra?.displayOnly).toBe(false);
+    expect(isDisplayOnly(extra?.schedule)).toBe(false);
   });
 
   it("is display-only when `schedule` names a different weekday", async () => {
@@ -151,7 +155,7 @@ describe("usePrayerTimes extra prayer schedule", () => {
 
     const extra = result.current.prayers.find((p) => p.name === "Khutbah");
     expect(extra).toBeDefined();
-    expect(extra?.displayOnly).toBe(true);
+    expect(isDisplayOnly(extra?.schedule)).toBe(true);
   });
 
   it("is active when `schedule` contains today's exact ISO date", async () => {
@@ -179,7 +183,7 @@ describe("usePrayerTimes extra prayer schedule", () => {
 
     const extra = result.current.prayers.find((p) => p.name === "Eid Prayer");
     expect(extra).toBeDefined();
-    expect(extra?.displayOnly).toBe(false);
+    expect(isDisplayOnly(extra?.schedule)).toBe(false);
   });
 
   it("is display-only when `schedule` names a different date", async () => {
@@ -207,7 +211,7 @@ describe("usePrayerTimes extra prayer schedule", () => {
 
     const extra = result.current.prayers.find((p) => p.name === "Eid Prayer");
     expect(extra).toBeDefined();
-    expect(extra?.displayOnly).toBe(true);
+    expect(isDisplayOnly(extra?.schedule)).toBe(true);
   });
 
   it("is always display-only when no `schedule` is configured", async () => {
@@ -236,6 +240,7 @@ describe("usePrayerTimes extra prayer schedule", () => {
       (p) => p.name === "Announcement",
     );
     expect(extra).toBeDefined();
-    expect(extra?.displayOnly).toBe(true);
+    expect(extra?.schedule).toEqual([]);
+    expect(isDisplayOnly(extra?.schedule)).toBe(true);
   });
 });

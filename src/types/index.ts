@@ -11,19 +11,15 @@ export interface PrayerTime {
   iqamah: string | null;
   // Optional time-only entry/entries (e.g., multiple khutbah sessions)
   times?: string | string[];
-  // Computed at runtime — not a config input. When true, this prayer is
-  // shown in the table but excluded from event processing: it won't drive
-  // countdowns, highlights, or critical signals. Extra prayers are
-  // display-only by default; they become active automatically on any day
-  // that matches an entry in `schedule`. Base prayers never set this.
-  displayOnly?: boolean;
   // Unified recurrence for extra prayers. Each entry is either a 3-letter
   // weekday abbreviation ("sun"|"mon"|"tue"|"wed"|"thu"|"fri"|"sat") for
   // weekly recurrence, or an ISO date ("YYYY-MM-DD") for a one-off
-  // occurrence (e.g. Eid). On any day matching one of these entries, the
-  // prayer is automatically included in the countdown; on every other day
-  // it remains display-only. Omit (or leave empty) to keep the entry
-  // permanently display-only.
+  // occurrence (e.g. Eid). Base prayers never set this (always active).
+  // Extra prayers are display-only by default (undefined/empty schedule)
+  // and are automatically included in the countdown/highlight/critical-
+  // signal processing on any day matching an entry. Use `isDisplayOnly`
+  // from `utils/prayerSchedule` to derive this rather than storing a
+  // separate flag, so it can never drift out of sync with `schedule`.
   schedule?: string[];
 }
 

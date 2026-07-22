@@ -44,3 +44,19 @@ export function isScheduledToday(
     return normalized === todayAbbr || normalized === todayISO;
   });
 }
+
+/**
+ * Derives `PrayerTime.displayOnly` from `schedule` instead of storing it as
+ * a separate flag, so the two can never drift out of sync.
+ *
+ * `schedule === undefined` marks a base prayer (Fajr, Dhuhr, ...), which is
+ * never display-only. Extra prayers always carry a `schedule` array (empty
+ * when unconfigured) and are display-only unless it matches today via
+ * `isScheduledToday`.
+ */
+export function isDisplayOnly(
+  schedule: string[] | undefined,
+  now: Date = new Date(),
+): boolean {
+  return schedule !== undefined && !isScheduledToday(schedule, now);
+}
