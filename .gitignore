@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Generated copies of the root-level legal docs (see scripts/sync-legal-docs.ts)
+public/PRIVACY.md
+public/TERMS.md
+public/AD_POLICY.md
+public/LICENSE
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

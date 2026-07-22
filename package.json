@@ -5,11 +5,14 @@
   "license": "MPL-2.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run sync:legal-docs",
     "dev": "vite",
+    "prebuild": "npm run sync:legal-docs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "check:translations": "ts-node --project tsconfig.scripts.json scripts/check-translations.ts",
+    "sync:legal-docs": "ts-node --project tsconfig.scripts.json scripts/sync-legal-docs.ts",
     "test": "vitest"
   },
   "dependencies": {
