@@ -97,7 +97,3 @@ If you are a business interested in becoming a sponsor, or have a concern about 
 - **Email**: [divine-display@snake.mozmail.com](mailto:divine-display@snake.mozmail.com) (business partnership inquiries can use the "Contact our sales representative" link on this website)
 - **GitHub**: [As-Salam-Mosque/divine-display](https://github.com/As-Salam-Mosque/divine-display)
 - **Report an issue**: [GitHub Issues](https://github.com/As-Salam-Mosque/divine-display/issues)
-
----
-
-*This document reflects the values already stated on this website's landing page ("Our Vision": Halal Screened, Community Driven, Freedom) and has not been reviewed by a lawyer or religious scholar. If you operate your own Divine Display instance, have this policy reviewed by your own religious leadership and, where relevant, legal counsel before relying on it.*

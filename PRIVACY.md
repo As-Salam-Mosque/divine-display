@@ -4,9 +4,9 @@
 
 ## About this document
 
-Divine Display is open-source software (licensed under the [Mozilla Public License 2.0](LICENSE)): a prayer-time display screen (this repository, [`divine-display`](https://github.com/As-Salam-Mosque/divine-display)) paired with a configuration API (`divine-display-backend`) that mosques and Islamic centers self-host or subscribe to in order to manage their own display.
+Divine Display is open-source software (licensed under the [Mozilla Public License 2.0](LICENSE)): a prayer-time display screen (this repository, [`divine-display`](https://github.com/As-Salam-Mosque/divine-display)) that mosques and Islamic centers self-host or subscribe to in order to manage their own display.
 
-This Privacy Policy covers this specific hosted instance of Divine Display — the website you are currently on, where mosques can register for a display and businesses can become sponsors. If you deploy your own separate instance, update the identifying details throughout this document to match your own deployment before publishing it.
+This Privacy Policy covers this specific hosted instance of Divine Display — the website you are currently on, where mosques can register for a display and businesses can become sponsors.
 
 Throughout this document, "we," "our," and "us" refer to **Divine Display**, and "the Service" refers to this website, the prayer-time display it produces, and its administration dashboard.
 
