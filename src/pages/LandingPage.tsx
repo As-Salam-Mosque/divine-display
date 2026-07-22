@@ -173,15 +173,13 @@ export function LandingPage() {
 
         <section id="features" className="scroll-mt-24 px-5 py-20 md:px-8">
           <div className="mx-auto w-full max-w-7xl">
-            <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div className="max-w-xl">
-                <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
-                  {t.landing.capabilities}
-                </span>
-                <h2 className="text-4xl font-bold lg:text-5xl">
-                  {t.landing.premiumFeatures}
-                </h2>
-              </div>
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
+                {t.landing.capabilities}
+              </span>
+              <h2 className="text-4xl font-bold lg:text-5xl">
+                {t.landing.premiumFeatures}
+              </h2>
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -211,7 +209,10 @@ export function LandingPage() {
           className="scroll-mt-24 bg-surface-container px-5 py-20 md:px-8"
         >
           <div className="mx-auto mb-12 w-full max-w-3xl text-center">
-            <h2 className="text-3xl font-bold text-primary md:text-4xl">
+            <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
+              {t.landing.ecosystem}
+            </span>
+            <h2 className="text-3xl font-bold md:text-4xl">
               {t.landing.partnersHeading}
             </h2>
             <p className="mt-3 text-lg text-text-muted">
@@ -258,7 +259,7 @@ export function LandingPage() {
 
       <footer
         id="contact"
-        className="scroll-mt-24 border-t border-outline-variant bg-background-deep px-5 pt-20 pb-96 md:px-8"
+        className="scroll-mt-24 border-t border-outline-variant bg-background-deep px-5 pt-20 pb-20 md:px-8"
       >
         <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-3">
           <div>

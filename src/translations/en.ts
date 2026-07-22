@@ -270,6 +270,7 @@ const en = {
     featureUpdatesTitle: "Continuous updates",
     featureUpdatesDescription:
       "New features and religious content are continuously shipped at no extra cost.",
+    ecosystem: "Ecosystem",
     partnersHeading: "Trusted by Communities and Partners",
     partnersSubheading:
       "Building stronger local ecosystems through mosque-first digital communication.",
