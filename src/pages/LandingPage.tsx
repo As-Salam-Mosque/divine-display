@@ -35,6 +35,12 @@ export function LandingPage() {
     },
   ];
 
+  const heroHighlights = [
+    { icon: "schedule", label: t.landing.featureRealtimeTitle },
+    { icon: "campaign", label: t.landing.featureAnnouncementsTitle },
+    { icon: "devices", label: t.landing.featureDevicesTitle },
+  ];
+
   const featureItems = [
     {
       icon: "schedule",
@@ -88,10 +94,14 @@ export function LandingPage() {
       <main id="main-content" className="pt-20" tabIndex={-1}>
         <section
           id="home"
-          className="scroll-mt-24 overflow-hidden px-5 py-24 md:px-8"
+          className="scroll-mt-24 overflow-hidden px-5 py-20 md:px-8"
         >
           <div className="mx-auto grid w-full max-w-7xl items-center gap-10 lg:grid-cols-2">
-            <div>
+            <div className="relative">
+              <div className="absolute -top-16 -left-16 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
+              <span className="mb-4 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">
+                {t.landing.heroEyebrow}
+              </span>
               <h1 className="mb-6 text-5xl leading-tight font-bold lg:text-7xl">
                 {t.landing.heroTitleLead} <br />
                 <span className="text-primary italic">
@@ -101,6 +111,22 @@ export function LandingPage() {
               <p className="mb-8 max-w-xl text-lg text-text-muted">
                 {t.landing.heroDescription}
               </p>
+              <div className="mb-8 flex flex-wrap gap-x-6 gap-y-3">
+                {heroHighlights.map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex items-center gap-2 text-sm text-text-muted"
+                  >
+                    <span
+                      className="material-symbols-outlined text-primary"
+                      aria-hidden="true"
+                    >
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
+                  </div>
+                ))}
+              </div>
               <div className="flex flex-wrap gap-4">
                 <button
                   onClick={() => setLocation("/register")}
@@ -186,18 +212,18 @@ export function LandingPage() {
               {featureItems.map((item) => (
                 <article
                   key={item.title}
-                  className="flex gap-4 border-b border-outline-variant p-4"
+                  className="flat-card ghost-border rounded-xl p-8 text-center"
                 >
-                  <span
-                    className="material-symbols-outlined shrink-0 text-3xl text-primary"
-                    aria-hidden="true"
-                  >
-                    {item.icon}
-                  </span>
-                  <div>
-                    <h3 className="mb-1 text-xl font-semibold">{item.title}</h3>
-                    <p className="text-text-muted">{item.description}</p>
+                  <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-outline-variant bg-background-deep">
+                    <span
+                      className="material-symbols-outlined text-3xl text-primary"
+                      aria-hidden="true"
+                    >
+                      {item.icon}
+                    </span>
                   </div>
+                  <h3 className="mb-3 text-2xl font-semibold">{item.title}</h3>
+                  <p className="text-text-muted">{item.description}</p>
                 </article>
               ))}
             </div>
@@ -206,7 +232,7 @@ export function LandingPage() {
 
         <section
           id="partners"
-          className="scroll-mt-24 bg-surface-container px-5 py-20 md:px-8"
+          className="scroll-mt-24 border-t border-outline-variant bg-surface-container px-5 py-20 md:px-8"
         >
           <div className="mx-auto mb-12 w-full max-w-3xl text-center">
             <span className="mb-2 block text-sm font-semibold tracking-[0.2em] text-primary uppercase">

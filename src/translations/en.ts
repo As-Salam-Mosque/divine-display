@@ -230,6 +230,7 @@ const en = {
     navContact: "Contact",
     languageToggle: "Language",
     joinUs: "Join Us",
+    heroEyebrow: "Prayer Times Display",
     heroTitleLead: "Elevate Your",
     heroTitleHighlight: "Masjid's Presence.",
     heroDescription:
