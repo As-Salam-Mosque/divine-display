@@ -1,6 +1,8 @@
 import { cn } from "../../utils/cn";
+import { isWeekdayAbbr } from "../../utils/prayerSchedule";
 import {
   AddRowBtn,
+  DayOfWeekPicker,
   Field,
   FieldLabel,
   RemoveBtn,
@@ -79,6 +81,16 @@ interface DashboardFormSectionsProps {
     timeIndex: number,
     value: string,
   ) => void;
+  addExtraPrayerScheduleDate: (index: number) => void;
+  removeExtraPrayerScheduleDate: (
+    prayerIndex: number,
+    scheduleIndex: number,
+  ) => void;
+  setExtraPrayerScheduleDate: (
+    prayerIndex: number,
+    scheduleIndex: number,
+    value: string,
+  ) => void;
 }
 
 export function DashboardFormSections({
@@ -100,6 +112,9 @@ export function DashboardFormSections({
   addExtraPrayerTime,
   removeExtraPrayerTime,
   setExtraPrayerTime,
+  addExtraPrayerScheduleDate,
+  removeExtraPrayerScheduleDate,
+  setExtraPrayerScheduleDate,
 }: DashboardFormSectionsProps) {
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
@@ -834,39 +849,99 @@ export function DashboardFormSections({
                   </div>
                 </div>
 
-                <Toggle
-                  id={`ep-display-${i}`}
-                  checked={prayer.displayOnly}
-                  onChange={(v) => setExtraPrayer(i, "displayOnly", v)}
-                  label={t.displayOnlyLabel}
+                <DayOfWeekPicker
+                  idPrefix={`ep-days-${i}`}
+                  label={t.daysOfWeekLabel}
+                  description={t.daysOfWeekDesc}
+                  selectedDays={prayer.schedule.filter(isWeekdayAbbr)}
+                  dayAbbreviations={t.dayAbbreviations}
+                  onChange={(days) =>
+                    setExtraPrayer(i, "schedule", [
+                      ...days,
+                      ...prayer.schedule.filter((s) => !isWeekdayAbbr(s)),
+                    ])
+                  }
                 />
 
-                {!prayer.displayOnly && (
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <Field id={`ep-adhan-${i}`} label={t.adhanTimeLabel}>
-                      <input
-                        id={`ep-adhan-${i}`}
-                        className={inputCls}
-                        value={prayer.adhan}
-                        onChange={(e) =>
-                          setExtraPrayer(i, "adhan", e.target.value)
-                        }
-                        placeholder={t.adhanTimePlaceholder}
-                      />
-                    </Field>
-                    <Field id={`ep-iqamah-${i}`} label={t.iqamahTimeLabel}>
-                      <input
-                        id={`ep-iqamah-${i}`}
-                        className={inputCls}
-                        value={prayer.iqamah}
-                        onChange={(e) =>
-                          setExtraPrayer(i, "iqamah", e.target.value)
-                        }
-                        placeholder={t.iqamahTimePlaceholder}
-                      />
-                    </Field>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <FieldLabel>{t.datesLabel}</FieldLabel>
+                    <AddRowBtn onClick={() => addExtraPrayerScheduleDate(i)}>
+                      {t.addDateLabel}
+                    </AddRowBtn>
                   </div>
-                )}
+                  {prayer.schedule.filter((s) => !isWeekdayAbbr(s)).length ===
+                  0 ? (
+                    <p className="text-xs text-text-muted italic">
+                      {t.noDatesConfigured}
+                    </p>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {prayer.schedule.map((entry, si) =>
+                        isWeekdayAbbr(entry) ? null : (
+                          <div key={si} className="flex items-center gap-2">
+                            <input
+                              type="date"
+                              className={cn(inputCls, "flex-1 min-w-0")}
+                              value={entry}
+                              onChange={(e) =>
+                                setExtraPrayerScheduleDate(
+                                  i,
+                                  si,
+                                  e.target.value,
+                                )
+                              }
+                              aria-label={t.dateLabel(si, prayer.name)}
+                            />
+                            <button
+                              type="button"
+                              aria-label={t.removeDateLabel}
+                              onClick={() =>
+                                removeExtraPrayerScheduleDate(i, si)
+                              }
+                              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg transition-colors focus-ring text-red-400 hover:bg-red-500/10"
+                              style={{ border: "1px solid rgba(239,68,68,0.3)" }}
+                            >
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: 16 }}
+                                aria-hidden="true"
+                              >
+                                close
+                              </span>
+                            </button>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  )}
+                  <p className="text-xs text-text-muted">{t.datesDesc}</p>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field id={`ep-adhan-${i}`} label={t.adhanTimeLabel}>
+                    <input
+                      id={`ep-adhan-${i}`}
+                      className={inputCls}
+                      value={prayer.adhan}
+                      onChange={(e) =>
+                        setExtraPrayer(i, "adhan", e.target.value)
+                      }
+                      placeholder={t.adhanTimePlaceholder}
+                    />
+                  </Field>
+                  <Field id={`ep-iqamah-${i}`} label={t.iqamahTimeLabel}>
+                    <input
+                      id={`ep-iqamah-${i}`}
+                      className={inputCls}
+                      value={prayer.iqamah}
+                      onChange={(e) =>
+                        setExtraPrayer(i, "iqamah", e.target.value)
+                      }
+                      placeholder={t.iqamahTimePlaceholder}
+                    />
+                  </Field>
+                </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-3">

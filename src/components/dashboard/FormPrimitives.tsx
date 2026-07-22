@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "../../utils/cn";
+import { WEEKDAY_ABBR } from "../../utils/prayerSchedule";
 
 export const inputCls =
   "w-full rounded-lg py-2.5 px-3 text-sm text-on-surface bg-surface-container " +
@@ -183,5 +184,67 @@ export function RemoveBtn({
     >
       {label}
     </button>
+  );
+}
+
+/**
+ * Multi-select weekday picker for the unified `PrayerTime.schedule` field.
+ * `selectedDays` and the values passed to `onChange` are canonical weekday
+ * abbreviations ("sun".."sat"); `dayAbbreviations` supplies the translated
+ * captions shown on each pill, index-aligned with `WEEKDAY_ABBR`.
+ */
+export function DayOfWeekPicker({
+  idPrefix,
+  label,
+  description,
+  selectedDays,
+  dayAbbreviations,
+  onChange,
+}: {
+  idPrefix: string;
+  label: string;
+  description?: string;
+  selectedDays: string[];
+  dayAbbreviations: readonly string[];
+  onChange: (days: string[]) => void;
+}) {
+  const toggleDay = (abbr: string) => {
+    onChange(
+      selectedDays.includes(abbr)
+        ? selectedDays.filter((d) => d !== abbr)
+        : [...selectedDays, abbr],
+    );
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <FieldLabel>{label}</FieldLabel>
+      <div role="group" aria-label={label} className="flex flex-wrap gap-2">
+        {WEEKDAY_ABBR.map((abbr, idx) => {
+          const checked = selectedDays.includes(abbr);
+          return (
+            <button
+              key={abbr}
+              id={`${idPrefix}-${abbr}`}
+              type="button"
+              role="checkbox"
+              aria-checked={checked}
+              onClick={() => toggleDay(abbr)}
+              className={cn(
+                "rounded-full px-3 py-1.5 text-xs font-label-caps uppercase tracking-wide transition-colors focus-ring",
+                checked
+                  ? "bg-primary text-black"
+                  : "bg-surface-container-low text-text-muted border border-outline-variant",
+              )}
+            >
+              {dayAbbreviations[idx]}
+            </button>
+          );
+        })}
+      </div>
+      {description && (
+        <p className="text-xs text-text-muted">{description}</p>
+      )}
+    </div>
   );
 }

@@ -203,8 +203,18 @@ const fr = {
     arabicNameLabel: "Nom en arabe",
     arabicNamePlaceholder: "الجمعة",
     removePrayerLabel: "Supprimer la prière",
-    displayOnlyLabel:
-      "Affichage uniquement — pas de compte à rebours ni d'alertes",
+    daysOfWeekLabel: "Se répète le",
+    daysOfWeekDesc:
+      "Automatiquement inclus dans le compte à rebours ces jours-là. Laissez tout non sélectionné pour un affichage uniquement.",
+    dayAbbreviations: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+    datesLabel: "Dates spécifiques",
+    datesDesc:
+      "Automatiquement inclus dans le compte à rebours à ces dates exactes (ex. l'Aïd). Affichage uniquement les autres jours.",
+    addDateLabel: "+ Ajouter une date",
+    noDatesConfigured: "Aucune date spécifique ajoutée.",
+    dateLabel: (index: number, name: string) =>
+      `Date ${index + 1} pour ${name || "prière"}`,
+    removeDateLabel: "Supprimer la date",
     adhanTimeLabel: "Heure d'Adhan",
     adhanTimePlaceholder: "13:00",
     iqamahTimeLabel: "Heure d'Iqamah",

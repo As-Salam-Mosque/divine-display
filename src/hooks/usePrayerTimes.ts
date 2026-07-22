@@ -7,6 +7,7 @@ import type {
   MosqueConfig,
 } from "../types";
 import { parseTime, addMinutes } from "../utils/time";
+import { isScheduledToday } from "../utils/prayerSchedule";
 import {
   type EventType,
   type NextEvent,
@@ -269,6 +270,7 @@ export function usePrayerTimes(
 function buildPrayers(
   timings: Record<string, string>,
   config: MosqueConfig,
+  now: Date = new Date(),
 ): PrayerTime[] {
   // Build canonical daily prayers. Upstream data may append admin-defined
   // `extraPrayers` (e.g. khutbahs) which are merged below.
@@ -317,7 +319,10 @@ function buildPrayers(
       adhan: e.adhan,
       iqamah,
       times: e.times,
-      displayOnly: e.displayOnly ?? true,
+      schedule: e.schedule,
+      // Display-only by default; automatically active on days matching
+      // `schedule` (weekly weekday abbreviations and/or one-off ISO dates).
+      displayOnly: !isScheduledToday(e.schedule, now),
     };
   });
 

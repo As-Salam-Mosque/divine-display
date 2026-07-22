@@ -31,6 +31,15 @@ describe("dashboardForm utils", () => {
         "iqamah",
       ]),
     ).toBe("ep-iqamah-1");
+    expect(
+      mapValidationLocToFieldId([
+        "body",
+        "configuration",
+        "extraPrayers",
+        1,
+        "schedule",
+      ]),
+    ).toBe("ep-days-1-sun");
   });
 
   it("converts configuration payload into dashboard form state", () => {
@@ -55,7 +64,7 @@ describe("dashboardForm utils", () => {
           arabicName: "الجمعة",
           adhan: "13:00",
           iqamah: "13:30",
-          displayOnly: false,
+          schedule: ["fri"],
           times: ["13:30", "14:30"],
         },
       ],
@@ -72,6 +81,7 @@ describe("dashboardForm utils", () => {
     expect(form.announcementsEn).toBe("A\nB");
     expect(form.promoEnabled).toBe(true);
     expect(form.extraPrayers[0].times).toEqual(["13:30", "14:30"]);
+    expect(form.extraPrayers[0].schedule).toEqual(["fri"]);
   });
 
   it("converts dashboard form state back to mosque configuration", () => {
@@ -110,7 +120,7 @@ describe("dashboardForm utils", () => {
           arabicName: "الجمعة",
           adhan: "13:00",
           iqamah: "13:30",
-          displayOnly: false,
+          schedule: ["fri", "2026-03-20"],
           times: ["13:30"],
         },
       ],
@@ -128,5 +138,45 @@ describe("dashboardForm utils", () => {
     expect(config.logo).toBe("https://example.com/logo.png");
     expect(config.announcementsEn).toEqual(["One", "Two"]);
     expect(config.promo?.displayDurationMs).toBe(8000);
+    expect(config.extraPrayers?.[0].schedule).toEqual(["fri", "2026-03-20"]);
+  });
+
+  it("omits an empty schedule from the saved configuration", () => {
+    const config = formToConfig({
+      name: "Masjid",
+      city: "Montreal",
+      location: "Address",
+      website: "https://example.com",
+      capacity: "500",
+      openingHours: "Daily",
+      logo: "https://example.com/logo.png",
+      email: "test@example.com",
+      phone: "123",
+      latitude: "45.5",
+      longitude: "-73.6",
+      calculationMethod: "2",
+      iqamahOffsets: [],
+      sponsors: [],
+      adRailSlots: [],
+      adRailRotationMs: "",
+      announcementsEn: "",
+      announcementsFr: "",
+      promoEnabled: false,
+      promoDisplayDurationMs: "",
+      promoCycleMs: "",
+      promoInitialDelayMs: "",
+      extraPrayers: [
+        {
+          name: "Khutbah",
+          arabicName: "خطبة",
+          adhan: "",
+          iqamah: "",
+          schedule: ["", "  "],
+          times: ["13:00"],
+        },
+      ],
+    });
+
+    expect(config.extraPrayers?.[0].schedule).toBeUndefined();
   });
 });

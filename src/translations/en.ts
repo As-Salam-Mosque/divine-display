@@ -201,7 +201,18 @@ const en = {
     arabicNameLabel: "Arabic Name",
     arabicNamePlaceholder: "الجمعة",
     removePrayerLabel: "Remove prayer",
-    displayOnlyLabel: "Display only — no countdown or alerts",
+    daysOfWeekLabel: "Repeat weekly on",
+    daysOfWeekDesc:
+      "Automatically included in the countdown on these weekdays. Leave unselected for a display-only entry.",
+    dayAbbreviations: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    datesLabel: "Specific dates",
+    datesDesc:
+      "Automatically included in the countdown on these exact dates (e.g. Eid). Display-only on every other day.",
+    addDateLabel: "+ Add Date",
+    noDatesConfigured: "No specific dates added.",
+    dateLabel: (index: number, name: string) =>
+      `Date ${index + 1} for ${name || "prayer"}`,
+    removeDateLabel: "Remove date",
     adhanTimeLabel: "Adhan Time",
     adhanTimePlaceholder: "13:00",
     iqamahTimeLabel: "Iqamah Time",
