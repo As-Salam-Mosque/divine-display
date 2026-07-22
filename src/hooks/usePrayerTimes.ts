@@ -7,6 +7,7 @@ import type {
   MosqueConfig,
 } from "../types";
 import { parseTime, addMinutes } from "../utils/time";
+import { isDisplayOnly } from "../utils/prayerSchedule";
 import {
   type EventType,
   type NextEvent,
@@ -138,7 +139,7 @@ export function usePrayerTimes(
 
     for (let i = 0; i < prayers.length; i++) {
       const p = prayers[i];
-      if (p.displayOnly) continue;
+      if (isDisplayOnly(p.schedule, now)) continue;
 
       if (p.iqamah) addEvent(i, "iqamah", p.iqamah);
 
@@ -317,7 +318,9 @@ function buildPrayers(
       adhan: e.adhan,
       iqamah,
       times: e.times,
-      displayOnly: e.displayOnly ?? true,
+      // Always defined (possibly empty) so `isDisplayOnly` can tell extras
+      // apart from base prayers, which never set `schedule` at all.
+      schedule: e.schedule ?? [],
     };
   });
 

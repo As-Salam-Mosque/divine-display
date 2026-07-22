@@ -73,6 +73,7 @@ export function mapValidationLocToFieldId(
     if (nestedField === "arabicName") return `ep-arabic-${index}`;
     if (nestedField === "adhan") return `ep-adhan-${index}`;
     if (nestedField === "iqamah") return `ep-iqamah-${index}`;
+    if (nestedField === "schedule") return `ep-days-${index}-sun`;
   }
 
   return null;
@@ -133,7 +134,7 @@ export function configToForm(c: any): FormState {
       arabicName: p.arabicName,
       adhan: p.adhan || "",
       iqamah: p.iqamah || "",
-      displayOnly: !!p.displayOnly,
+      schedule: Array.isArray(p.schedule) ? [...p.schedule] : [],
       times: Array.isArray(p.times) ? [...p.times] : p.times ? [p.times] : [],
     })),
   };
@@ -199,13 +200,16 @@ export function formToConfig(f: FormState): MosqueConfig {
       .map((l) => l.trim())
       .filter(Boolean),
     promo,
-    extraPrayers: f.extraPrayers.map((p) => ({
-      name: p.name,
-      arabicName: p.arabicName,
-      adhan: p.adhan || null,
-      iqamah: p.iqamah || null,
-      displayOnly: p.displayOnly,
-      times: p.times.length > 0 ? p.times : undefined,
-    })),
+    extraPrayers: f.extraPrayers.map((p) => {
+      const schedule = p.schedule.map((s) => s.trim()).filter(Boolean);
+      return {
+        name: p.name,
+        arabicName: p.arabicName,
+        adhan: p.adhan || null,
+        iqamah: p.iqamah || null,
+        schedule: schedule.length > 0 ? schedule : undefined,
+        times: p.times.length > 0 ? p.times : undefined,
+      };
+    }),
   };
 }

@@ -26,7 +26,7 @@ export interface ExtraPrayerRow {
   arabicName: string;
   adhan: string;
   iqamah: string;
-  displayOnly: boolean;
+  schedule: string[];
   times: string[];
 }
 

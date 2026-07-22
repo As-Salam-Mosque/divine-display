@@ -326,7 +326,7 @@ export function DashboardPage() {
           arabicName: "",
           adhan: "",
           iqamah: "",
-          displayOnly: true,
+          schedule: [],
           times: [],
         },
       ],
@@ -373,6 +373,36 @@ export function DashboardPage() {
       const times = [...rows[pIdx].times];
       times[tIdx] = value;
       rows[pIdx] = { ...rows[pIdx], times };
+      return { ...p, extraPrayers: rows };
+    });
+
+  const addExtraPrayerScheduleDate = (i: number) =>
+    setForm((p) => {
+      const rows = [...p.extraPrayers];
+      rows[i] = { ...rows[i], schedule: [...rows[i].schedule, ""] };
+      return { ...p, extraPrayers: rows };
+    });
+
+  const removeExtraPrayerScheduleDate = (pIdx: number, scheduleIdx: number) =>
+    setForm((p) => {
+      const rows = [...p.extraPrayers];
+      rows[pIdx] = {
+        ...rows[pIdx],
+        schedule: rows[pIdx].schedule.filter((_, i) => i !== scheduleIdx),
+      };
+      return { ...p, extraPrayers: rows };
+    });
+
+  const setExtraPrayerScheduleDate = (
+    pIdx: number,
+    scheduleIdx: number,
+    value: string,
+  ) =>
+    setForm((p) => {
+      const rows = [...p.extraPrayers];
+      const schedule = [...rows[pIdx].schedule];
+      schedule[scheduleIdx] = value;
+      rows[pIdx] = { ...rows[pIdx], schedule };
       return { ...p, extraPrayers: rows };
     });
 
@@ -440,6 +470,9 @@ export function DashboardPage() {
                   addExtraPrayerTime={addExtraPrayerTime}
                   removeExtraPrayerTime={removeExtraPrayerTime}
                   setExtraPrayerTime={setExtraPrayerTime}
+                  addExtraPrayerScheduleDate={addExtraPrayerScheduleDate}
+                  removeExtraPrayerScheduleDate={removeExtraPrayerScheduleDate}
+                  setExtraPrayerScheduleDate={setExtraPrayerScheduleDate}
                 />
 
                 <DashboardSaveBar
