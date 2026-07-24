@@ -174,7 +174,7 @@ export function DashboardPage() {
       const body = new FormData();
       body.append("image", file);
 
-      const res = await fetch(`${API_BASE}/api/v1/mosques/upload-image`, {
+      const res = await fetch(`${API_BASE}/api/v1/images/upload`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body,
@@ -239,7 +239,7 @@ export function DashboardPage() {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/api/v1/mosques/configuration`, {
+      const res = await fetch(`${API_BASE}/api/v1/mosques`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
