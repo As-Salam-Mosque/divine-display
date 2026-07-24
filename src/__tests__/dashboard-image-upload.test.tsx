@@ -143,9 +143,10 @@ describe("dashboard deferred image upload", () => {
       url.toString().includes("/upload-image"),
     );
     expect(uploadCalls).toHaveLength(2);
+    const apiBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
     expect(uploadCalls.map(([url]) => url)).toEqual([
-      "http://localhost:8000/api/v1/mosques/upload-image",
-      "http://localhost:8000/api/v1/mosques/upload-image",
+      `${apiBase}/api/v1/mosques/upload-image`,
+      `${apiBase}/api/v1/mosques/upload-image`,
     ]);
 
     expect(captured.body?.configuration?.logo).toBe(

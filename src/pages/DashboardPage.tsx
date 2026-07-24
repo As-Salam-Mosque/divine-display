@@ -23,7 +23,8 @@ import {
   mapValidationLocToFieldId,
 } from "../utils/dashboardForm";
 
-const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
+const API_BASE =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
 const DASHBOARD_SECTION_IDS = [
   "mosque-info",
