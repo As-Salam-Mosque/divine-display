@@ -37,7 +37,7 @@ describe("dashboard deferred image upload", () => {
     seedValidSession();
   });
 
-  it("locks the logo field and shows a local blob preview without uploading", async () => {
+  it("locks the logo field without showing a preview or uploading", async () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       const method = init?.method ?? "GET";
       if (url.toString().includes("/api/v1/mosques?name=") && method === "GET") {
@@ -63,10 +63,7 @@ describe("dashboard deferred image upload", () => {
     expect(logoInput.value).toBe("logo.png");
     expect(logoInput.readOnly).toBe(true);
 
-    const preview = (await screen.findByAltText(
-      t.logoPreviewAlt,
-    )) as HTMLImageElement;
-    expect(preview.src).toMatch(/^blob:/);
+    expect(document.querySelector('img[src^="blob:"]')).toBeNull();
 
     expect(
       fetchMock.mock.calls.some(([url]) =>
@@ -146,6 +143,10 @@ describe("dashboard deferred image upload", () => {
       url.toString().includes("/upload-image"),
     );
     expect(uploadCalls).toHaveLength(2);
+    expect(uploadCalls.map(([url]) => url)).toEqual([
+      "http://localhost:8000/api/v1/mosques/upload-image",
+      "http://localhost:8000/api/v1/mosques/upload-image",
+    ]);
 
     expect(captured.body?.configuration?.logo).toBe(
       "https://iili.io/hosted-logo.png",

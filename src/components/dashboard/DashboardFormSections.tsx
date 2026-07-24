@@ -51,7 +51,6 @@ interface DashboardFormSectionsProps {
   t: DashboardTranslations;
   update: (patch: Partial<FormState>) => void;
   logoFile: File | null;
-  logoPreviewUrl: string | null;
   onLogoFileChange: (file: File | null) => void;
   onClearLogo: () => void;
   sponsorFiles: Record<string, File>;
@@ -106,7 +105,6 @@ export function DashboardFormSections({
   t,
   update,
   logoFile,
-  logoPreviewUrl,
   onLogoFileChange,
   onClearLogo,
   sponsorFiles,
@@ -241,7 +239,6 @@ export function DashboardFormSections({
               onChange={(e) => update({ logo: e.target.value })}
               placeholder={t.logoPlaceholder}
               readOnly={Boolean(logoFile)}
-              aria-describedby={logoFile ? "cfg-logo-pending-hint" : undefined}
             />
             <button
               type="button"
@@ -303,23 +300,6 @@ export function DashboardFormSections({
               }}
             />
           </div>
-          {logoFile && (
-            <p id="cfg-logo-pending-hint" className="text-xs text-text-muted">
-              {t.pendingImageUploadHint}
-            </p>
-          )}
-          {(logoPreviewUrl ||
-            (form.logo &&
-              (form.logo.startsWith("data:") ||
-                form.logo.startsWith("http")))) && (
-            <div className="w-32 h-20 rounded-lg overflow-hidden ghost-border bg-surface-container flex items-center justify-center">
-              <img
-                src={logoPreviewUrl ?? form.logo}
-                alt={t.logoPreviewAlt}
-                className="max-w-full max-h-full object-contain"
-              />
-            </div>
-          )}
         </Field>
       </SectionCard>
 

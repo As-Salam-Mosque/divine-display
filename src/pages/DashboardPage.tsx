@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
-import { useObjectUrl, useObjectUrlMap } from "../hooks/useObjectUrl";
+import { useObjectUrlMap } from "../hooks/useObjectUrl";
 import { DashboardFormSections } from "../components/dashboard/DashboardFormSections";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { DashboardSaveBar } from "../components/dashboard/DashboardSaveBar";
@@ -62,7 +62,6 @@ export function DashboardPage() {
   // URLs) right before the configuration is sent to the backend.
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [sponsorFiles, setSponsorFiles] = useState<Record<string, File>>({});
-  const logoPreviewUrl = useObjectUrl(logoFile);
   const sponsorPreviewUrls = useObjectUrlMap(sponsorFiles);
 
   const handleUnauthorized = useCallback(() => {
@@ -576,7 +575,6 @@ export function DashboardPage() {
                   t={t}
                   update={update}
                   logoFile={logoFile}
-                  logoPreviewUrl={logoPreviewUrl}
                   onLogoFileChange={handleLogoFileChange}
                   onClearLogo={handleClearLogo}
                   sponsorFiles={sponsorFiles}
