@@ -35,6 +35,25 @@ for (const target of [globalThis, window]) {
   });
 }
 
+// jsdom doesn't implement URL.createObjectURL/revokeObjectURL. Components
+// that preview locally-selected files (e.g. the dashboard's deferred image
+// upload flow) rely on these, so provide minimal deterministic stubs.
+let objectUrlCounter = 0;
+if (typeof URL.createObjectURL !== "function") {
+  Object.defineProperty(URL, "createObjectURL", {
+    configurable: true,
+    writable: true,
+    value: () => `blob:mock-${++objectUrlCounter}`,
+  });
+}
+if (typeof URL.revokeObjectURL !== "function") {
+  Object.defineProperty(URL, "revokeObjectURL", {
+    configurable: true,
+    writable: true,
+    value: () => {},
+  });
+}
+
 afterEach(() => {
   cleanup();
   localStorage.clear();

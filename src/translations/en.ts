@@ -112,7 +112,8 @@ const en = {
     logoPlaceholder: "https://... or upload →",
     uploadLogoLabel: "Upload logo",
     clearLogoLabel: "Clear logo",
-    logoPreviewAlt: "Mosque logo preview",
+    pendingImageUploadHint: "Selected — will upload when you save.",
+    failedToUploadImage: "Failed to upload image. Please try again.",
     locationCalculation: "Location & Calculation",
     locationCalculationDesc:
       "Coordinates and AlAdhan method used for automatic prayer times",
