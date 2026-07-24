@@ -67,7 +67,7 @@ describe("dashboard deferred image upload", () => {
 
     expect(
       fetchMock.mock.calls.some(([url]) =>
-        url.toString().includes("/upload-image"),
+        url.toString().includes("/api/v1/images/upload"),
       ),
     ).toBe(false);
   });
@@ -92,7 +92,7 @@ describe("dashboard deferred image upload", () => {
         });
       }
 
-      if (target.includes("/upload-image") && method === "POST") {
+      if (target.includes("/api/v1/images/upload") && method === "POST") {
         const body = init?.body as FormData;
         const uploadedFile = body.get("image") as File;
         return new Response(
@@ -105,7 +105,7 @@ describe("dashboard deferred image upload", () => {
         );
       }
 
-      if (target.includes("/configuration") && method === "PUT") {
+      if (target.includes("/api/v1/mosques") && method === "PUT") {
         captured.body = JSON.parse(init?.body as string);
         return new Response(JSON.stringify({ ok: true }), {
           status: 200,
@@ -140,13 +140,13 @@ describe("dashboard deferred image upload", () => {
     await waitFor(() => expect(captured.body).not.toBeNull());
 
     const uploadCalls = fetchMock.mock.calls.filter(([url]) =>
-      url.toString().includes("/upload-image"),
+      url.toString().includes("/api/v1/images/upload"),
     );
     expect(uploadCalls).toHaveLength(2);
     const apiBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
     expect(uploadCalls.map(([url]) => url)).toEqual([
-      `${apiBase}/api/v1/mosques/upload-image`,
-      `${apiBase}/api/v1/mosques/upload-image`,
+      `${apiBase}/api/v1/images/upload`,
+      `${apiBase}/api/v1/images/upload`,
     ]);
 
     expect(captured.body?.configuration?.logo).toBe(
@@ -176,7 +176,7 @@ describe("dashboard deferred image upload", () => {
         });
       }
 
-      if (target.includes("/upload-image") && method === "POST") {
+      if (target.includes("/api/v1/images/upload") && method === "POST") {
         return new Response(JSON.stringify({ detail: "upstream error" }), {
           status: 502,
           headers: { "Content-Type": "application/json" },
@@ -203,8 +203,9 @@ describe("dashboard deferred image upload", () => {
     await screen.findByText(t.failedToUploadImage);
 
     expect(
-      fetchMock.mock.calls.some(([url]) =>
-        url.toString().includes("/api/v1/mosques/configuration"),
+      fetchMock.mock.calls.some(([url, init]) =>
+        url.toString().includes("/api/v1/mosques") &&
+        (init?.method ?? "GET") === "PUT",
       ),
     ).toBe(false);
 
