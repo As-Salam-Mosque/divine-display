@@ -3,7 +3,9 @@
 set -euo pipefail
 
 URL="https://divine-display.onrender.com/?name=assalam"
-AUTOSTART_FILE="${HOME}/.config/labwc/autostart"
+LABWC_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/labwc"
+AUTOSTART_FILE="${LABWC_CONFIG_DIR}/autostart"
+RC_FILE="${LABWC_CONFIG_DIR}/rc.xml"
 
 if ! command -v apt-get >/dev/null 2>&1; then
   echo "This installer currently supports apt-based systems (Raspberry Pi OS/Debian)." >&2
@@ -31,30 +33,37 @@ else
   install_if_missing chromium
 fi
 
-install_if_missing ydotool
-
 CHROMIUM_BIN="chromium"
 if command -v chromium-browser >/dev/null 2>&1; then
   CHROMIUM_BIN="chromium-browser"
 fi
 
-if command -v systemctl >/dev/null 2>&1; then
-  if ${SUDO} systemctl list-unit-files --type=service | grep -q '^ydotoold\.service'; then
-    ${SUDO} systemctl enable --now ydotoold.service
-  elif ${SUDO} systemctl list-unit-files --type=service | grep -q '^ydotool\.service'; then
-    ${SUDO} systemctl enable --now ydotool.service
-  else
-    echo "Warning: no ydotool systemd service unit was found. Cursor move may fail until ydotoold is started."
-  fi
-fi
+mkdir -p "${LABWC_CONFIG_DIR}"
 
-mkdir -p "$(dirname "${AUTOSTART_FILE}")"
+cat > "${RC_FILE}" <<'EOF'
+<?xml version="1.0"?>
+<labwc_config>
+  <windowRules>
+    <!-- Keep the display focused on Chromium and hide the pointer on startup. -->
+    <windowRule
+      identifier="chromium*"
+      serverDecoration="no"
+      skipTaskbar="yes"
+      skipWindowSwitcher="yes">
+      <action name="WarpCursor" to="output" x="-1" y="-1" />
+      <action name="HideCursor" />
+    </windowRule>
+  </windowRules>
+</labwc_config>
+EOF
 
 cat > "${AUTOSTART_FILE}" <<EOF
 #!/usr/bin/env sh
-${CHROMIUM_BIN} --kiosk ${URL} --noerrdialogs --disable-session-crashed-bubble --disable-infobars &
-sleep 12; ydotool mousemove --absolute -x 10000 -y 10000 &
+${CHROMIUM_BIN} --kiosk "${URL}" --noerrdialogs --disable-session-crashed-bubble --disable-infobars &
 EOF
 
+chmod +x "${AUTOSTART_FILE}"
+
+echo "Wrote labwc configuration to: ${RC_FILE}"
 echo "Wrote autostart file to: ${AUTOSTART_FILE}"
 echo "Restart the labwc session (or reboot) to start kiosk mode."
