@@ -50,6 +50,14 @@ interface DashboardFormSectionsProps {
   form: FormState;
   t: DashboardTranslations;
   update: (patch: Partial<FormState>) => void;
+  logoFile: File | null;
+  logoPreviewUrl: string | null;
+  onLogoFileChange: (file: File | null) => void;
+  onClearLogo: () => void;
+  sponsorFiles: Record<string, File>;
+  sponsorPreviewUrls: Record<string, string>;
+  onSponsorFileChange: (index: number, file: File | null) => void;
+  onClearSponsorImage: (index: number) => void;
   addIqamah: () => void;
   removeIqamah: (index: number) => void;
   setIqamah: (
@@ -97,6 +105,14 @@ export function DashboardFormSections({
   form,
   t,
   update,
+  logoFile,
+  logoPreviewUrl,
+  onLogoFileChange,
+  onClearLogo,
+  sponsorFiles,
+  sponsorPreviewUrls,
+  onSponsorFileChange,
+  onClearSponsorImage,
   addIqamah,
   removeIqamah,
   setIqamah,
@@ -216,10 +232,16 @@ export function DashboardFormSections({
           <div className="flex items-center gap-2">
             <input
               id="cfg-logo"
-              className={cn(inputCls, "flex-1")}
-              value={form.logo}
+              className={cn(
+                inputCls,
+                "flex-1",
+                logoFile && "opacity-70 cursor-not-allowed",
+              )}
+              value={logoFile ? logoFile.name : form.logo}
               onChange={(e) => update({ logo: e.target.value })}
               placeholder={t.logoPlaceholder}
+              readOnly={Boolean(logoFile)}
+              aria-describedby={logoFile ? "cfg-logo-pending-hint" : undefined}
             />
             <button
               type="button"
@@ -244,7 +266,7 @@ export function DashboardFormSections({
             <button
               type="button"
               aria-label={t.clearLogoLabel}
-              onClick={() => update({ logo: "" })}
+              onClick={onClearLogo}
               className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg transition-colors focus-ring text-red-400 hover:bg-red-500/10"
               style={{ border: "1px solid rgba(239,68,68,0.3)" }}
             >
@@ -256,17 +278,18 @@ export function DashboardFormSections({
                 delete
               </span>
             </button>
-            {form.logo &&
-              (form.logo.startsWith("data:") ||
-                form.logo.startsWith("http")) && (
-                <span
-                  className="material-symbols-outlined text-emerald-400"
-                  style={{ fontSize: 20 }}
-                  aria-hidden="true"
-                >
-                  check_circle
-                </span>
-              )}
+            {(logoFile ||
+              (form.logo &&
+                (form.logo.startsWith("data:") ||
+                  form.logo.startsWith("http")))) && (
+              <span
+                className="material-symbols-outlined text-emerald-400"
+                style={{ fontSize: 20 }}
+                aria-hidden="true"
+              >
+                check_circle
+              </span>
+            )}
             <input
               id="cfg-logo-file"
               type="file"
@@ -275,13 +298,28 @@ export function DashboardFormSections({
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
-                const reader = new FileReader();
-                reader.onload = () => update({ logo: reader.result as string });
-                reader.readAsDataURL(file);
+                onLogoFileChange(file);
                 e.target.value = "";
               }}
             />
           </div>
+          {logoFile && (
+            <p id="cfg-logo-pending-hint" className="text-xs text-text-muted">
+              {t.pendingImageUploadHint}
+            </p>
+          )}
+          {(logoPreviewUrl ||
+            (form.logo &&
+              (form.logo.startsWith("data:") ||
+                form.logo.startsWith("http")))) && (
+            <div className="w-32 h-20 rounded-lg overflow-hidden ghost-border bg-surface-container flex items-center justify-center">
+              <img
+                src={logoPreviewUrl ?? form.logo}
+                alt={t.logoPreviewAlt}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+          )}
         </Field>
       </SectionCard>
 
@@ -474,12 +512,27 @@ export function DashboardFormSections({
                       <div className="flex items-center gap-2">
                         <input
                           id={`ad-image-${i}`}
-                          className={cn(inputCls, "flex-1")}
-                          value={slot.image}
+                          className={cn(
+                            inputCls,
+                            "flex-1",
+                            sponsorFiles[slot.id] &&
+                              "opacity-70 cursor-not-allowed",
+                          )}
+                          value={
+                            sponsorFiles[slot.id]
+                              ? sponsorFiles[slot.id].name
+                              : slot.image
+                          }
                           onChange={(e) =>
                             setSponsor(i, "image", e.target.value)
                           }
                           placeholder={t.imagePlaceholder}
+                          readOnly={Boolean(sponsorFiles[slot.id])}
+                          aria-describedby={
+                            sponsorFiles[slot.id]
+                              ? `ad-image-pending-hint-${i}`
+                              : undefined
+                          }
                         />
                         <button
                           type="button"
@@ -504,7 +557,7 @@ export function DashboardFormSections({
                         <button
                           type="button"
                           aria-label={t.clearImageLabel}
-                          onClick={() => setSponsor(i, "image", "")}
+                          onClick={() => onClearSponsorImage(i)}
                           className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg transition-colors focus-ring text-red-400 hover:bg-red-500/10"
                           style={{ border: "1px solid rgba(239,68,68,0.3)" }}
                         >
@@ -524,14 +577,19 @@ export function DashboardFormSections({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (!file) return;
-                            const reader = new FileReader();
-                            reader.onload = () =>
-                              setSponsor(i, "image", reader.result as string);
-                            reader.readAsDataURL(file);
+                            onSponsorFileChange(i, file);
                             e.target.value = "";
                           }}
                         />
                       </div>
+                      {sponsorFiles[slot.id] && (
+                        <p
+                          id={`ad-image-pending-hint-${i}`}
+                          className="text-xs text-text-muted"
+                        >
+                          {t.pendingImageUploadHint}
+                        </p>
+                      )}
                     </Field>
 
                     <div className="grid gap-3 sm:grid-cols-[1fr_120px_auto] sm:items-end">
@@ -572,17 +630,18 @@ export function DashboardFormSections({
                     </div>
                   </div>
 
-                  {slot.image &&
-                    (slot.image.startsWith("data:") ||
-                      slot.image.startsWith("http")) && (
-                      <div className="hidden sm:flex shrink-0 w-1/4 h-full items-center justify-center">
-                        <img
-                          src={slot.image}
-                          alt={`${t.previewLabel.replace("{label}", slot.label || t.adSlotPreview)}`}
-                          className="w-full h-full rounded-lg object-contain ghost-border"
-                        />
-                      </div>
-                    )}
+                  {(sponsorPreviewUrls[slot.id] ||
+                    (slot.image &&
+                      (slot.image.startsWith("data:") ||
+                        slot.image.startsWith("http")))) && (
+                    <div className="hidden sm:flex shrink-0 w-1/4 self-center h-60 items-center justify-center overflow-hidden rounded-lg ghost-border bg-white/10">
+                      <img
+                        src={sponsorPreviewUrls[slot.id] ?? slot.image}
+                        alt={`${t.previewLabel.replace("{label}", slot.label || t.adSlotPreview)}`}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

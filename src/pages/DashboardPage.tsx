@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
+import { useObjectUrl, useObjectUrlMap } from "../hooks/useObjectUrl";
 import { DashboardFormSections } from "../components/dashboard/DashboardFormSections";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { DashboardSaveBar } from "../components/dashboard/DashboardSaveBar";
@@ -54,6 +55,15 @@ export function DashboardPage() {
   const previousFieldErrorIdsRef = useRef<string[]>([]);
   const [savedForm, setSavedForm] = useState<FormState>(EMPTY_FORM);
   const [activeSection, setActiveSection] = useState<string>("mosque-info");
+
+  // Pending logo/sponsor images selected by the user but not yet uploaded.
+  // These stay out of `form` so they never get serialized into the saved
+  // configuration directly — they're only uploaded (and swapped for hosted
+  // URLs) right before the configuration is sent to the backend.
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [sponsorFiles, setSponsorFiles] = useState<Record<string, File>>({});
+  const logoPreviewUrl = useObjectUrl(logoFile);
+  const sponsorPreviewUrls = useObjectUrlMap(sponsorFiles);
 
   const handleUnauthorized = useCallback(() => {
     logout();
@@ -159,11 +169,74 @@ export function DashboardPage() {
     };
   }, [loading]);
 
+  const uploadImage = useCallback(
+    async (file: File): Promise<string> => {
+      const body = new FormData();
+      body.append("image", file);
+
+      const res = await fetch(`${API_BASE}/api/v1/mosques/upload-image`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body,
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        handleUnauthorized();
+      }
+
+      if (!res.ok) throw new Error("image-upload-failed");
+
+      const data = await res.json();
+      return (data as { url: string }).url;
+    },
+    [token, handleUnauthorized],
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setStatus(null);
     setFieldErrorIds([]);
+
+    // Pending logo/sponsor images are only uploaded now, right before the
+    // configuration that references them is sent to the backend. Until this
+    // point they only exist as local blob previews.
+    let resolvedLogo = form.logo;
+    let resolvedSponsors = form.sponsors;
+
+    try {
+      if (logoFile) {
+        resolvedLogo = await uploadImage(logoFile);
+      }
+
+      const pendingSponsorIds = form.sponsors
+        .map((sponsor) => sponsor.id)
+        .filter((id) => Boolean(sponsorFiles[id]));
+
+      if (pendingSponsorIds.length > 0) {
+        const uploadedUrls = await Promise.all(
+          pendingSponsorIds.map((id) => uploadImage(sponsorFiles[id])),
+        );
+        const urlById = new Map(
+          pendingSponsorIds.map((id, idx) => [id, uploadedUrls[idx]]),
+        );
+        resolvedSponsors = form.sponsors.map((sponsor) => {
+          const uploadedUrl = urlById.get(sponsor.id);
+          return uploadedUrl ? { ...sponsor, image: uploadedUrl } : sponsor;
+        });
+      }
+    } catch (err: unknown) {
+      setSaving(false);
+      if (err instanceof Error && err.message === "unauthorized") return;
+      setStatus({ type: "error", message: t.failedToUploadImage });
+      return;
+    }
+
+    const resolvedForm: FormState = {
+      ...form,
+      logo: resolvedLogo,
+      sponsors: resolvedSponsors,
+    };
 
     try {
       const res = await fetch(`${API_BASE}/api/v1/mosques/configuration`, {
@@ -172,7 +245,7 @@ export function DashboardPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ configuration: formToConfig(form) }),
+        body: JSON.stringify({ configuration: formToConfig(resolvedForm) }),
       });
 
       if (res.status === 401 || res.status === 403) {
@@ -212,7 +285,10 @@ export function DashboardPage() {
       }
 
       setFieldErrorIds([]);
-      setSavedForm(form);
+      setForm(resolvedForm);
+      setSavedForm(resolvedForm);
+      setLogoFile(null);
+      setSponsorFiles({});
       setStatus({
         type: "success",
         message: t.configurationSaved,
@@ -270,11 +346,21 @@ export function DashboardPage() {
       ],
     }));
 
-  const removeSponsor = (i: number) =>
+  const removeSponsor = (i: number) => {
+    const removedId = form.sponsors[i]?.id;
+    if (removedId) {
+      setSponsorFiles((prev) => {
+        if (!(removedId in prev)) return prev;
+        const next = { ...prev };
+        delete next[removedId];
+        return next;
+      });
+    }
     setForm((p) => ({
       ...p,
       sponsors: p.sponsors.filter((_, idx) => idx !== i),
     }));
+  };
 
   const setSponsor = (i: number, field: keyof SponsorRow, value: string) =>
     setForm((p) => {
@@ -282,6 +368,37 @@ export function DashboardPage() {
       rows[i] = { ...rows[i], [field]: value };
       return { ...p, sponsors: rows };
     });
+
+  const handleLogoFileChange = (file: File | null) => setLogoFile(file);
+
+  const handleClearLogo = () => {
+    setLogoFile(null);
+    update({ logo: "" });
+  };
+
+  const handleSponsorFileChange = (i: number, file: File | null) => {
+    const id = form.sponsors[i]?.id;
+    if (!id) return;
+    setSponsorFiles((prev) => {
+      const next = { ...prev };
+      if (file) next[id] = file;
+      else delete next[id];
+      return next;
+    });
+  };
+
+  const handleClearSponsorImage = (i: number) => {
+    const id = form.sponsors[i]?.id;
+    if (id) {
+      setSponsorFiles((prev) => {
+        if (!(id in prev)) return prev;
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+    }
+    setSponsor(i, "image", "");
+  };
 
   const addAdRailSlot = () =>
     setForm((p) => ({
@@ -412,7 +529,10 @@ export function DashboardPage() {
     return () => clearTimeout(timeoutId);
   }, [status]);
 
-  const hasChanges = JSON.stringify(form) !== JSON.stringify(savedForm);
+  const hasPendingUploads =
+    Boolean(logoFile) || Object.keys(sponsorFiles).length > 0;
+  const hasChanges =
+    hasPendingUploads || JSON.stringify(form) !== JSON.stringify(savedForm);
 
   if (!isAuthenticated || !token || !slug) return null;
 
@@ -455,6 +575,14 @@ export function DashboardPage() {
                   form={form}
                   t={t}
                   update={update}
+                  logoFile={logoFile}
+                  logoPreviewUrl={logoPreviewUrl}
+                  onLogoFileChange={handleLogoFileChange}
+                  onClearLogo={handleClearLogo}
+                  sponsorFiles={sponsorFiles}
+                  sponsorPreviewUrls={sponsorPreviewUrls}
+                  onSponsorFileChange={handleSponsorFileChange}
+                  onClearSponsorImage={handleClearSponsorImage}
                   addIqamah={addIqamah}
                   removeIqamah={removeIqamah}
                   setIqamah={setIqamah}
@@ -480,7 +608,11 @@ export function DashboardPage() {
                   hasChanges={hasChanges}
                   saving={saving}
                   t={t}
-                  onDiscard={() => setForm(savedForm)}
+                  onDiscard={() => {
+                    setForm(savedForm);
+                    setLogoFile(null);
+                    setSponsorFiles({});
+                  }}
                 />
               </form>
             )}

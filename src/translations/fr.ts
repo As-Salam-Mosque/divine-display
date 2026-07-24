@@ -110,6 +110,8 @@ const fr = {
     uploadLogoLabel: "Télécharger le logo",
     clearLogoLabel: "Effacer le logo",
     logoPreviewAlt: "Aperçu du logo de la mosquée",
+    pendingImageUploadHint: "Sélectionné — sera téléchargé à l'enregistrement.",
+    failedToUploadImage: "Échec du téléchargement de l'image. Veuillez réessayer.",
     locationCalculation: "Localisation et calcul",
     locationCalculationDesc:
       "Coordonnées et méthode AlAdhan utilisées pour les horaires automatiques",
