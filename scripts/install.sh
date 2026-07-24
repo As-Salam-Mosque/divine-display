@@ -27,15 +27,16 @@ install_if_missing() {
 
 ${SUDO} apt-get update -y
 
-if apt-cache show chromium-browser >/dev/null 2>&1; then
-  install_if_missing chromium-browser
-else
-  install_if_missing chromium
-fi
-
-CHROMIUM_BIN="chromium"
 if command -v chromium-browser >/dev/null 2>&1; then
   CHROMIUM_BIN="chromium-browser"
+elif command -v chromium >/dev/null 2>&1; then
+  CHROMIUM_BIN="chromium"
+elif apt-cache show chromium-browser >/dev/null 2>&1; then
+  install_if_missing chromium-browser
+  CHROMIUM_BIN="chromium-browser"
+else
+  install_if_missing chromium
+  CHROMIUM_BIN="chromium"
 fi
 
 mkdir -p "${LABWC_CONFIG_DIR}"
