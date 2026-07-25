@@ -51,7 +51,6 @@ interface EventCache {
   prayers: PrayerTime[];
   events: NextEvent[];
 }
-let eventCache: EventCache | null = null;
 
 function todayKey(): string {
   const d = new Date();
@@ -129,6 +128,8 @@ export function usePrayerTimes(
     };
   });
 
+  const eventCacheRef = useRef<EventCache | null>(null);
+
   // Build events list once when prayers load (not on every tick)
   const buildEventsList = useCallback((prayers: PrayerTime[]) => {
     const now = new Date();
@@ -159,7 +160,7 @@ export function usePrayerTimes(
         EVENT_TYPE_PRIORITY[b.type],
     );
 
-    eventCache = { prayers, events };
+    eventCacheRef.current = { prayers, events };
     return events;
   }, []);
 
@@ -256,9 +257,13 @@ export function usePrayerTimes(
   // Poll every second to keep the status message countdown live
   // This only updates dynamic status, not prayer data
   useEffect(() => {
-    if (!state.prayers.length || !eventCache) return;
-    const tick = () =>
-      updateDynamicStatus(eventCache!.prayers, eventCache!.events);
+    if (!state.prayers.length || !eventCacheRef.current) return;
+    const tick = () => {
+      const eventCache = eventCacheRef.current;
+      if (eventCache) {
+        updateDynamicStatus(eventCache.prayers, eventCache.events);
+      }
+    };
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);

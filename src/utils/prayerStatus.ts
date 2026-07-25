@@ -22,6 +22,10 @@ export const EVENT_TYPE_PRIORITY: Record<EventType, number> = {
 
 export const STATUS_SIGNAL_WINDOW_MS = 60_000;
 
+export function isCriticalStatusType(statusType: StatusType): boolean {
+  return statusType.endsWith("-now");
+}
+
 export function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
   return (
     now.getTime() >= targetDate.getTime() &&

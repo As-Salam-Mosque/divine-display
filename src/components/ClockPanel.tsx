@@ -2,6 +2,7 @@ import { memo } from "react";
 import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
+import { isCriticalStatusType } from "../utils/prayerStatus";
 import type { ClockState, CriticalSignalData, StatusType } from "../types";
 import { CriticalSignalPanel } from "./CriticalSignalPanel";
 
@@ -185,10 +186,7 @@ export function ClockPanel({
 
   const is24h = settings.timeFormat === "24h";
   const displayHours = is24h ? clock.hours24 : clock.hours;
-  const isCriticalSignal =
-    statusType === "adhan-now" ||
-    statusType === "iqamah-now" ||
-    statusType === "time-now";
+  const isCriticalSignal = isCriticalStatusType(statusType);
 
   return (
     <div

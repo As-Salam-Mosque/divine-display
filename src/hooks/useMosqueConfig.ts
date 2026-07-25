@@ -21,11 +21,9 @@ export interface UseMosqueConfigOptions {
 }
 
 export function useMosqueConfig(
-  options?: UseMosqueConfigOptions | string,
+  options?: UseMosqueConfigOptions,
 ): MosqueConfigState {
-  // Support both legacy string parameter and new options object
-  const opts: UseMosqueConfigOptions =
-    typeof options === "string" ? { url: options } : options || {};
+  const opts = options || {};
   const resolvedUrl = opts.url?.trim() || DEFAULT_CONFIG_URL || undefined;
   const resolvedApiBase =
     opts.apiBase?.trim() || DEFAULT_API_BASE_URL || undefined;
