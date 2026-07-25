@@ -3,7 +3,12 @@ import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
 import { isCriticalStatusType } from "../utils/prayerStatus";
-import type { ClockState, CriticalSignalData, StatusType } from "../types";
+import type {
+  ClockState,
+  CriticalSignalData,
+  Language,
+  StatusType,
+} from "../types";
 import { CriticalSignalPanel } from "./CriticalSignalPanel";
 
 interface ClockPanelProps {
@@ -120,14 +125,14 @@ MosqueInfo.displayName = "MosqueInfo";
 interface CalendarRowProps {
   clock: ClockState;
   hijriDate: string;
+  language: Language;
   promoActive: boolean;
 }
 
 // Calendar dates — only re-renders when date changes (once per day)
 const CalendarRow = memo(
-  ({ clock, hijriDate, promoActive }: CalendarRowProps) => {
-    const { settings } = useSettings();
-    const t = useT(settings.language);
+  ({ clock, hijriDate, language, promoActive }: CalendarRowProps) => {
+    const t = useT(language);
     return (
       <div className="clock-panel__dates flex items-center gap-2 md:gap-4 lg:gap-5">
         <div
@@ -167,6 +172,7 @@ const CalendarRow = memo(
     prev.clock.gregorianDate === next.clock.gregorianDate &&
     prev.clock.dayName === next.clock.dayName &&
     prev.hijriDate === next.hijriDate &&
+    prev.language === next.language &&
     prev.promoActive === next.promoActive,
 );
 
@@ -248,6 +254,7 @@ export function ClockPanel({
             <CalendarRow
               clock={clock}
               hijriDate={hijriDate}
+              language={settings.language}
               promoActive={promoActive}
             />
 
