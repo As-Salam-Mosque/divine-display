@@ -6,7 +6,7 @@ import type {
   StatusType,
 } from "../types";
 
-export interface DebugCriticalOverride {
+interface DebugCriticalOverride {
   statusType: StatusType;
   statusMessage: string;
   criticalSignal: CriticalSignalData;

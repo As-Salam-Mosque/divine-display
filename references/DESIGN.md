@@ -9,13 +9,11 @@ themes:
     surface: "#0b1220"
     surface-container: "#081028"
     surface-container-low: "#071022"
-    surface-container-highest: "#081028"
     on-surface: "#ffffff"
     on-surface-variant: "#dfe6ff"
     text-muted: "rgba(255,255,255,0.6)"
     outline-variant: "rgba(233,193,118,0.08)"
     ghost-border-color: "rgba(233,193,118,0.2)"
-    active-glow-alpha: "0.12"
   light:
     primary: "#b87a00"
     primary-rgb: "184, 122, 0"
@@ -24,82 +22,29 @@ themes:
     surface: "#f5f7fa"
     surface-container: "#edf1f5"
     surface-container-low: "#f3f6f9"
-    surface-container-highest: "#fafbfd"
     on-surface: "#0f1724"
     on-surface-variant: "#1f2b3d"
     text-muted: "rgba(15,23,36,0.82)"
     outline-variant: "rgba(15,23,36,0.3)"
     ghost-border-color: "rgba(15,23,36,0.34)"
-    active-glow-alpha: "0.14"
 colors:
   surface: "#16130e"
-  surface-dim: "#16130e"
-  surface-bright: "#3d3933"
-  surface-container-lowest: "#110e09"
   surface-container-low: "#1e1b16"
   surface-container: "#231f1a"
-  surface-container-high: "#2d2924"
-  surface-container-highest: "#38342e"
   on-surface: "#e9e1d8"
   on-surface-variant: "#d1c5b4"
-  inverse-surface: "#e9e1d8"
-  inverse-on-surface: "#34302a"
-  outline: "#9a8f80"
   outline-variant: "#4e4639"
-  surface-tint: "#e9c176"
   primary: "#e9c176"
-  on-primary: "#412d00"
-  primary-container: "#c5a059"
-  on-primary-container: "#4e3700"
-  inverse-primary: "#775a19"
-  secondary: "#bfc5e4"
-  on-secondary: "#292f48"
-  secondary-container: "#424862"
-  on-secondary-container: "#b1b7d6"
-  tertiary: "#b0c6f9"
-  on-tertiary: "#173059"
-  tertiary-container: "#8fa5d6"
-  on-tertiary-container: "#233a65"
-  error: "#ffb4ab"
-  on-error: "#690005"
-  error-container: "#93000a"
-  on-error-container: "#ffdad6"
-  primary-fixed: "#ffdea5"
-  primary-fixed-dim: "#e9c176"
-  on-primary-fixed: "#261900"
-  on-primary-fixed-variant: "#5d4201"
-  secondary-fixed: "#dce1ff"
-  secondary-fixed-dim: "#bfc5e4"
-  on-secondary-fixed: "#141a32"
-  on-secondary-fixed-variant: "#3f465f"
-  tertiary-fixed: "#d8e2ff"
-  tertiary-fixed-dim: "#b0c6f9"
-  on-tertiary-fixed: "#001a41"
-  on-tertiary-fixed-variant: "#304671"
-  background: "#16130e"
-  on-background: "#e9e1d8"
-  surface-variant: "#38342e"
   background-deep: "#060A1A"
   surface-panel: "#111A35"
-  accent-bronze: "#A37E3E"
   text-muted: "#8E9BB1"
-  text-on-dark: "#FFFFFF"
 typography:
   # All font utility classes (font-clock-display, font-headline-*, font-body-*, etc.)
   # resolve to Inter at runtime via CSS variable override in index.css.
   # The semantic font class names are preserved for structural meaning.
   font-family: Inter
   clock-display:
-    fontFamily: Inter
-    fontSize: "clamp(4rem, 8vw, 12.5rem)"
-    fontWeight: "700"
-    lineHeight: "1"
-    letterSpacing: -0.02em
-  clock-display-mobile:
-    fontFamily: Inter
-    fontSize: "clamp(2.5rem, 6vw, 6.25rem)"
-    fontWeight: "700"
-    lineHeight: "1"
+
   headline-lg:
     fontFamily: Inter
     fontSize: "clamp(1.5rem, 2.2vw, 3rem)"
@@ -132,16 +77,7 @@ typography:
     fontSize: "clamp(1rem, 1.2vw, 1.25rem)"
     fontWeight: "600"
     lineHeight: "1.5rem"
-  prayer-name:
-    fontFamily: Inter
-    fontSize: "clamp(1.25rem, 3vw, 4.5rem)"
-    fontWeight: "800"
-    lineHeight: "1.2"
-  prayer-time:
-    fontFamily: Inter
-    fontSize: "clamp(2rem, 5vw, 8rem)"
-    fontWeight: "800"
-    lineHeight: "1.05"
+
 rounded:
   sm: 0.125rem
   DEFAULT: 0.25rem
@@ -187,14 +123,11 @@ The palette is designed so the primary color guides the eye to the most critical
 
 ## Typography
 
-All text is rendered in **Inter** — a single geometric sans-serif family optimized for screen legibility across all sizes and weights. The legacy semantic class names (`font-clock-display`, `font-headline-lg`, `font-body-md`, etc.) are preserved for structural meaning and are each mapped to Inter via CSS variable override in `index.css`.
+All text is rendered in **Inter** — a single geometric sans-serif family optimized for screen legibility across all sizes and weights. The semantic class names (`font-clock-display`, `font-headline-md`, `font-body-md`, etc.) are mapped to Inter via CSS variable override in `index.css`.
 
 **Font scales are fluid**, using `clamp()` values to scale continuously from mobile to 4K TV without breakpoint jumps. See the `typography` section of the YAML for exact ranges.
 
-Two prayer-specific scales are defined separately from the general type ramp:
 
-- **`prayer-name`:** `clamp(1.25rem, 3vw, 4.5rem)` at weight 800 — the prayer name label inside each card.
-- **`prayer-time`:** `clamp(2rem, 5vw, 8rem)` at weight 800 — the Adhan/Iqamah time numerals.
 
 **Arabic Prayer Names:** rendered with `lang="ar"` on the containing element. Arabic text is displayed in the browser's default Arabic fallback (system Naskh) and hidden below 40% viewport height to avoid crowding on small displays.
 
@@ -223,7 +156,7 @@ The left stage is a flex column split into two height regions:
 
 When `statusType` is `"adhan-now"` or `"iqamah-now"`, the entire layout switches to an **immersive alert state**:
 
-- The ClockPanel fills its container with a full-height announcement showing a pulsing Campaign icon and the status message in large `font-headline-lg` text.
+- The ClockPanel fills its container with a full-height announcement showing the prayer signal and status message at headline scale.
 - The ad rail is hidden (width collapses to `0px`).
 - The panel gains a 2px `border-primary` border and a `0 0 45px rgba(primary, 0.6)` outer glow.
 - An `role="alert"` + `aria-live="assertive"` region ensures screen readers announce the prayer call immediately.
@@ -268,7 +201,7 @@ The dominant component. Displays mosque branding (mosque icon + name + city), th
 
 ### PromoRail
 
-An overlay that slides in from the right edge of the ClockPanel on a configurable timer cycle. Shows a weighted-random sponsor image from `adSlots`, with the background tinted to the image's dominant colour (extracted via `useDominantColor`). Automatically suppressed in critical signal mode or when `showSponsors` is false. Controlled by `PromoRail.tsx` and coordinated with `ClockPanel` via an `onActiveChange` callback.
+An overlay that slides in from the right edge of the ClockPanel on a configurable timer cycle. Shows a weighted-random sponsor image from `sponsors`, with the background tinted to the image's dominant colour (extracted via `useDominantColor`). Automatically suppressed in critical signal mode or when `showSponsors` is false. Controlled by `PromoRail.tsx` and coordinated with `ClockPanel` via an `onActiveChange` callback.
 
 ### Prayer Table
 

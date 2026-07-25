@@ -6,7 +6,7 @@ This README provides a short overview. Developer-facing technical details (devel
 
 ## Key ideas
 
-- Configuration-first: `mosque.config.ts` is the single source of runtime configuration (coordinates, calculation method, iqamah offsets, ad slots, announcements, mosque metadata).
+- Configuration-first: `mosque.config.ts` is the single source of runtime configuration (coordinates, calculation method, iqamah offsets, sponsors, announcements, and mosque metadata).
 - Local caching: prayer times are fetched from the AlAdhan API and cached in `localStorage` (one entry per day).
 - Large-screen UI: layout optimized for 16:9; left stage shows clock and prayer table, right rail shows ads (hidden when `showSponsors` is `false`).
 

@@ -33,13 +33,7 @@ export function isWithinSignalWindow(targetDate: Date, now: Date): boolean {
   );
 }
 
-export interface DynamicPrayerStatus {
-  activePrayerIndex: number | null;
-  nextPrayerIndex: number | null;
-  statusMessage: string;
-  statusType: StatusType;
-  criticalSignal: CriticalSignalData | null;
-}
+
 
 export interface NextEvent {
   prayerIndex: number;
@@ -56,10 +50,11 @@ export function buildStatusFromEvent(
   nextEvent: NextEvent | null,
   now: Date,
   language: Language,
-): Pick<
-  DynamicPrayerStatus,
-  "statusMessage" | "statusType" | "criticalSignal"
-> {
+): {
+  statusMessage: string;
+  statusType: StatusType;
+  criticalSignal: CriticalSignalData | null;
+} {
   const t = translations[language];
   if (!nextEvent)
     return { statusMessage: "", statusType: "none", criticalSignal: null };

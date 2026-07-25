@@ -1,5 +1,4 @@
-export type PrayerName =
-  "Fajr" | "Shuruq" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
+
 
 // Relaxed PrayerTime: allow arbitrary names (string) so extra/admin prayers
 // can reuse the same type as canonical prayers without a separate ExtraPrayer.
@@ -82,15 +81,6 @@ export interface MosqueConfig {
   // Display-only by default; use `schedule` to automatically include an
   // entry in the countdown on matching weekdays/dates.
   extraPrayers?: PrayerTime[];
-}
-
-export type MosqueConfigSource = "default" | "remote";
-
-export interface MosqueConfigState {
-  config: MosqueConfig;
-  loading: boolean;
-  error: string | null;
-  source: MosqueConfigSource;
 }
 
 export interface ClockState {

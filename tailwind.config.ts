@@ -10,57 +10,14 @@ export default {
       },
       colors: {
         surface: "#16130e",
-        "surface-dim": "#16130e",
-        "surface-bright": "#3d3933",
-        "surface-container-lowest": "#110e09",
-        "surface-container-low": "#1e1b16",
         "surface-container": "#231f1a",
-        "surface-container-high": "#2d2924",
-        "surface-container-highest": "#38342e",
         "on-surface": "#e9e1d8",
         "on-surface-variant": "#d1c5b4",
-        "inverse-surface": "#e9e1d8",
-        "inverse-on-surface": "#34302a",
-        outline: "#9a8f80",
         "outline-variant": "#4e4639",
-        "surface-tint": "#e9c176",
         primary: "#e9c176",
-        "on-primary": "#412d00",
-        "primary-container": "#c5a059",
-        "on-primary-container": "#4e3700",
-        "inverse-primary": "#775a19",
-        "primary-fixed": "#ffdea5",
-        "primary-fixed-dim": "#e9c176",
-        "on-primary-fixed": "#261900",
-        "on-primary-fixed-variant": "#5d4201",
-        secondary: "#bfc5e4",
-        "on-secondary": "#292f48",
-        "secondary-container": "#424862",
-        "on-secondary-container": "#b1b7d6",
-        "secondary-fixed": "#dce1ff",
-        "secondary-fixed-dim": "#bfc5e4",
-        "on-secondary-fixed": "#141a32",
-        "on-secondary-fixed-variant": "#3f465f",
-        tertiary: "#b0c6f9",
-        "on-tertiary": "#173059",
-        "tertiary-container": "#8fa5d6",
-        "on-tertiary-container": "#233a65",
-        "tertiary-fixed": "#d8e2ff",
-        "tertiary-fixed-dim": "#b0c6f9",
-        "on-tertiary-fixed": "#001a41",
-        "on-tertiary-fixed-variant": "#304671",
-        error: "#ffb4ab",
-        "on-error": "#690005",
-        "error-container": "#93000a",
-        "on-error-container": "#ffdad6",
-        background: "#16130e",
-        "on-background": "#e9e1d8",
-        "surface-variant": "#38342e",
         "background-deep": "#060A1A",
         "surface-panel": "#111A35",
-        "accent-bronze": "#A37E3E",
         "text-muted": "#8E9BB1",
-        "text-on-dark": "#FFFFFF",
       },
       borderRadius: {
         DEFAULT: "0.25rem",
@@ -71,12 +28,8 @@ export default {
         full: "9999px",
       },
       spacing: {
-        // Base spacing token (formerly 8px)
-        base: "clamp(0.5rem, 0.8vw, 0.75rem)",
         // Page margin: scales from 1rem (mobile) up to ~4rem (large)
         "margin-page": "clamp(1rem, 3vw, 4rem)",
-        // Grid gutter between columns: scales from 0.5rem to 2rem
-        "gutter-grid": "clamp(0.5rem, 1.5vw, 2rem)",
         // Panel padding inside cards/containers: scales from 1rem to 2.5rem
         "panel-padding": "clamp(1rem, 2vw, 2.5rem)",
         // Stage gap between major layout regions: scales from 1.5rem to 6rem
@@ -84,8 +37,6 @@ export default {
       },
       fontFamily: {
         "clock-display": ["Playfair Display", "serif"],
-        "clock-display-mobile": ["Playfair Display", "serif"],
-        "headline-lg": ["Playfair Display", "serif"],
         "headline-md": ["Playfair Display", "serif"],
         "body-lg": ["Montserrat", "sans-serif"],
         "body-md": ["Montserrat", "sans-serif"],
@@ -93,50 +44,9 @@ export default {
         "tabular-nums": ["Montserrat", "sans-serif"],
       },
       fontSize: {
-        "clock-display": [
-          "clamp(4rem, 8vw, 12.5rem)",
-          { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" },
-        ],
-        "clock-display-mobile": [
-          "clamp(2.5rem, 6vw, 6.25rem)",
-          { lineHeight: "1", fontWeight: "700" },
-        ],
-        "headline-lg": [
-          "clamp(1.5rem, 2.2vw, 3rem)",
-          {
-            lineHeight: "clamp(1.75rem, 2.8vw, 3.5rem)",
-            letterSpacing: "0.05em",
-            fontWeight: "600",
-          },
-        ],
-        "headline-md": [
-          "clamp(1.25rem, 1.6vw, 2rem)",
-          { lineHeight: "clamp(1.5rem, 2.2vw, 2.5rem)", fontWeight: "600" },
-        ],
-        "body-lg": [
-          "clamp(1rem, 1.6vw, 1.5rem)",
-          { lineHeight: "clamp(1.25rem, 2vw, 2rem)", fontWeight: "500" },
-        ],
-        "body-md": [
-          "clamp(0.875rem, 1.2vw, 1.125rem)",
-          { lineHeight: "clamp(1rem, 1.6vw, 1.5rem)", fontWeight: "400" },
-        ],
         "label-caps": [
           "clamp(0.75rem, 1vw, 0.875rem)",
           { lineHeight: "1.25rem", letterSpacing: "0.15em", fontWeight: "700" },
-        ],
-        "tabular-nums": [
-          "clamp(1rem, 1.2vw, 1.25rem)",
-          { lineHeight: "1.5rem", fontWeight: "600" },
-        ],
-        // Prayer-specific scales
-        "prayer-name": [
-          "clamp(1.25rem, 3vw, 4.5rem)",
-          { lineHeight: "1.2", fontWeight: "800" },
-        ],
-        "prayer-time": [
-          "clamp(2rem, 5vw, 8rem)",
-          { lineHeight: "1.05", fontWeight: "800" },
         ],
       },
     },

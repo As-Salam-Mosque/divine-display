@@ -12,8 +12,6 @@ export const WEEKDAY_ABBR = [
   "sat",
 ] as const;
 
-export type WeekdayAbbr = (typeof WEEKDAY_ABBR)[number];
-
 export function isWeekdayAbbr(value: string): boolean {
   return (WEEKDAY_ABBR as readonly string[]).includes(
     value.trim().toLowerCase(),

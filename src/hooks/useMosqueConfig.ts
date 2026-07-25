@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { MosqueConfig, MosqueConfigState } from "../types";
+import type { MosqueConfig } from "../types";
 import fallbackConfig from "../../mosque.config";
 
 const DEFAULT_CONFIG_URL = import.meta.env.VITE_MOSQUE_CONFIG_URL || "";
@@ -11,7 +11,16 @@ interface InternalConfigState {
   sourceUrl: string | null;
 }
 
-export interface UseMosqueConfigOptions {
+type MosqueConfigSource = "default" | "remote";
+
+interface MosqueConfigState {
+  config: MosqueConfig;
+  loading: boolean;
+  error: string | null;
+  source: MosqueConfigSource;
+}
+
+interface UseMosqueConfigOptions {
   /** URL to fetch config from. If provided, takes precedence over apiBase + slug. */
   url?: string;
   /** Base URL of the API (e.g., "http://localhost:8000") */

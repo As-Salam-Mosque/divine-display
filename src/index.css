@@ -40,8 +40,6 @@ button {
 /* Map the design-system font utility classes to explicit font-families so
    behavior matches the legacy UI even if Tailwind utilities differ. */
 .font-clock-display,
-.font-clock-display-mobile,
-.font-headline-lg,
 .font-headline-md {
     font-family: var(--font-headline) !important;
 }
@@ -64,7 +62,6 @@ button {
 }
 
 /* Make sure headings using headline fonts inherit appropriate weight/ligatures */
-.font-headline-lg,
 .font-headline-md,
 .font-clock-display {
     font-feature-settings:
@@ -83,17 +80,13 @@ button {
     --surface: #f5f7fa;
     --surface-container: #edf1f5;
     --surface-container-low: #f3f6f9;
-    --surface-container-highest: #fafbfd;
-
     --on-surface: #0f1724; /* strong text contrast on light */
-    --on-surface-rgb: 15, 23, 36;
     --on-surface-variant: #1f2b3d;
     --text-muted: rgba(15, 23, 36, 0.82);
     --outline-variant: rgba(15, 23, 36, 0.3);
 
     --ghost-border-color: rgba(15, 23, 36, 0.34);
     --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
-    --active-glow-alpha: 0.2;
     --primary-alpha-10: 0.2;
     --primary-alpha-20: 0.44;
     --primary-alpha-25: 0.56;
@@ -114,10 +107,7 @@ button {
     --surface: #0b1220;
     --surface-container: #081028;
     --surface-container-low: #071022;
-    --surface-container-highest: #081028;
-
     --on-surface: #ffffff;
-    --on-surface-rgb: 255, 255, 255;
     --on-surface-variant: #dfe6ff;
     /* Verified WCAG 2.2 AA contrast: ~7.28:1 on --background-deep, ~6.84:1 on
        --surface-panel (both exceed the 4.5:1 body-text minimum). */
@@ -126,7 +116,6 @@ button {
 
     --ghost-border-color: rgba(233, 193, 118, 0.2);
     --panel-separation-shadow: none;
-    --active-glow-alpha: 0.12;
     --primary-alpha-10: 0.1;
     --primary-alpha-20: 0.2;
     --primary-alpha-25: 0.25;
@@ -147,10 +136,7 @@ button {
     --surface: #f5f7fa;
     --surface-container: #edf1f5;
     --surface-container-low: #f3f6f9;
-    --surface-container-highest: #fafbfd;
-
     --on-surface: #0f1724;
-    --on-surface-rgb: 15, 23, 36;
     --on-surface-variant: #1f2b3d;
     /* Verified WCAG 2.2 AA contrast: ~8.24:1 on --background-deep, ~9.35:1 on
        --surface-panel (both exceed the 4.5:1 body-text minimum). */
@@ -160,7 +146,6 @@ button {
     /* Adjusted highlight — brighter but not as strong as original */
     --ghost-border-color: rgba(15, 23, 36, 0.3);
     --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
-    --active-glow-alpha: 0.14;
     --primary-alpha-10: 0.12;
     --primary-alpha-20: 0.36;
     --primary-alpha-25: 0.45;
@@ -216,11 +201,6 @@ button {
         color: var(--primary);
     }
 
-    /* small primary shadow helper (theme-aware) */
-    .shadow-primary-sm {
-        box-shadow: 0 0 5px rgba(var(--primary-rgb), 0.7);
-    }
-
     /* status pill (theme-aware, less dark) */
     .status-pill {
         background-color: rgba(var(--primary-rgb), 0.12);
@@ -259,12 +239,6 @@ button {
     }
 
     /* Map semantic token classes to CSS variables so light/dark themes work */
-    /* active card glow (no layout shift) */
-    .active-pulse {
-        animation: active-glow 2s ease-in-out infinite;
-    }
-
-    /* Map semantic token classes to CSS variables so light/dark themes work */
     .bg-background-deep {
         background-color: var(--background-deep) !important;
     }
@@ -288,9 +262,6 @@ button {
     }
     .bg-surface-container-low {
         background-color: var(--surface-container-low) !important;
-    }
-    .bg-surface-container-highest {
-        background-color: var(--surface-container-highest) !important;
     }
 
     .text-on-surface {
@@ -324,6 +295,7 @@ button {
             var(--primary-alpha-10)
         ) !important;
     }
+
     .bg-primary-20 {
         background-color: rgba(
             var(--primary-rgb),
@@ -538,21 +510,6 @@ button {
     }
 }
 
-@keyframes float {
-    0% {
-        transform: translateY(0px) rotate(0deg);
-        opacity: 0.2;
-    }
-    50% {
-        transform: translateY(-20px) rotate(5deg);
-        opacity: 0.4;
-    }
-    100% {
-        transform: translateY(0px) rotate(0deg);
-        opacity: 0.2;
-    }
-}
-
 @keyframes marquee {
     0% {
         transform: translateX(100%);
@@ -565,10 +522,7 @@ button {
 /* Accessibility: respect user motion preferences */
 @media (prefers-reduced-motion: reduce) {
     .animate-marquee,
-    .active-pulse,
-    .shadow-primary-sm,
-    .critical-enter,
-    .critical-ripple::before {
+    .critical-enter {
         animation: none !important;
         transition: none !important;
     }
@@ -644,58 +598,7 @@ button {
     }
 }
 
-/* Adhan pulse — slower, calmer */
-.critical-pulse-adhan {
-    animation: critical-pulse 3s ease-in-out infinite;
-}
 
-/* Iqamah pulse — faster, more urgent */
-.critical-pulse-iqamah {
-    animation: critical-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes critical-pulse {
-    0%,
-    100% {
-        opacity: 0.06;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.12;
-        transform: scale(1.03);
-    }
-}
-
-/* Concentric ripple emanating from center (TV-friendly) */
-.critical-ripple {
-    position: relative;
-}
-.critical-ripple::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: ripple-expand 2.5s ease-out infinite;
-    border: 2px solid rgba(var(--primary-rgb), 0.3);
-    pointer-events: none;
-}
-
-@keyframes ripple-expand {
-    0% {
-        width: 80px;
-        height: 80px;
-        opacity: 0.6;
-    }
-    100% {
-        width: 500px;
-        height: 500px;
-        opacity: 0;
-    }
-}
 
 /* Reduced motion fallback: static glow + visible subtitle */
 @media (prefers-reduced-motion: reduce) {
@@ -709,9 +612,7 @@ button {
     }
 }
 
-/* Image helpers to reserve space and avoid CLS */
-.ad-image,
-.promo-image,
+/* Image helper to reserve space and avoid CLS */
 .abs-fill img {
     width: 100%;
     height: 100%;

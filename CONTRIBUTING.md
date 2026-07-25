@@ -57,8 +57,8 @@ Edit `mosque.config.ts` to adjust runtime behavior. The exported `MosqueConfig` 
 - `coordinates` (latitude, longitude)
 - `calculationMethod` for AlAdhan
 - `iqamahOffsets` (minutes per prayer)
-- `adSlots` (images / links for the ad rail)
-- `announcements` for the marquee
+- `sponsors` and `adRailSlots` for the ad rail
+- `announcementsEn` and `announcementsFr` for the marquee
 - `mosque` metadata (name, city)
 
 ### Option 2: API-based configuration (via divine-display-backend)
@@ -183,7 +183,7 @@ There is no formal unit test suite. To verify behavior locally:
 
 - Add languages by adding files under `src/translations` and updating `src/i18n.ts`.
 - Add design tokens in `tailwind.config.ts` and mirror them in `references/DESIGN.md`.
-- Add ad slot images via the `adSlots` property in `mosque.config.ts`.
+- Add sponsor images via the `sponsors` property and place them in the rail with `adRailSlots` in `mosque.config.ts`.
 
 ## Contribution process
 

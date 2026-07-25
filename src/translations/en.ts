@@ -41,7 +41,6 @@ const en = {
     `${name} Iqamah in ${remaining}`,
   statusNext: (name: string, remaining: string) => `${name} in ${remaining}`,
   communitySponsors: "COMMUNITY SPONSORS",
-  paidAds: "PAID ADS",
   available: "Available",
   masjidAnnouncements: "ANNOUNCEMENTS",
   currentlyActive: ", currently active",
@@ -56,9 +55,6 @@ const en = {
   sectionAccessibility: "Accessibility",
   alternatePrayerCardColors: "Use alternating backgrounds for prayer cards",
   login: {
-    adminPortal: "Admin Portal",
-    welcomeBack: "Welcome back",
-    signInPrompt: "Sign in to manage your dashboard and account information.",
     mosqueSlug: "Mosque Slug",
     slugPlaceholder: "e.g. assalam",
     password: "Password",
@@ -300,8 +296,6 @@ const en = {
     contactSales: "Contact our sales representative",
     footerDescription:
       "Providing sacred spaces with digital tools to connect, inform and grow.",
-    company: "Company",
-    sitemap: "Sitemap",
     legal: "Legal",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",

@@ -35,7 +35,6 @@ const fr = {
     `Iqama de ${name} dans ${remaining}`,
   statusNext: (name: string, remaining: string) => `${name} dans ${remaining}`,
   communitySponsors: "SPONSORS COMMUNAUTAIRES",
-  paidAds: "PUBLICITÉS PAYANTES",
   available: "Disponible",
   masjidAnnouncements: "ANNONCES",
   currentlyActive: ", actuellement en cours",
@@ -51,10 +50,6 @@ const fr = {
   alternatePrayerCardColors:
     "Utiliser des fonds alternés pour les cartes de prière",
   login: {
-    adminPortal: "Portail administrateur",
-    welcomeBack: "Bon retour",
-    signInPrompt:
-      "Connectez-vous pour gérer votre tableau de bord et vos informations de compte.",
     mosqueSlug: "Code de la mosquée",
     slugPlaceholder: "par ex. assalam",
     password: "Mot de passe",
@@ -302,8 +297,6 @@ const fr = {
     contactSales: "Contacter notre représentant commercial",
     footerDescription:
       "Nous offrons aux espaces sacrés des outils numériques pour connecter, informer et faire grandir la communauté.",
-    company: "Entreprise",
-    sitemap: "Plan du site",
     legal: "Légal",
     privacyPolicy: "Politique de confidentialité",
     termsOfService: "Conditions d'utilisation",

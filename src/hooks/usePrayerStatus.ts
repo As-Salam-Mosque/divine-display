@@ -3,7 +3,7 @@ import { usePrayerTimes } from "./usePrayerTimes";
 import { isCriticalStatusType } from "../utils/prayerStatus";
 import type { Language, MosqueConfig, PrayerTimesState } from "../types";
 
-export interface PrayerStatusState
+interface PrayerStatusState
   extends Omit<
     PrayerTimesState,
     "statusMessage" | "statusType" | "criticalSignal"

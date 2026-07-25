@@ -96,19 +96,6 @@ export function CriticalSignalPanel({
               </div>
             </div>
 
-            {/* Pulsing dots — centered under the full bilingual row */}
-            {/*<div
-              className="flex items-center gap-2 md:gap-3 mt-1 md:mt-2"
-              aria-hidden="true"
-            >
-              {[0, 0.3, 0.6].map((delay) => (
-                <span
-                  key={delay}
-                  className="w-2 h-2 md:w-3 md:h-3 lg:w-4 lg:h-4 bg-primary rounded-full motion-safe:animate-pulse"
-                  style={{ animationDelay: `${delay}s` }}
-                />
-              ))}
-            </div>*/}
           </div>
         </div>
       </div>

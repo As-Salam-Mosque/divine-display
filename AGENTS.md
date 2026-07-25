@@ -181,14 +181,14 @@ The app supports dark and light themes via CSS custom properties and the `.dark`
 
 ### Typography — dual-font strategy
 
-- `font-clock-display` / `font-headline-lg` / `font-headline-md` → **Inter** (sans-serif)
+- `font-clock-display` / `font-headline-md` → **Inter** (sans-serif)
 - `font-body-md` / `font-body-lg` / `font-label-caps` / `font-tabular-nums` → **Inter** (sans-serif)
 
 Always use `font-tabular-nums` for Adhan/Iqamah time values to keep columns aligned.
 
 ### Spacing tokens
 
-Non-standard Tailwind values: `p-panel-padding`, `p-margin-page`, `gap-gutter-grid`, `gap-stage-gap`. These use `clamp()` for fluid scaling between mobile and TV sizes.
+Non-standard Tailwind values: `p-panel-padding`, `px-margin-page`, and `gap-stage-gap`. These use `clamp()` for fluid scaling between mobile and TV sizes.
 
 ### Custom CSS classes (defined in `src/index.css`)
 
