@@ -23,6 +23,12 @@ export function CriticalSignalPanel({
   const { settings } = useSettings();
   const t = useT(settings.language);
   const isIqamah = criticalSignal.urgency === "high";
+  const actionLabel =
+    criticalSignal.urgency === "high"
+      ? t.iqamah
+      : criticalSignal.urgency === "medium"
+        ? t.time
+        : t.adhan;
 
   return (
     <div
@@ -45,35 +51,49 @@ export function CriticalSignalPanel({
 
       {/* Typography stack — padded bottom on mobile to clear the absolute clock block */}
       <div
-        className="z-30 flex flex-col items-center justify-center gap-6 md:gap-8 lg:gap-10 pb-16 md:pb-0"
+        className="z-30 w-full flex flex-col items-center justify-center gap-6 md:gap-8 lg:gap-10 pb-16 md:pb-0"
         aria-hidden="true"
       >
         <div className="flex flex-col items-center gap-3 md:gap-5 lg:gap-6">
           {/* Action label */}
           <span className="font-label-caps text-lg md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl text-primary/70 tracking-[0.25em] md:tracking-[0.35em] uppercase">
-            {criticalSignal.urgency === "low" ? t.adhan : t.iqamah}
+            {actionLabel}
           </span>
 
           {/* Hero prayer name — bilingual horizontal */}
           <div className="flex flex-col items-center gap-2 md:gap-3">
-            <div className="flex flex-row items-center gap-4 md:gap-6 lg:gap-10">
-              <h2
-                className="font-clock-display text-primary leading-none critical-text-blink"
-                style={{ fontSize: "clamp(2.5rem, 8vw, 11rem)" }}
-              >
-                {criticalSignal.prayerName}
-              </h2>
-              <span
-                className="block w-1 shrink-0 bg-primary/50"
+            <div className="flex w-full flex-row items-center gap-4 md:gap-6 lg:gap-10">
+              <div className="flex min-w-0 flex-1 justify-end">
+                <h2
+                  className="font-clock-display text-primary leading-none critical-text-blink text-center"
+                  style={{ fontSize: "clamp(2.5rem, 8vw, 11rem)" }}
+                >
+                  {criticalSignal.prayerName}
+                </h2>
+              </div>
+              <div
+                style={{
+                  width: "4px",
+                  minWidth: "4px",
+                  height: "clamp(4rem, 8vw, 11rem)",
+                  minHeight: "4rem",
+                  flexShrink: 0,
+                  alignSelf: "center",
+                  borderRadius: "9999px",
+                  backgroundColor: "var(--on-surface-variant)",
+                  opacity: 0.25,
+                }}
                 aria-hidden="true"
               />
-              <span
-                className="font-body-lg text-primary/80 font-medium leading-none critical-text-blink"
-                lang="ar"
-                style={{ fontSize: "clamp(2.5rem, 8vw, 11rem)" }}
-              >
-                {criticalSignal.arabicName}
-              </span>
+              <div className="flex min-w-0 flex-1 justify-start">
+                <span
+                  className="font-body-lg text-primary/80 font-medium leading-none critical-text-blink"
+                  lang="ar"
+                  style={{ fontSize: "clamp(2.5rem, 8vw, 11rem)" }}
+                >
+                  {criticalSignal.arabicName}
+                </span>
+              </div>
             </div>
 
             {/* Pulsing dots — centered under the full bilingual row */}

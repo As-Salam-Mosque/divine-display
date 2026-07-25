@@ -186,7 +186,9 @@ export function ClockPanel({
   const is24h = settings.timeFormat === "24h";
   const displayHours = is24h ? clock.hours24 : clock.hours;
   const isCriticalSignal =
-    statusType === "adhan-now" || statusType === "iqamah-now";
+    statusType === "adhan-now" ||
+    statusType === "iqamah-now" ||
+    statusType === "time-now";
 
   return (
     <div

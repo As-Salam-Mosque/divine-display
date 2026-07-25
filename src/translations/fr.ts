@@ -29,6 +29,7 @@ const fr = {
     `Aucune configuration n’a été trouvée pour "${name}".`,
   statusAdhanNow: (name: string) => `Adhan de ${name} — venez à la prière`,
   statusIqamahNow: (name: string) => `Iqama de ${name} — venez à la prière`,
+  statusTimeNow: (name: string) => `${name} maintenant — venez à la prière`,
   criticalSubtitle: "Venez à la prière",
   statusIqamah: (name: string, remaining: string) =>
     `Iqama de ${name} dans ${remaining}`,

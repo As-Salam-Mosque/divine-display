@@ -2,6 +2,7 @@ import { type CSSProperties, useMemo, useState } from "react";
 import { useClock } from "../hooks/useClock";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 import { useMosqueConfig } from "../hooks/useMosqueConfig";
+import { useDebugCriticalSignal } from "../hooks/useDebugCriticalSignal";
 import { ClockPanel } from "../components/ClockPanel";
 import { PromoRail } from "../components/PromoRail";
 import { PrayerTable } from "../components/PrayerTable";
@@ -22,9 +23,21 @@ function Display() {
 
   const clock = useClock(settings.language);
   const prayerTimes = usePrayerTimes(settings.mosque, settings.language);
+
+  const debugCritical = useDebugCriticalSignal(
+    settings.language,
+    prayerTimes.prayers,
+  );
+  const statusType = debugCritical?.statusType ?? prayerTimes.statusType;
+  const statusMessage =
+    debugCritical?.statusMessage ?? prayerTimes.statusMessage;
+  const criticalSignal =
+    debugCritical?.criticalSignal ?? prayerTimes.criticalSignal;
+
   const isCriticalSignal =
-    prayerTimes.statusType === "adhan-now" ||
-    prayerTimes.statusType === "iqamah-now";
+    statusType === "adhan-now" ||
+    statusType === "iqamah-now" ||
+    statusType === "time-now";
 
   const showAdRail = settings.showSponsors && !isCriticalSignal;
   const [promoActive, setPromoActive] = useState(false);
@@ -62,9 +75,9 @@ function Display() {
                 <ClockPanel
                   clock={clock}
                   hijriDate={prayerTimes.hijriDate}
-                  statusMessage={prayerTimes.statusMessage}
-                  statusType={prayerTimes.statusType}
-                  criticalSignal={prayerTimes.criticalSignal}
+                  statusMessage={statusMessage}
+                  statusType={statusType}
+                  criticalSignal={criticalSignal}
                   onOpenSettings={() => setSettingsOpen(true)}
                   promoActive={promoActive}
                 />

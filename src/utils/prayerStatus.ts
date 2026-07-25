@@ -90,6 +90,19 @@ export function buildStatusFromEvent(
     };
   }
 
+  if (type === "time" && isWithinSignalWindow(date, now)) {
+    return {
+      statusMessage: t.statusTimeNow(p.name),
+      statusType: "time-now",
+      criticalSignal: {
+        prayerName: p.name,
+        arabicName: p.arabicName,
+        urgency: "medium",
+        subtitle: t.criticalSubtitle,
+      },
+    };
+  }
+
   // Non-critical countdowns
   if (type === "iqamah") {
     return {
