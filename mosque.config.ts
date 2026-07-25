@@ -29,14 +29,14 @@ const config: MosqueConfig = {
       times: ["13:00", "14:00"],
       schedule: ["fri"], // Friday — automatically active in the countdown
     },
-    {
-      name: "Eid Prayer",
-      arabicName: "صلاة العيد",
-      adhan: null,
-      iqamah: null,
-      times: ["08:00"],
-      schedule: ["2026-03-20"], // update yearly — active only on this date
-    },
+    // {
+    //   name: "Eid Prayer",
+    //   arabicName: "صلاة العيد",
+    //   adhan: null,
+    //   iqamah: null,
+    //   times: ["08:00"],
+    //   schedule: ["2026-03-20"], // update yearly — active only on this date
+    // },
   ],
   sponsors: [
     {

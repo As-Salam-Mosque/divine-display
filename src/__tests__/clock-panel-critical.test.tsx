@@ -20,7 +20,7 @@ const baseClock: ClockState = {
 };
 
 const renderCritical = (
-  statusType: "adhan-now" | "iqamah-now",
+  statusType: "adhan-now" | "iqamah-now" | "time-now",
   message: string,
   criticalSignal: CriticalSignalData,
 ) =>
@@ -79,6 +79,22 @@ describe("ClockPanel critical signal", () => {
     expect(alert).toHaveTextContent("الظهر");
     expect(alert).toHaveTextContent("Sep 1, 2024");
     expect(alert).toHaveTextContent(/Rabi.*1446 AH/);
+    expect(screen.queryByRole("timer")).not.toBeInTheDocument();
+  });
+
+  it("shows the generic time label for a time-only critical signal", () => {
+    const message = translations.en.statusTimeNow("Khutbah 1");
+    renderCritical("time-now", message, {
+      prayerName: "Khutbah 1",
+      arabicName: "خطبة 1",
+      urgency: "medium",
+      subtitle: "Come to prayer",
+    });
+
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent(/time/i);
+    expect(alert).toHaveTextContent(/khutbah 1/i);
+    expect(alert).toHaveTextContent("خطبة 1");
     expect(screen.queryByRole("timer")).not.toBeInTheDocument();
   });
 });

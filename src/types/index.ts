@@ -104,13 +104,18 @@ export interface ClockState {
 }
 
 export type StatusType =
-  "none" | "adhan-now" | "iqamah-now" | "iqamah-countdown" | "next-countdown";
+  | "none"
+  | "adhan-now"
+  | "iqamah-now"
+  | "time-now"
+  | "iqamah-countdown"
+  | "next-countdown";
 
-/** Structured data for the critical (adhan-now / iqamah-now) display state. */
+/** Structured data for any critical PrayerTime event display state. */
 export interface CriticalSignalData {
   prayerName: string;
   arabicName: string;
-  /** urgency level: "low" = adhan (preparatory), "medium" = reserved, "high" = iqamah (starting now) */
+  /** urgency level: "low" = adhan, "medium" = time-only event, "high" = iqamah */
   urgency: "low" | "medium" | "high";
   subtitle: string;
 }
@@ -122,7 +127,7 @@ export interface PrayerTimesState {
   nextPrayerIndex: number | null;
   statusMessage: string;
   statusType: StatusType;
-  /** Structured critical signal data (non-null only during adhan-now/iqamah-now). */
+  /** Structured critical signal data (non-null only during a *-now status). */
   criticalSignal: CriticalSignalData | null;
   loading: boolean;
   error: string | null;
