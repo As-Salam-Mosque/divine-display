@@ -8,6 +8,7 @@ import {
 } from "react";
 import type { AppSettings, Language } from "../types";
 import { DEFAULT_APP_SETTINGS } from "../types";
+import { useLanguageRotation } from "../hooks/useLanguageRotation";
 
 /** Only user-adjustable preferences are persisted — mosque config is never cached. */
 type SettingsPatch = Partial<Omit<AppSettings, "mosque">>;
@@ -94,6 +95,17 @@ export function SettingsProvider({
       }),
     [],
   );
+
+  const rotateLanguage = useCallback(
+    (language: Language) => updateSettings({ language }),
+    [updateSettings],
+  );
+
+  useLanguageRotation({
+    enabled: settings.autoRotateLanguage,
+    language: settings.language,
+    onLanguageChange: rotateLanguage,
+  });
 
   const value = useMemo(
     () => ({ settings, updateSettings }),

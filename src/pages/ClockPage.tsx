@@ -25,6 +25,7 @@ function ClockPageContent({ mosqueName }: ClockPageProps) {
   const defaultSettings = useMemo<AppSettings>(
     () => ({
       language,
+      autoRotateLanguage: false,
       timeFormat: "12h",
       showSponsors: true,
       theme: "dark",
