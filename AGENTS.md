@@ -122,7 +122,7 @@ Never define local `formatDisplayTime`, `parseTime`, or `addMinutes` — always 
 When a component's `useEffect` exceeds ~20 lines or manages multiple timers, extract it into a custom hook:
 - `usePromoTimer` — manages promo rotation lifecycle
 - `useFocusTrap` — traps Tab/Shift+Tab in modals
-- `useDominantColor` — extracts dominant color from loaded images
+- `useDominantColor` — estimates a background colour from an image's edges so containers blend with it
 
 ### State initialization from cache
 

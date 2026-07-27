@@ -201,7 +201,7 @@ The dominant component. Displays mosque branding (mosque icon + name + city), th
 
 ### PromoRail
 
-An overlay that slides in from the right edge of the ClockPanel on a configurable timer cycle. Shows a weighted-random sponsor image from `sponsors`, with the background tinted to the image's dominant colour (extracted via `useDominantColor`). Automatically suppressed in critical signal mode or when `showSponsors` is false. Controlled by `PromoRail.tsx` and coordinated with `ClockPanel` via an `onActiveChange` callback.
+An overlay that slides in from the right edge of the ClockPanel on a configurable timer cycle. Shows a weighted-random sponsor image from `sponsors`, with the background tinted to the image's edge colour so the frame blends into the artwork (extracted via `useDominantColor`). Automatically suppressed in critical signal mode or when `showSponsors` is false. Controlled by `PromoRail.tsx` and coordinated with `ClockPanel` via an `onActiveChange` callback.
 
 ### Prayer Table
 
@@ -221,7 +221,7 @@ Each card shows Prayer Name (Latin caps) and Arabic name below it, separated fro
 
 ### Ad Rail
 
-Visible only at `lg`+ breakpoint. A vertical flex column labelled "COMMUNITY SPONSORS" in `font-label-caps`. Each slot renders a sponsor image (with dominant-colour background) or a placeholder (storefront icon + "Available" label). Rail width is `20vw`; collapses to `0px` when sponsors are hidden or during critical signal mode.
+Visible only at `lg`+ breakpoint. A vertical flex column labelled "COMMUNITY SPONSORS" in `font-label-caps`. Each slot renders a sponsor image (with a background blended from the image's edge colour) or a placeholder (storefront icon + "Available" label). Rail width is `20vw`; collapses to `0px` when sponsors are hidden or during critical signal mode.
 
 ### Announcements Ticker
 
