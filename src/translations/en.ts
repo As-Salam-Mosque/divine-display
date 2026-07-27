@@ -49,6 +49,7 @@ const en = {
   time: "TIME",
   adhan: "ADHAN",
   iqamah: "IQAMAH",
+  now: "NOW",
   // theme
   lightTheme: "Use light theme",
   // accessibility

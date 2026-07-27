@@ -43,6 +43,7 @@ const fr = {
   time: "HEURE",
   adhan: "ADHAN",
   iqamah: "IQAMAH",
+  now: "MAINTENANT",
   // theme
   lightTheme: "Activer le thème clair",
   // accessibility
