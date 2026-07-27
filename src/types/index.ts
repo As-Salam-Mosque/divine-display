@@ -129,6 +129,7 @@ export type Theme = "dark" | "light";
 
 export interface AppSettings {
   language: Language;
+  autoRotateLanguage: boolean;
   timeFormat: TimeFormat;
   showSponsors: boolean;
   theme: Theme;
@@ -144,6 +145,7 @@ export interface AppSettings {
 // localStorage.
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   language: "en",
+  autoRotateLanguage: false,
   timeFormat: "24h",
   showSponsors: true,
   theme: "dark",

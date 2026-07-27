@@ -5,6 +5,7 @@ const fr = {
   sectionVisibility: "Visibilité",
   sectionMosqueInfo: "Informations sur la mosquée",
   language: "Langue",
+  autoRotateLanguage: "Changer automatiquement de langue toutes les 5 minutes",
   langEn: "Anglais",
   langFr: "Français",
   timeFormat: "Format de l'heure",

@@ -7,6 +7,7 @@ const en = {
   sectionMosqueInfo: "Mosque Information",
   // display
   language: "Language",
+  autoRotateLanguage: "Automatically switch language every 5 minutes",
   langEn: "English",
   langFr: "French",
   timeFormat: "Time Format",

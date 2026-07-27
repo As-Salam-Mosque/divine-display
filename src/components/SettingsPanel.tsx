@@ -219,7 +219,9 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               <Field label={t.language}>
                 <PillGroup<Language>
                   value={settings.language}
-                  onChange={(v) => updateSettings({ language: v })}
+                  onChange={(v) =>
+                    updateSettings({ language: v, autoRotateLanguage: false })
+                  }
                   options={[
                     { value: "en", label: t.langEn },
                     { value: "fr", label: t.langFr },
@@ -227,6 +229,11 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   groupLabel={t.language}
                 />
               </Field>
+              <Toggle
+                checked={settings.autoRotateLanguage}
+                onChange={(v) => updateSettings({ autoRotateLanguage: v })}
+                label={t.autoRotateLanguage}
+              />
               <Field label={t.timeFormat}>
                 <PillGroup<TimeFormat>
                   value={settings.timeFormat}
