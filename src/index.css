@@ -238,6 +238,240 @@ button {
         font-size: clamp(0.875rem, 5cqw, 3rem) !important;
     }
 
+    /* CriticalSignalPanel scales against its rendered panel, not the viewport. */
+    .critical-signal-panel {
+        container: critical-signal / inline-size;
+        min-width: 0;
+    }
+
+    .critical-signal-content {
+        box-sizing: border-box;
+        min-height: 100%;
+        gap: clamp(0.75rem, 3cqw, 2rem);
+        padding: clamp(1rem, 2cqw, 2.5rem)
+            clamp(1rem, 2cqw, 2.5rem)
+            clamp(3rem, 5cqw, 4rem);
+    }
+
+    .critical-signal-heading {
+        width: 100%;
+        gap: clamp(0.75rem, 3cqw, 2rem);
+    }
+
+    .critical-action-row {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: clamp(0.5rem, 2cqw, 1.5rem);
+    }
+
+    .critical-action-label {
+        font-size: clamp(1.1rem, 5cqw, 5rem);
+        letter-spacing: clamp(0.08em, 0.3cqw, 0.3em);
+        line-height: 1.1;
+        text-align: center;
+    }
+
+    .critical-now-badge {
+        padding: clamp(0.25rem, 0.8cqw, 0.75rem)
+            clamp(0.65rem, 1.6cqw, 1.5rem);
+        font-size: clamp(0.85rem, 2.8cqw, 3rem);
+        letter-spacing: clamp(0.08em, 0.18cqw, 0.18em);
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+
+    .critical-hero-wrap {
+        width: 100%;
+        gap: clamp(0.5rem, 1.5cqw, 1.25rem);
+    }
+
+    .critical-hero-row {
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: clamp(0.5rem, 2.5cqw, 2.5rem);
+    }
+
+    .critical-hero-name {
+        font-size: clamp(1.75rem, 8cqw, 11rem);
+    }
+
+    /* Arabic fallback glyphs have a smaller cap-height than the Latin face. */
+    .critical-hero-arabic {
+        font-size: clamp(2rem, 10cqw, 11rem);
+    }
+
+    .critical-hero-name,
+    .critical-hero-arabic,
+    .critical-hero-name-cell,
+    .critical-hero-arabic-cell {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .critical-hero-name-cell {
+        justify-self: end;
+    }
+
+    .critical-hero-arabic-cell {
+        justify-self: start;
+    }
+
+    .critical-hero-divider {
+        width: 2px;
+        min-width: 2px;
+        height: clamp(3rem, 15cqw, 11rem);
+        min-height: 3rem;
+        flex-shrink: 0;
+        align-self: center;
+        border-radius: 9999px;
+        background-color: var(--on-surface-variant);
+        opacity: 0.25;
+    }
+
+    .critical-meta {
+        left: clamp(0.75rem, 2.5cqw, 1.5rem);
+        right: clamp(0.75rem, 2.5cqw, 1.5rem);
+        bottom: clamp(0.75rem, 2.5cqw, 1.5rem);
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        text-align: center;
+        gap: clamp(0.35rem, 1cqw, 0.9rem);
+        max-width: calc(100% - 1.5rem);
+        white-space: nowrap;
+        font-size: clamp(0.8rem, 2.6cqw, 1.75rem);
+        line-height: 1.1;
+    }
+
+    .critical-meta-time {
+        flex-shrink: 0;
+        color: var(--primary);
+        font-weight: 700;
+        padding: 0.2em 0.55em;
+        border: 1px solid rgba(var(--primary-rgb), 0.45);
+        border-radius: 9999px;
+        background-color: rgba(var(--primary-rgb), 0.1);
+        box-shadow: 0 0 0.75rem rgba(var(--primary-rgb), 0.2);
+    }
+
+    .critical-meta-dates {
+        min-width: 0;
+        flex-wrap: nowrap;
+        flex-shrink: 1;
+        gap: clamp(0.25rem, 0.8cqw, 0.75rem);
+    }
+
+    .critical-meta-date {
+        min-width: 0;
+        white-space: nowrap;
+    }
+
+    .critical-meta-separator {
+        line-height: 1;
+    }
+
+    @media (min-width: 1024px) {
+        /* The desktop clock stage has a definite height, so cqh is safe here. */
+        .critical-signal-panel {
+            container-type: size;
+        }
+
+        .critical-signal-content {
+            gap: clamp(0.75rem, min(3cqw, 4cqh), 2rem);
+            padding: clamp(1rem, min(3cqw, 4cqh), 3rem)
+                clamp(1rem, 2cqw, 2.5rem)
+                clamp(2.5rem, min(6cqw, 8cqh), 4rem);
+        }
+
+        .critical-signal-heading {
+            gap: clamp(0.75rem, min(3cqw, 4cqh), 2rem);
+        }
+
+        .critical-action-label {
+            font-size: clamp(1.1rem, min(5cqw, 6cqh), 5rem);
+        }
+
+        .critical-now-badge {
+            font-size: clamp(0.85rem, min(2.8cqw, 3.5cqh), 3rem);
+        }
+
+        .critical-hero-wrap {
+            gap: clamp(0.5rem, min(1.5cqw, 2cqh), 1.25rem);
+        }
+
+        .critical-hero-row {
+            gap: clamp(0.5rem, min(2.5cqw, 4cqh), 2.5rem);
+        }
+
+        .critical-hero-name {
+            font-size: clamp(1.75rem, min(8cqw, 15cqh), 11rem);
+        }
+
+        .critical-hero-arabic {
+            font-size: clamp(2rem, min(10cqw, 18cqh), 11rem);
+        }
+
+        .critical-hero-divider {
+            height: clamp(3rem, min(15cqw, 18cqh), 11rem);
+        }
+
+        .critical-meta {
+            bottom: clamp(0.75rem, min(2.5cqw, 3cqh), 1.5rem);
+            font-size: clamp(0.9rem, min(3.2cqw, 6cqh), 3rem);
+        }
+    }
+
+    @container critical-signal (max-width: 30rem) {
+        .critical-signal-content {
+            padding-bottom: clamp(3rem, 12cqw, 4rem);
+        }
+
+        .critical-action-row {
+            row-gap: 0.5rem;
+        }
+
+        .critical-hero-row {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: auto auto auto;
+            justify-items: center;
+            gap: clamp(0.65rem, 2cqw, 1rem);
+        }
+
+        .critical-hero-name-cell,
+        .critical-hero-arabic-cell {
+            justify-self: center;
+            padding: 0;
+            text-align: center;
+        }
+
+        .critical-hero-name,
+        .critical-hero-arabic {
+            text-align: center;
+        }
+
+        .critical-hero-divider {
+            width: clamp(3rem, 24cqw, 10rem);
+            min-width: 3rem;
+            height: 2px;
+            min-height: 2px;
+        }
+
+        .critical-meta {
+            flex-direction: row;
+            align-items: baseline;
+            gap: clamp(0.25rem, 1cqw, 0.4rem);
+        }
+
+        .critical-meta-dates {
+            width: auto;
+            flex-wrap: nowrap;
+            gap: clamp(0.2rem, 0.7cqw, 0.35rem);
+        }
+
+        .critical-meta {
+            font-size: clamp(0.9rem, 3.2cqw, 1.2rem);
+        }
+    }
+
     /* Map semantic token classes to CSS variables so light/dark themes work */
     .bg-background-deep {
         background-color: var(--background-deep) !important;
@@ -557,20 +791,20 @@ button {
 .critical-inner-glow-adhan {
     background: radial-gradient(
         ellipse at center,
-        rgba(var(--primary-rgb), 0.14) 0%,
+        rgba(var(--primary-rgb), 0.2) 0%,
         transparent 70%
     );
-    animation: inner-glow-pulse 3s ease-in-out infinite;
+    animation: inner-glow-pulse 3.5s ease-in-out infinite;
 }
 
 /* Internal radial glow — iqamah (intense, faster) */
 .critical-inner-glow-iqamah {
     background: radial-gradient(
         ellipse at center,
-        rgba(var(--primary-rgb), 0.26) 0%,
+        rgba(var(--primary-rgb), 0.32) 0%,
         transparent 65%
     );
-    animation: inner-glow-pulse 1.5s ease-in-out infinite;
+    animation: inner-glow-pulse 2s ease-in-out infinite;
 }
 
 @keyframes inner-glow-pulse {
@@ -583,28 +817,29 @@ button {
     }
 }
 
-/* Subtitle blink */
-.critical-text-blink {
-    animation: text-blink 1.5s ease-in-out infinite;
+/* Hero pulse — draws attention without reducing text legibility */
+.critical-hero-pulse {
+    animation: critical-hero-pulse 3.5s ease-in-out infinite;
+    transform-origin: center;
 }
 
-@keyframes text-blink {
+@keyframes critical-hero-pulse {
     0%,
     100% {
-        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 0 rgba(var(--primary-rgb), 0));
     }
     50% {
-        opacity: 0.25;
+        transform: scale(1.015);
+        filter: drop-shadow(0 0 1rem rgba(var(--primary-rgb), 0.3));
     }
 }
 
-
-
-/* Reduced motion fallback: static glow + visible subtitle */
+/* Reduced motion fallback: static glow and a stable hero */
 @media (prefers-reduced-motion: reduce) {
     .critical-inner-glow-adhan,
     .critical-inner-glow-iqamah,
-    .critical-text-blink {
+    .critical-hero-pulse {
         animation: none;
     }
     .critical-inner-glow-iqamah {

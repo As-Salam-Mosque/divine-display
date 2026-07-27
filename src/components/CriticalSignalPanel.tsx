@@ -32,7 +32,7 @@ export function CriticalSignalPanel({
 
   return (
     <div
-      className="z-20 w-full h-full flex flex-col items-center justify-center text-center relative"
+      className="critical-signal-panel z-20 w-full h-full flex flex-col items-center justify-center text-center relative"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
@@ -49,47 +49,41 @@ export function CriticalSignalPanel({
         aria-hidden="true"
       />
 
-      {/* Typography stack — padded bottom on mobile to clear the absolute clock block */}
+      {/* Typography stack — kept clear of the absolute clock block on mobile */}
       <div
-        className="z-30 w-full flex flex-col items-center justify-center gap-6 md:gap-8 lg:gap-10 pb-16 md:pb-0"
+        className="critical-signal-content z-30 w-full flex flex-col items-center justify-center"
         aria-hidden="true"
       >
-        <div className="flex flex-col items-center gap-3 md:gap-5 lg:gap-6">
-          {/* Action label */}
-          <span className="font-label-caps text-lg md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl text-primary/70 tracking-[0.25em] md:tracking-[0.35em] uppercase">
-            {actionLabel}
-          </span>
+        <div className="critical-signal-heading flex flex-col items-center">
+          {/* Action label and localized urgency badge */}
+          <div className="critical-action-row flex items-center justify-center">
+            <span className="critical-action-label font-label-caps text-on-surface font-semibold uppercase">
+              {actionLabel}
+            </span>
+            <span className="critical-now-badge rounded-full border border-primary/60 bg-primary/15 font-label-caps text-primary font-semibold uppercase">
+              {t.now}
+            </span>
+          </div>
 
           {/* Hero prayer name — bilingual horizontal */}
-          <div className="flex flex-col items-center gap-2 md:gap-3">
-            <div className="flex w-full flex-row items-center gap-4 md:gap-6 lg:gap-10">
-              <div className="flex min-w-0 flex-1 justify-end">
+          <div className="critical-hero-wrap flex flex-col items-center">
+            <div className="critical-hero-pulse critical-hero-row grid w-full items-center">
+              <div className="critical-hero-name-cell min-w-0">
                 <h2
-                  className="font-clock-display text-primary leading-none critical-text-blink text-center"
-                  style={{ fontSize: "clamp(2.5rem, 8vw, 11rem)" }}
+                  className="critical-hero-name max-w-full font-clock-display text-on-surface leading-none text-right"
                 >
                   {criticalSignal.prayerName}
                 </h2>
               </div>
               <div
-                style={{
-                  width: "4px",
-                  minWidth: "4px",
-                  height: "clamp(4rem, 8vw, 11rem)",
-                  minHeight: "4rem",
-                  flexShrink: 0,
-                  alignSelf: "center",
-                  borderRadius: "9999px",
-                  backgroundColor: "var(--on-surface-variant)",
-                  opacity: 0.25,
-                }}
+                className="critical-hero-divider"
                 aria-hidden="true"
               />
-              <div className="flex min-w-0 flex-1 justify-start">
+              <div className="critical-hero-arabic-cell min-w-0">
                 <span
-                  className="font-body-lg text-primary/80 font-medium leading-none critical-text-blink"
+                  className="critical-hero-arabic max-w-full font-body-lg text-on-surface-variant font-medium leading-none"
                   lang="ar"
-                  style={{ fontSize: "clamp(2.5rem, 8vw, 11rem)" }}
+                  dir="rtl"
                 >
                   {criticalSignal.arabicName}
                 </span>
@@ -100,33 +94,35 @@ export function CriticalSignalPanel({
         </div>
       </div>
 
-      {/* Retained current time + dates — corner */}
+      {/* Retained current time and dates — centered */}
       <div
-        className="absolute bottom-3 left-4 md:bottom-4 md:left-5 lg:bottom-5 lg:left-6 flex flex-row items-baseline gap-2 md:gap-3 lg:gap-4 text-text-muted opacity-70 z-30"
+        className="critical-meta absolute text-text-muted opacity-70 z-30"
         aria-hidden="true"
       >
-        <span className="font-tabular-nums text-base md:text-xl lg:text-3xl xl:text-4xl tv:text-5xl">
+        <span className="critical-meta-time font-tabular-nums">
           {displayHours}:{clock.minutes}
-          {!is24h && <span className="ml-1 text-[0.7em]">{clock.ampm}</span>}
+          {!is24h && <span className="ml-1">{clock.ampm}</span>}
         </span>
-        <span
-          className="text-text-muted/40 text-base md:text-xl lg:text-2xl"
-          aria-hidden="true"
-        >
-          ·
-        </span>
-        <span className="font-body-md text-xs md:text-sm lg:text-lg xl:text-xl tv:text-2xl">
-          {clock.gregorianDate}
-        </span>
-        <span
-          className="text-text-muted/40 text-base md:text-xl lg:text-2xl"
-          aria-hidden="true"
-        >
-          ·
-        </span>
-        <span className="font-body-md text-xs md:text-sm lg:text-lg xl:text-xl tv:text-2xl">
-          {hijriDate || "—"}
-        </span>
+        <div className="critical-meta-dates flex items-baseline">
+          <span
+            className="critical-meta-separator text-text-muted/40"
+            aria-hidden="true"
+          >
+            ·
+          </span>
+          <span className="critical-meta-date font-body-md">
+            {clock.gregorianDate}
+          </span>
+          <span
+            className="critical-meta-separator text-text-muted/40"
+            aria-hidden="true"
+          >
+            ·
+          </span>
+          <span className="critical-meta-date font-body-md">
+            {hijriDate || "—"}
+          </span>
+        </div>
       </div>
     </div>
   );
