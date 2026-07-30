@@ -150,8 +150,7 @@ export function LandingPage() {
                   className="block h-auto w-full"
                 />
               </div>
-              <div className="absolute -top-12 -right-12 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
-              <div className="absolute -bottom-12 -left-12 h-56 w-56 rounded-full bg-surface-panel blur-[80px]" />
+
             </div>
           </div>
         </section>
