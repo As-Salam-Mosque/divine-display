@@ -94,10 +94,8 @@ export function LandingPage() {
         >
           <div className="mx-auto grid w-full max-w-7xl items-center gap-10 lg:grid-cols-2">
             <div className="relative">
-              <div className="absolute -top-16 -left-16 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
-
               <h1 className="mb-6 text-5xl leading-tight font-bold lg:text-7xl">
-                {t.landing.heroTitleLead} <br />
+                {t.landing.heroTitleLead} <br className="hidden lg:block" />
                 <span className="text-primary italic">
                   {t.landing.heroTitleHighlight}
                 </span>
@@ -218,7 +216,7 @@ export function LandingPage() {
             </p>
           </div>
           <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-2">
-            <article className="rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
+            <article className="flex h-full flex-col rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-primary-25 bg-background-deep">
                 <span
                   className="material-symbols-outlined text-3xl text-primary"
@@ -251,13 +249,13 @@ export function LandingPage() {
               </ul>
               <button
                 onClick={() => setLocation("/register")}
-                className="gold-button block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring bg-none border-none cursor-pointer"
+                className="gold-button mt-auto block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring bg-none border-none cursor-pointer"
               >
                 {t.landing.registerMosque}
               </button>
             </article>
 
-            <article className="rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
+            <article className="flex h-full flex-col rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-primary-25 bg-background-deep">
                 <span
                   className="material-symbols-outlined text-3xl text-primary"
@@ -288,7 +286,7 @@ export function LandingPage() {
               </ul>
               <a
                 href="mailto:divine-display@snake.mozmail.com?subject=Divine%20Display%20Partnership%20Inquiry"
-                className="gold-button block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring"
+                className="gold-button mt-auto block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring"
               >
                 {t.landing.contactSales}
               </a>

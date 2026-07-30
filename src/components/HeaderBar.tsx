@@ -44,12 +44,12 @@ export function LandingHeaderBar({
           <button
             type="button"
             onClick={onBrandClick}
-            className="flex items-center gap-2 font-headline-md text-2xl font-bold text-primary focus-ring bg-none border-none cursor-pointer p-0"
+            className="flex min-w-0 items-center gap-2 font-headline-md text-xl font-bold text-primary focus-ring bg-none border-none cursor-pointer p-0 sm:text-2xl"
           >
             <img
               src="/favicon.svg"
               alt=""
-              className="h-8 w-8 object-contain"
+              className="h-7 w-7 shrink-0 object-contain sm:h-8 sm:w-8"
               aria-hidden="true"
             />
             {brand}
@@ -57,19 +57,19 @@ export function LandingHeaderBar({
         ) : (
           <a
             href={brandHref}
-            className="flex items-center gap-2 font-headline-md text-2xl font-bold text-primary focus-ring"
+            className="flex min-w-0 items-center gap-2 font-headline-md text-xl font-bold text-primary focus-ring sm:text-2xl"
           >
             <img
               src="/favicon.svg"
               alt=""
-              className="h-8 w-8 object-contain"
+              className="h-7 w-7 shrink-0 object-contain sm:h-8 sm:w-8"
               aria-hidden="true"
             />
             {brand}
           </a>
         )}
         {navItems.length > 0 && (
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-8 lg:flex">
             {navItems.map((item) => (
               <a
                 key={item.label}
@@ -84,7 +84,7 @@ export function LandingHeaderBar({
         <div className="flex items-center gap-3">
           {showLanguageSwitch && (
             <div
-              className="hidden md:flex items-center gap-1 rounded-lg border border-outline-variant bg-surface-panel/60 p-1"
+              className="hidden items-center gap-1 rounded-lg border border-outline-variant bg-surface-panel/60 p-1 lg:flex"
               role="group"
               aria-label={languageToggleLabel}
             >
@@ -122,7 +122,7 @@ export function LandingHeaderBar({
                 type="button"
                 onClick={action.onClick}
                 aria-label={action.ariaLabel}
-                className="gold-button rounded-lg px-6 py-2 text-sm font-semibold focus-ring bg-none border-none cursor-pointer"
+                className="gold-button rounded-lg px-3 py-2 text-xs font-semibold focus-ring bg-none border-none cursor-pointer sm:px-6 sm:text-sm"
               >
                 {action.label}
               </button>
@@ -130,7 +130,7 @@ export function LandingHeaderBar({
               <a
                 href={action.href}
                 aria-label={action.ariaLabel}
-                className="gold-button rounded-lg px-6 py-2 text-sm font-semibold focus-ring"
+                className="gold-button rounded-lg px-3 py-2 text-xs font-semibold focus-ring sm:px-6 sm:text-sm"
               >
                 {action.label}
               </a>
