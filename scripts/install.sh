@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-URL="https://divine-display.onrender.com/?name=assalam"
+URL="https://divinedisplayapp.com/?name=assalam"
 LABWC_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/labwc"
 AUTOSTART_FILE="${LABWC_CONFIG_DIR}/autostart"
 RC_FILE="${LABWC_CONFIG_DIR}/rc.xml"
