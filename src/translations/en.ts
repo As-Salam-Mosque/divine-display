@@ -241,18 +241,18 @@ const en = {
     navContact: "Contact",
     languageToggle: "Language",
     joinUs: "Join Us",
-    heroEyebrow: "Prayer Times Display",
+
     heroTitleLead: "Elevate Your",
     heroTitleHighlight: "Masjid's Presence.",
     heroDescription:
-      "Providing sacred spaces with the digital tools they need to connect, inform and grow.",
+      "Elegant, intuitive prayer time displays to connect with prayer.",
     heroJoin: "Join us",
     liveDemo: "Live demo",
     heroImageAlt: "Divine Display interface screenshot",
     perspective: "Perspective",
     ourVision: "Our Vision",
     visionDescription:
-      "Redefining how masjids connect with congregants through ethical, community-centric technology.",
+      "Helping mosques become more self-sufficient while strengthening their communities and bringing people together.",
     visionHalalTitle: "Halal Screened",
     visionHalalDescription:
       "Only community businesses that align with Islamic values are permitted to display announcements.",
@@ -261,9 +261,9 @@ const en = {
       "Local businesses support their spiritual home while growing their reach within the community.",
     visionFreedomTitle: "Freedom",
     visionFreedomDescription:
-      "The clock is open source and can be installed anywhere for free for accessible digital infrastructure.",
+      "The prayer clock software is free forever! No paywalls, subscriptions, or hidden fees. Open source and available to every mosque.",
     capabilities: "Capabilities",
-    premiumFeatures: "Premium Features",
+    premiumFeatures: "Everything You Need",
     featureRealtimeTitle: "Real-time prayer times",
     featureRealtimeDescription:
       "Automated, location-based Adhan and Iqamah times with multiple calculation methods.",
@@ -272,7 +272,7 @@ const en = {
       "Broadcast Jumu'ah times, educational events, and community alerts instantly.",
     featurePostersTitle: "Display custom posters",
     featurePostersDescription:
-      "Upload your own graphics and PDF posters to rotate seamlessly on the display.",
+      "Upload your own graphics and posters on the display.",
     featurePromotionsTitle: "Dynamic promotions",
     featurePromotionsDescription:
       "Showcase partner businesses and fundraising goals with elegant visuals.",
@@ -287,17 +287,27 @@ const en = {
     partnersSubheading:
       "Building stronger local ecosystems through mosque-first digital communication.",
     forCommunities: "For Communities",
-    mosque: "Mosque",
+    mosque: "Mosques & Communities",
     mosqueDescription:
-      "Upgrade your facility with a premium digital display system. No hardware costs, no subscription fees.",
-    registerMosque: "Register your mosque for free",
+      "Everything your community needs to inform, connect, and grow together.",
+    mosqueBenefits: [
+      "Free digital display software",
+      "No subscription fees or hidden costs",
+      "Seamless community announcements",
+    ],
+    registerMosque: "Register Your Mosque",
     forPartners: "For Partners",
-    businessPartner: "Business (Partner)",
+    businessPartner: "Local Businesses & Sponsors",
     businessDescription:
-      "Increase your reach while supporting your local mosque through a halal-screened announcement network.",
-    contactSales: "Contact our sales representative",
+      "Reach your local Muslim community while supporting the mosque at the heart of it.",
+    businessBenefits: [
+      "Reach local Muslim consumers directly",
+      "A 100% halal-screened ad environment",
+      "Support your local community center",
+    ],
+    contactSales: "Partner With Us",
     footerDescription:
-      "Providing sacred spaces with digital tools to connect, inform and grow.",
+      "Elegant, intuitive prayer time displays to connect with prayer.",
     legal: "Legal",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",

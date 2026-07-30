@@ -242,18 +242,18 @@ const fr = {
     navContact: "Contact",
     languageToggle: "Langue",
     joinUs: "Rejoignez-nous",
-    heroEyebrow: "Affichage des horaires de prière",
+
     heroTitleLead: "Élevez la présence de",
     heroTitleHighlight: "votre mosquée.",
     heroDescription:
-      "Nous offrons aux espaces sacrés les outils numériques nécessaires pour connecter, informer et faire grandir la communauté.",
+      "Des affichages élégants et intuitifs des horaires de prière pour connecter les fidèles à la prière.",
     heroJoin: "Rejoignez-nous",
     liveDemo: "Démo en direct",
     heroImageAlt: "Capture de l'interface Divine Display",
     perspective: "Perspective",
     ourVision: "Notre vision",
     visionDescription:
-      "Redéfinir la manière dont les mosquées se connectent à leurs fidèles grâce à une technologie éthique et centrée sur la communauté.",
+      "Aider les mosquées à devenir plus autonomes tout en renforçant leur communauté et en rapprochant les gens.",
     visionHalalTitle: "Sélection halal",
     visionHalalDescription:
       "Seules les entreprises communautaires alignées avec les valeurs islamiques peuvent afficher des annonces.",
@@ -262,9 +262,9 @@ const fr = {
       "Les entreprises locales soutiennent leur mosquée tout en développant leur portée au sein de la communauté.",
     visionFreedomTitle: "Liberté",
     visionFreedomDescription:
-      "L'horloge est open source et peut être installée gratuitement partout pour une infrastructure numérique accessible.",
+      "Le logiciel d'horaires de prière est gratuit pour toujours! Sans paywall, abonnement ni frais cachés. Open source et accessible à toutes les mosquées.",
     capabilities: "Capacités",
-    premiumFeatures: "Fonctionnalités premium",
+    premiumFeatures: "Tout ce dont vous avez besoin",
     featureRealtimeTitle: "Horaires de prière en temps réel",
     featureRealtimeDescription:
       "Horaires d'Adhan et d'Iqamah automatisés selon la localisation avec plusieurs méthodes de calcul.",
@@ -273,7 +273,7 @@ const fr = {
       "Diffusez instantanément les horaires de Jumu'ah, les événements éducatifs et les alertes communautaires.",
     featurePostersTitle: "Affichage d'affiches personnalisées",
     featurePostersDescription:
-      "Importez vos graphiques et affiches PDF pour une rotation fluide sur l'écran.",
+      "Importez vos graphiques et posters sur l'écran.",
     featurePromotionsTitle: "Promotions dynamiques",
     featurePromotionsDescription:
       "Mettez en valeur les entreprises partenaires et les objectifs de financement avec des visuels élégants.",
@@ -288,17 +288,27 @@ const fr = {
     partnersSubheading:
       "Renforcer les écosystèmes locaux grâce à une communication numérique centrée sur la mosquée.",
     forCommunities: "Pour les communautés",
-    mosque: "Mosquée",
+    mosque: "Mosquées et communautés",
     mosqueDescription:
-      "Modernisez votre établissement avec un système d'affichage numérique premium. Aucun coût matériel, aucun abonnement.",
-    registerMosque: "Inscrire votre mosquée gratuitement",
+      "Tout ce dont votre communauté a besoin pour s'informer, se rapprocher et grandir ensemble.",
+    mosqueBenefits: [
+      "Logiciel d'affichage numérique gratuits",
+      "Aucun abonnement ni frais cachés",
+      "Des annonces communautaires fluides",
+    ],
+    registerMosque: "Inscrire votre mosquée",
     forPartners: "Pour les partenaires",
-    businessPartner: "Entreprise (partenaire)",
+    businessPartner: "Entreprises et sponsors locaux",
     businessDescription:
-      "Augmentez votre portée tout en soutenant votre mosquée locale grâce à un réseau d'annonces halal.",
-    contactSales: "Contacter notre représentant commercial",
+      "Atteignez votre communauté musulmane locale tout en soutenant la mosquée qui l'anime.",
+    businessBenefits: [
+      "Touchez directement les consommateurs musulmans locaux",
+      "Un environnement publicitaire 100 % halal",
+      "Soutenez votre centre communautaire local",
+    ],
+    contactSales: "Devenir partenaire",
     footerDescription:
-      "Nous offrons aux espaces sacrés des outils numériques pour connecter, informer et faire grandir la communauté.",
+      "Des affichages élégants et intuitifs des horaires de prière pour connecter les fidèles à la prière.",
     legal: "Légal",
     privacyPolicy: "Politique de confidentialité",
     termsOfService: "Conditions d'utilisation",
