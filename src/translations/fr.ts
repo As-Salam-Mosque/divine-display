@@ -246,7 +246,7 @@ const fr = {
     heroTitleLead: "Restez proches de votre",
     heroTitleHighlight: "mosquée et de votre communauté.",
     heroDescription:
-      "Un affichage chaleureux pour les horaires de prière, les annonces et les moments qui rapprochent votre communauté.",
+      "Un affichage élégant pour les horaires de prière, les annonces et les moments qui rapprochent votre communauté.",
     heroJoin: "Commencer",
     liveDemo: "Voir en action",
     heroImageAlt: "Capture de l'interface Divine Display",

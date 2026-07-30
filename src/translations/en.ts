@@ -245,7 +245,7 @@ const en = {
     heroTitleLead: "Stay connected to your",
     heroTitleHighlight: "masjid and community.",
     heroDescription:
-      "A calm, welcoming display for prayer times, announcements, and the moments that bring your community together.",
+      "An elegant, welcoming display for prayer times, announcements, and the moments that bring your community together.",
     heroJoin: "Get started",
     liveDemo: "Live demo",
     heroImageAlt: "Divine Display interface screenshot",

@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { LandingHeaderBar } from "../components/HeaderBar";
+import { PartnerCard } from "../components/PartnerCard";
 import { SkipLink } from "../components/common/SkipLink";
 import { useLanguage } from "../context/LanguageContext";
 import { useT } from "../i18n";
@@ -216,81 +217,29 @@ export function LandingPage() {
             </p>
           </div>
           <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-2">
-            <article className="flex h-full flex-col rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-primary-25 bg-background-deep">
-                <span
-                  className="material-symbols-outlined text-3xl text-primary"
-                  aria-hidden="true"
-                >
-                  mosque
-                </span>
-              </div>
-              <span className="eyebrow-label mb-2">
-                {t.landing.forCommunities}
-              </span>
-              <h3 className="mb-4 text-3xl font-bold md:text-4xl">
-                {t.landing.mosque}
-              </h3>
-              <p className="mb-5 text-lg text-text-muted">
-                {t.landing.mosqueDescription}
-              </p>
-              <ul className="mb-8 space-y-3 text-text-muted">
-                {t.landing.mosqueBenefits.map((benefit) => (
-                  <li key={benefit} className="flex items-start gap-3">
-                    <span
-                      className="material-symbols-outlined mt-0.5 text-xl text-primary"
-                      aria-hidden="true"
-                    >
-                      check_circle
-                    </span>
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => setLocation("/register")}
-                className="gold-button mt-auto block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring bg-none border-none cursor-pointer"
-              >
-                {t.landing.registerMosque}
-              </button>
-            </article>
+            <PartnerCard
+              icon="mosque"
+              eyebrow={t.landing.forCommunities}
+              title={t.landing.mosque}
+              description={t.landing.mosqueDescription}
+              benefits={t.landing.mosqueBenefits}
+              action={{
+                label: t.landing.registerMosque,
+                onClick: () => setLocation("/register"),
+              }}
+            />
 
-            <article className="flex h-full flex-col rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-primary-25 bg-background-deep">
-                <span
-                  className="material-symbols-outlined text-3xl text-primary"
-                  aria-hidden="true"
-                >
-                  handshake
-                </span>
-              </div>
-              <span className="eyebrow-label mb-2">{t.landing.forPartners}</span>
-              <h3 className="mb-4 text-3xl font-bold md:text-4xl">
-                {t.landing.businessPartner}
-              </h3>
-              <p className="mb-5 text-lg text-text-muted">
-                {t.landing.businessDescription}
-              </p>
-              <ul className="mb-8 space-y-3 text-text-muted">
-                {t.landing.businessBenefits.map((benefit) => (
-                  <li key={benefit} className="flex items-start gap-3">
-                    <span
-                      className="material-symbols-outlined mt-0.5 text-xl text-primary"
-                      aria-hidden="true"
-                    >
-                      check_circle
-                    </span>
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="mailto:divine-display@snake.mozmail.com?subject=Divine%20Display%20Partnership%20Inquiry"
-                className="gold-button mt-auto block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring"
-              >
-                {t.landing.contactSales}
-              </a>
-            </article>
+            <PartnerCard
+              icon="handshake"
+              eyebrow={t.landing.forPartners}
+              title={t.landing.businessPartner}
+              description={t.landing.businessDescription}
+              benefits={t.landing.businessBenefits}
+              action={{
+                label: t.landing.contactSales,
+                href: "mailto:divine-display@snake.mozmail.com?subject=Divine%20Display%20Partnership%20Inquiry",
+              }}
+            />
           </div>
         </section>
       </main>
