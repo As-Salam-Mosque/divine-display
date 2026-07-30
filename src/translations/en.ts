@@ -307,7 +307,7 @@ const en = {
     ],
     contactSales: "Partner With Us",
     footerDescription:
-      "Providing sacred spaces with digital tools to connect, inform and grow.",
+      "Elegant, intuitive prayer time displays to connect with prayer.",
     legal: "Legal",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",

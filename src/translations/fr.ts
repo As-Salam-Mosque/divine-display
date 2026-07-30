@@ -308,7 +308,7 @@ const fr = {
     ],
     contactSales: "Devenir partenaire",
     footerDescription:
-      "Nous offrons aux espaces sacrés des outils numériques pour connecter, informer et faire grandir la communauté.",
+      "Des affichages élégants et intuitifs des horaires de prière pour connecter les fidèles à la prière.",
     legal: "Légal",
     privacyPolicy: "Politique de confidentialité",
     termsOfService: "Conditions d'utilisation",
