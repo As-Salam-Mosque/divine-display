@@ -44,15 +44,27 @@ export function LandingHeaderBar({
           <button
             type="button"
             onClick={onBrandClick}
-            className="font-headline-md text-2xl font-bold text-primary focus-ring bg-none border-none cursor-pointer p-0"
+            className="flex items-center gap-2 font-headline-md text-2xl font-bold text-primary focus-ring bg-none border-none cursor-pointer p-0"
           >
+            <img
+              src="/favicon.svg"
+              alt=""
+              className="h-8 w-8 object-contain"
+              aria-hidden="true"
+            />
             {brand}
           </button>
         ) : (
           <a
             href={brandHref}
-            className="font-headline-md text-2xl font-bold text-primary focus-ring"
+            className="flex items-center gap-2 font-headline-md text-2xl font-bold text-primary focus-ring"
           >
+            <img
+              src="/favicon.svg"
+              alt=""
+              className="h-8 w-8 object-contain"
+              aria-hidden="true"
+            />
             {brand}
           </a>
         )}

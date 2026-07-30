@@ -35,11 +35,7 @@ export function LandingPage() {
     },
   ];
 
-  const heroHighlights = [
-    { icon: "schedule", label: t.landing.featureRealtimeTitle },
-    { icon: "campaign", label: t.landing.featureAnnouncementsTitle },
-    { icon: "devices", label: t.landing.featureDevicesTitle },
-  ];
+
 
   const featureItems = [
     {
@@ -88,7 +84,7 @@ export function LandingPage() {
         currentLanguage={language}
         onLanguageChange={setLanguage}
         navItems={navItems}
-        action={{ label: t.landing.joinUs, href: "#partners" }}
+        action={{ label: t.landing.joinUs, href: "/register" }}
       />
 
       <main id="main-content" className="pt-20" tabIndex={-1}>
@@ -99,7 +95,7 @@ export function LandingPage() {
           <div className="mx-auto grid w-full max-w-7xl items-center gap-10 lg:grid-cols-2">
             <div className="relative">
               <div className="absolute -top-16 -left-16 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
-              <span className="eyebrow-label mb-4">{t.landing.heroEyebrow}</span>
+
               <h1 className="mb-6 text-5xl leading-tight font-bold lg:text-7xl">
                 {t.landing.heroTitleLead} <br />
                 <span className="text-primary italic">
@@ -109,22 +105,7 @@ export function LandingPage() {
               <p className="mb-8 max-w-xl text-lg text-text-muted">
                 {t.landing.heroDescription}
               </p>
-              <div className="mb-8 flex flex-wrap gap-x-6 gap-y-3">
-                {heroHighlights.map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex items-center gap-2 text-sm text-text-muted"
-                  >
-                    <span
-                      className="material-symbols-outlined text-primary"
-                      aria-hidden="true"
-                    >
-                      {item.icon}
-                    </span>
-                    <span>{item.label}</span>
-                  </div>
-                ))}
-              </div>
+
               <div className="flex flex-wrap gap-4">
                 <button
                   onClick={() => setLocation("/register")}
@@ -237,33 +218,77 @@ export function LandingPage() {
             </p>
           </div>
           <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-2">
-            <article className="ghost-border rounded-2xl bg-surface-panel p-8">
+            <article className="rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
+              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-primary-25 bg-background-deep">
+                <span
+                  className="material-symbols-outlined text-3xl text-primary"
+                  aria-hidden="true"
+                >
+                  mosque
+                </span>
+              </div>
               <span className="eyebrow-label mb-2">
                 {t.landing.forCommunities}
               </span>
-              <h3 className="mb-4 text-4xl font-bold">{t.landing.mosque}</h3>
-              <p className="mb-7 text-lg text-text-muted">
+              <h3 className="mb-4 text-3xl font-bold md:text-4xl">
+                {t.landing.mosque}
+              </h3>
+              <p className="mb-5 text-lg text-text-muted">
                 {t.landing.mosqueDescription}
               </p>
+              <ul className="mb-8 space-y-3 text-text-muted">
+                {t.landing.mosqueBenefits.map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-3">
+                    <span
+                      className="material-symbols-outlined mt-0.5 text-xl text-primary"
+                      aria-hidden="true"
+                    >
+                      check_circle
+                    </span>
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
               <button
                 onClick={() => setLocation("/register")}
-                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring inline-block bg-none border-none cursor-pointer"
+                className="gold-button block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring bg-none border-none cursor-pointer"
               >
                 {t.landing.registerMosque}
               </button>
             </article>
 
-            <article className="ghost-border rounded-2xl bg-surface-panel p-8">
+            <article className="rounded-2xl border border-primary-25 bg-linear-to-br from-surface-panel to-surface-container p-8 shadow-lg shadow-black/20">
+              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-primary-25 bg-background-deep">
+                <span
+                  className="material-symbols-outlined text-3xl text-primary"
+                  aria-hidden="true"
+                >
+                  handshake
+                </span>
+              </div>
               <span className="eyebrow-label mb-2">{t.landing.forPartners}</span>
-              <h3 className="mb-4 text-4xl font-bold">
+              <h3 className="mb-4 text-3xl font-bold md:text-4xl">
                 {t.landing.businessPartner}
               </h3>
-              <p className="mb-7 text-lg text-text-muted">
+              <p className="mb-5 text-lg text-text-muted">
                 {t.landing.businessDescription}
               </p>
+              <ul className="mb-8 space-y-3 text-text-muted">
+                {t.landing.businessBenefits.map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-3">
+                    <span
+                      className="material-symbols-outlined mt-0.5 text-xl text-primary"
+                      aria-hidden="true"
+                    >
+                      check_circle
+                    </span>
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
               <a
                 href="mailto:divine-display@snake.mozmail.com?subject=Divine%20Display%20Partnership%20Inquiry"
-                className="gold-button rounded-lg px-8 py-4 font-semibold focus-ring inline-block"
+                className="gold-button block w-full rounded-lg px-8 py-4 text-center font-semibold focus-ring"
               >
                 {t.landing.contactSales}
               </a>
