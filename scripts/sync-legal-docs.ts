@@ -2,15 +2,14 @@ import { copyFileSync, existsSync } from "fs";
 import { join } from "path";
 
 /**
- * Copies the root-level legal documents (Terms of Service, Privacy Policy,
- * Ad Policy, License) into `public/` so Vite serves them as static,
- * downloadable files.
+ * Copies the open-source license into `public/` so Vite serves it as a
+ * static, downloadable file.
  *
  * Runs automatically before `dev` and `build` (see `predev`/`prebuild` in
  * package.json) so the copies never drift out of sync.
  */
 const root = process.cwd();
-const docs = ["PRIVACY.md", "TERMS.md", "AD_POLICY.md", "LICENSE"];
+const docs = ["LICENSE"];
 
 let hasError = false;
 

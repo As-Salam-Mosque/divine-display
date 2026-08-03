@@ -241,7 +241,7 @@ const fr = {
     navPartners: "Partenaires",
     navContact: "Contact",
     languageToggle: "Langue",
-    joinUs: "Découvrir",
+    joinUs: "Rejoignez-nous",
 
     heroTitleLead: "Restez proches de votre",
     heroTitleHighlight: "mosquée et de votre communauté.",
