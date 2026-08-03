@@ -130,6 +130,15 @@ export function DashboardFormSections({
   removeExtraPrayerScheduleDate,
   setExtraPrayerScheduleDate,
 }: DashboardFormSectionsProps) {
+  const handleUseCurrentLocation = () => {
+    navigator.geolocation?.getCurrentPosition(({ coords }) => {
+      update({
+        latitude: String(coords.latitude),
+        longitude: String(coords.longitude),
+      });
+    });
+  };
+
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
       {/* ── 1. Mosque Information ──────────────────────────── */}
@@ -310,7 +319,7 @@ export function DashboardFormSections({
         title={t.locationCalculation}
         description={t.locationCalculationDesc}
       >
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid items-end gap-4 sm:grid-cols-[1fr_1fr_1fr_auto]">
           <Field id="cfg-lat" label={t.latitudeLabel}>
             <input
               id="cfg-lat"
@@ -347,6 +356,21 @@ export function DashboardFormSections({
               ))}
             </select>
           </Field>
+          <button
+            type="button"
+            aria-label="Use current location"
+            onClick={handleUseCurrentLocation}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-primary transition-colors hover:bg-primary/10 focus-ring"
+            style={{ border: "1px solid rgba(var(--primary-rgb), 0.3)" }}
+          >
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: 20 }}
+              aria-hidden="true"
+            >
+              gps_fixed
+            </span>
+          </button>
         </div>
       </SectionCard>
 
@@ -587,7 +611,7 @@ export function DashboardFormSections({
                       </Field>
                       <Field
                         id={`ad-weight-${i}`}
-                        label={t.rotationWeightLabel}
+                        label={t.priorityLabel}
                       >
                         <input
                           id={`ad-weight-${i}`}
@@ -598,7 +622,7 @@ export function DashboardFormSections({
                           onChange={(e) =>
                             setSponsor(i, "weight", e.target.value)
                           }
-                          placeholder={t.rotationWeightPlaceholder}
+                          placeholder={t.priorityPlaceholder}
                         />
                       </Field>
                       <div className="pb-0.5">
