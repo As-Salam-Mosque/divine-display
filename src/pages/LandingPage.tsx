@@ -85,7 +85,7 @@ export function LandingPage() {
         currentLanguage={language}
         onLanguageChange={setLanguage}
         navItems={navItems}
-        action={{ label: t.landing.joinUs, href: "/register" }}
+        action={{ label: t.landing.joinUs, href: "#partners" }}
       />
 
       <main id="main-content" className="pt-20" tabIndex={-1}>
@@ -248,7 +248,7 @@ export function LandingPage() {
         id="contact"
         className="scroll-mt-24 border-t border-outline-variant bg-background-deep px-5 pt-20 pb-20 md:px-8"
       >
-        <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-3">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 md:grid-cols-2">
           <div>
             <p className="mb-4 text-2xl font-semibold text-primary">
               {t.landing.brand}
@@ -256,39 +256,20 @@ export function LandingPage() {
             <p className="text-text-muted">{t.landing.footerDescription}</p>
           </div>
 
+          {/*
           <div>
             <p className="eyebrow-label mb-4">{t.landing.legal}</p>
             <a
-              href="/PRIVACY.md"
-              download
-              className="block text-text-muted transition-colors hover:text-primary focus-ring"
-            >
-              {t.landing.privacyPolicy}
-            </a>
-            <a
-              href="/TERMS.md"
-              download
-              className="mt-2 block text-text-muted transition-colors hover:text-primary focus-ring"
-            >
-              {t.landing.termsOfService}
-            </a>
-            <a
-              href="/AD_POLICY.md"
-              download
-              className="mt-2 block text-text-muted transition-colors hover:text-primary focus-ring"
-            >
-              {t.landing.adPolicy}
-            </a>
-            <a
               href="/LICENSE"
               download
-              className="mt-2 block text-text-muted transition-colors hover:text-primary focus-ring"
+              className="block text-text-muted transition-colors hover:text-primary focus-ring"
             >
               {t.landing.license}
             </a>
           </div>
+          */}
 
-          <div>
+          <div className="md:justify-self-end">
             <p className="eyebrow-label mb-4">{t.landing.contact}</p>
 
             <div className="flex flex-col gap-3">

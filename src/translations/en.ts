@@ -240,7 +240,7 @@ const en = {
     navPartners: "Partners",
     navContact: "Contact",
     languageToggle: "Language",
-    joinUs: "Get started",
+    joinUs: "Join Us",
 
     heroTitleLead: "Stay connected to your",
     heroTitleHighlight: "masjid and community.",
