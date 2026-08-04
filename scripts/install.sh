@@ -60,7 +60,7 @@ EOF
 
 cat > "${AUTOSTART_FILE}" <<EOF
 #!/usr/bin/env sh
-${CHROMIUM_BIN} --kiosk "${URL}" --noerrdialogs --disable-session-crashed-bubble --disable-infobars &
+${CHROMIUM_BIN} --kiosk "${URL}" --noerrdialogs --password-store=basic --disable-session-crashed-bubble --disable-infobars &
 EOF
 
 chmod +x "${AUTOSTART_FILE}"
