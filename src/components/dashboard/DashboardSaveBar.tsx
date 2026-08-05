@@ -37,8 +37,7 @@ export function DashboardSaveBar({
                 )}
               >
                 <span
-                  className="material-symbols-outlined shrink-0"
-                  style={{ fontSize: 18 }}
+                  className="material-symbols-outlined text-lg shrink-0"
                   aria-hidden="true"
                 >
                   {status.type === "success" ? "check_circle" : "error"}
@@ -73,8 +72,7 @@ export function DashboardSaveBar({
                 {saving ? (
                   <>
                     <span
-                      className="material-symbols-outlined motion-safe:animate-spin"
-                      style={{ fontSize: 18 }}
+                      className="material-symbols-outlined text-lg motion-safe:animate-spin"
                       aria-hidden="true"
                     >
                       sync
@@ -84,8 +82,7 @@ export function DashboardSaveBar({
                 ) : (
                   <>
                     <span
-                      className="material-symbols-outlined"
-                      style={{ fontSize: 18 }}
+                      className="material-symbols-outlined text-lg"
                       aria-hidden="true"
                     >
                       save

@@ -262,8 +262,7 @@ export function DashboardFormSections({
               className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg ghost-border bg-surface-container hover:bg-primary/10 hover:border-primary/30 transition-colors focus-ring"
             >
               <span
-                className="material-symbols-outlined text-text-muted"
-                style={{ fontSize: 18 }}
+                className="material-symbols-outlined text-text-muted text-lg"
                 aria-hidden="true"
               >
                 upload
@@ -277,8 +276,7 @@ export function DashboardFormSections({
               style={{ border: "1px solid rgba(239,68,68,0.3)" }}
             >
               <span
-                className="material-symbols-outlined"
-                style={{ fontSize: 18 }}
+                className="material-symbols-outlined text-lg"
                 aria-hidden="true"
               >
                 delete
@@ -289,8 +287,7 @@ export function DashboardFormSections({
                 (form.logo.startsWith("data:") ||
                   form.logo.startsWith("http")))) && (
               <span
-                className="material-symbols-outlined text-emerald-400"
-                style={{ fontSize: 20 }}
+                className="material-symbols-outlined text-emerald-400 text-xl"
                 aria-hidden="true"
               >
                 check_circle
@@ -364,8 +361,7 @@ export function DashboardFormSections({
             style={{ border: "1px solid rgba(var(--primary-rgb), 0.3)" }}
           >
             <span
-              className="material-symbols-outlined"
-              style={{ fontSize: 20 }}
+              className="material-symbols-outlined text-xl"
               aria-hidden="true"
             >
               gps_fixed
@@ -551,8 +547,7 @@ export function DashboardFormSections({
                           className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg ghost-border bg-surface-container hover:bg-primary/10 hover:border-primary/30 transition-colors focus-ring"
                         >
                           <span
-                            className="material-symbols-outlined text-text-muted"
-                            style={{ fontSize: 18 }}
+                            className="material-symbols-outlined text-text-muted text-lg"
                             aria-hidden="true"
                           >
                             upload
@@ -566,8 +561,7 @@ export function DashboardFormSections({
                           style={{ border: "1px solid rgba(239,68,68,0.3)" }}
                         >
                           <span
-                            className="material-symbols-outlined"
-                            style={{ fontSize: 18 }}
+                            className="material-symbols-outlined text-lg"
                             aria-hidden="true"
                           >
                             delete
@@ -966,8 +960,7 @@ export function DashboardFormSections({
                               style={{ border: "1px solid rgba(239,68,68,0.3)" }}
                             >
                               <span
-                                className="material-symbols-outlined"
-                                style={{ fontSize: 16 }}
+                                className="material-symbols-outlined text-base"
                                 aria-hidden="true"
                               >
                                 close
@@ -1038,8 +1031,7 @@ export function DashboardFormSections({
                             style={{ border: "1px solid rgba(239,68,68,0.3)" }}
                           >
                             <span
-                              className="material-symbols-outlined"
-                              style={{ fontSize: 16 }}
+                              className="material-symbols-outlined text-base"
                               aria-hidden="true"
                             >
                               close

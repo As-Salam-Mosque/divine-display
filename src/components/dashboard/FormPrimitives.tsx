@@ -76,8 +76,7 @@ export function SectionCard({
       >
         <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-primary/10">
           <span
-            className="material-symbols-outlined text-primary filled"
-            style={{ fontSize: 18 }}
+            className="material-symbols-outlined text-primary text-lg filled"
             aria-hidden="true"
           >
             {icon}

@@ -86,10 +86,9 @@ export function DashboardSidebar({
             >
               <span
                 className={cn(
-                  "material-symbols-outlined shrink-0",
+                  "material-symbols-outlined text-lg shrink-0",
                   isActive && "filled",
                 )}
-                style={{ fontSize: 18 }}
                 aria-hidden="true"
               >
                 {icon}

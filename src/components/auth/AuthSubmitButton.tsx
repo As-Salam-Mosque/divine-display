@@ -27,8 +27,7 @@ export function AuthSubmitButton({
       {loading ? (
         <>
           <span
-            className="material-symbols-outlined motion-safe:animate-spin"
-            style={{ fontSize: 20 }}
+            className="material-symbols-outlined text-xl motion-safe:animate-spin"
             aria-hidden="true"
           >
             sync

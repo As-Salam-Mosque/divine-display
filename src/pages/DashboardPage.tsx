@@ -561,8 +561,7 @@ export function DashboardPage() {
             {loading ? (
               <div className="flex items-center justify-center gap-3 py-24 text-text-muted">
                 <span
-                  className="material-symbols-outlined text-primary motion-safe:animate-spin"
-                  style={{ fontSize: 32 }}
+                  className="material-symbols-outlined text-primary text-4xl motion-safe:animate-spin"
                   aria-hidden="true"
                 >
                   sync

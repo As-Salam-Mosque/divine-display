@@ -185,7 +185,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         <div className="flex items-center justify-between px-6 py-4 border-b border-primary-25 shrink-0">
           <div className="flex items-center gap-2">
             <span
-              className="material-symbols-outlined text-primary text-[20px]"
+              className="material-symbols-outlined text-primary text-xl"
               aria-hidden="true"
             >
               settings
@@ -202,7 +202,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-[rgba(var(--primary-rgb),0.18)] focus-visible:text-primary focus-visible:bg-[rgba(var(--primary-rgb),0.18)] transition-colors focus-ring"
           >
             <span
-              className="material-symbols-outlined text-[20px]"
+              className="material-symbols-outlined text-xl"
               aria-hidden="true"
             >
               close

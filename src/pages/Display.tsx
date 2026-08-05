@@ -1,4 +1,9 @@
-import { type CSSProperties, useState } from "react";
+import {
+  type CSSProperties,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useClock } from "../hooks/useClock";
 import { usePrayerStatus } from "../hooks/usePrayerStatus";
 import { ClockPanel } from "../components/ClockPanel";
@@ -12,6 +17,8 @@ import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
 
+const SIGNAL_TRANSITION_HALF_DURATION_MS = 1000;
+
 export function Display() {
   const { settings } = useSettings();
   const t = useT(settings.language);
@@ -19,8 +26,77 @@ export function Display() {
 
   const clock = useClock(settings.language);
   const prayerStatus = usePrayerStatus(settings.mosque, settings.language);
-  const showAdRail = settings.showSponsors && !prayerStatus.isCriticalSignal;
   const [promoActive, setPromoActive] = useState(false);
+  const [displayedPrayerStatus, setDisplayedPrayerStatus] =
+    useState(prayerStatus);
+  const [isSignalTransitioning, setIsSignalTransitioning] = useState(false);
+  const [signalTransitionKey, setSignalTransitionKey] = useState(0);
+  const wasCriticalSignal = useRef(prayerStatus.isCriticalSignal);
+  const latestPrayerStatus = useRef(prayerStatus);
+  const transitionTimer = useRef<number | null>(null);
+
+  useLayoutEffect(() => {
+    latestPrayerStatus.current = prayerStatus;
+  }, [prayerStatus]);
+
+  const renderedPrayerStatus = isSignalTransitioning
+    ? displayedPrayerStatus
+    : prayerStatus;
+  const showAdRail =
+    settings.showSponsors && !renderedPrayerStatus.isCriticalSignal;
+
+  // Sync normal status updates into the currently displayed snapshot. The
+  // signal-transition effect below intentionally skips this while the actual
+  // layout is being covered by the black fade.
+  useLayoutEffect(() => {
+    if (
+      isSignalTransitioning ||
+      wasCriticalSignal.current !== prayerStatus.isCriticalSignal
+    ) {
+      return;
+    }
+
+    setDisplayedPrayerStatus(latestPrayerStatus.current);
+  }, [
+    isSignalTransitioning,
+    prayerStatus.activePrayerIndex,
+    prayerStatus.criticalSignal?.arabicName,
+    prayerStatus.criticalSignal?.prayerName,
+    prayerStatus.criticalSignal?.subtitle,
+    prayerStatus.criticalSignal?.urgency,
+    prayerStatus.error,
+    prayerStatus.hijriDate,
+    prayerStatus.isCriticalSignal,
+    prayerStatus.loading,
+    prayerStatus.nextPrayerIndex,
+    prayerStatus.prayers,
+    prayerStatus.statusMessage,
+    prayerStatus.statusType,
+  ]);
+
+  useLayoutEffect(() => {
+    if (wasCriticalSignal.current === prayerStatus.isCriticalSignal) return;
+
+    wasCriticalSignal.current = prayerStatus.isCriticalSignal;
+    setSignalTransitionKey((key) => key + 1);
+    setIsSignalTransitioning(true);
+    const transitionHalfDuration = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    )?.matches
+      ? 0
+      : SIGNAL_TRANSITION_HALF_DURATION_MS;
+    transitionTimer.current = window.setTimeout(() => {
+      setDisplayedPrayerStatus(latestPrayerStatus.current);
+      transitionTimer.current = null;
+    }, transitionHalfDuration);
+
+    return () => {
+      if (transitionTimer.current !== null) {
+        window.clearTimeout(transitionTimer.current);
+        transitionTimer.current = null;
+      }
+    };
+  }, [prayerStatus.isCriticalSignal]);
 
   return (
     <div
@@ -54,22 +130,22 @@ export function Display() {
               <div className="flex-1 flex items-center justify-center w-full h-auto">
                 <ClockPanel
                   clock={clock}
-                  hijriDate={prayerStatus.hijriDate}
-                  statusMessage={prayerStatus.statusMessage}
-                  statusType={prayerStatus.statusType}
-                  criticalSignal={prayerStatus.criticalSignal}
+                  hijriDate={renderedPrayerStatus.hijriDate}
+                  statusMessage={renderedPrayerStatus.statusMessage}
+                  statusType={renderedPrayerStatus.statusType}
+                  criticalSignal={renderedPrayerStatus.criticalSignal}
                   onOpenSettings={() => setSettingsOpen(true)}
                   promoActive={promoActive}
                 />
               </div>
               <PromoRail
-                isCriticalSignal={prayerStatus.isCriticalSignal}
+                isCriticalSignal={renderedPrayerStatus.isCriticalSignal}
                 onActiveChange={setPromoActive}
               />
             </div>
           </div>
 
-          {prayerStatus.loading ? (
+          {renderedPrayerStatus.loading ? (
             <div
               className="basis-[35%] min-h-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3"
               aria-busy="true"
@@ -88,8 +164,8 @@ export function Display() {
               id="prayer-times"
             >
               <PrayerTable
-                prayers={prayerStatus.prayers}
-                activePrayerIndex={prayerStatus.activePrayerIndex}
+                prayers={renderedPrayerStatus.prayers}
+                activePrayerIndex={renderedPrayerStatus.activePrayerIndex}
               />
             </div>
           )}
@@ -113,6 +189,15 @@ export function Display() {
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
       />
+
+      {isSignalTransitioning && (
+        <div
+          key={signalTransitionKey}
+          className="critical-signal-transition fixed inset-0 z-100 pointer-events-none bg-black"
+          aria-hidden="true"
+          onAnimationEnd={() => setIsSignalTransitioning(false)}
+        />
+      )}
     </div>
   );
 }
