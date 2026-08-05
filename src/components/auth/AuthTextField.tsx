@@ -40,8 +40,7 @@ export function AuthTextField({
       </label>
       <div className="relative flex items-center">
         <span
-          className="absolute left-3 text-text-muted material-symbols-outlined pointer-events-none"
-          style={{ fontSize: 20 }}
+          className="absolute left-3 text-text-muted material-symbols-outlined text-xl pointer-events-none"
           aria-hidden="true"
         >
           {icon}

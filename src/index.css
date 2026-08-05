@@ -23,6 +23,16 @@ html {
     background-color: #060a1a;
 }
 
+/* Large-format high-resolution displays have enough physical space for the
+   display's rem-based typography and spacing to use a 2x scale. The second
+   condition covers 4K screens reported as a 1920px CSS viewport by the OS. */
+@media (min-width: 2560px) and (min-height: 1440px),
+    (min-width: 1920px) and (min-height: 1080px) and (min-resolution: 2dppx) {
+    html {
+        font-size: 200%;
+    }
+}
+
 html:has(.light) {
     background-color: var(--background-deep);
 }
@@ -221,21 +231,35 @@ button {
         container-type: inline-size;
     }
     .promo-compact .font-clock-display {
-        font-size: clamp(2.5rem, 14cqw, 9rem) !important;
+        font-size: clamp(3rem, 16cqw, 10.5rem) !important;
     }
     .promo-compact .text-xl.sm\:text-2xl.md\:text-5xl,
     .promo-compact
         [class*="text-primary"][class*="font-bold"][class*="leading-tight"] {
-        font-size: clamp(1rem, 6cqw, 4.5rem) !important;
+        font-size: clamp(1.25rem, 7cqw, 5.5rem) !important;
     }
     .promo-compact .status-pill {
         max-width: 100%;
     }
     .promo-compact .status-pill span.font-body-md {
-        font-size: clamp(0.875rem, 4cqw, 2.5rem) !important;
+        font-size: clamp(1.625rem, 6.8cqw, 5.25rem) !important;
+    }
+
+    /* Give the status message more emphasis while the promo rail is visible. */
+    @media (min-width: 768px) {
+        .promo-compact .status-pill span.promo-status-text-expanded {
+            font-size: clamp(2.4rem, 8.5cqw, 7.5rem) !important;
+        }
+    }
+    .promo-compact h2.font-label-caps {
+        font-size: clamp(0.875rem, 2.6cqw, 2rem) !important;
     }
     .promo-compact h1.font-headline-md {
         font-size: clamp(0.875rem, 5cqw, 3rem) !important;
+    }
+    .promo-compact .status-pill svg {
+        width: clamp(2.75rem, 7cqw, 7rem) !important;
+        height: clamp(2.75rem, 7cqw, 7rem) !important;
     }
 
     /* CriticalSignalPanel scales against its rendered panel, not the viewport. */
@@ -767,6 +791,22 @@ button {
 
 /* --- Critical Signal Animations --- */
 
+/* Transition the complete display through black when entering or leaving a
+   critical signal. The content changes underneath the overlay at the midpoint. */
+.critical-signal-transition {
+    animation: critical-signal-fade-through-black 2s ease-in-out forwards;
+}
+
+@keyframes critical-signal-fade-through-black {
+    0%,
+    100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
 /* Entry animation when critical state activates */
 .critical-enter {
     animation: critical-breathe 0.7s ease-out forwards;
@@ -837,6 +877,9 @@ button {
 
 /* Reduced motion fallback: static glow and a stable hero */
 @media (prefers-reduced-motion: reduce) {
+    .critical-signal-transition {
+        animation-duration: 1ms;
+    }
     .critical-inner-glow-adhan,
     .critical-inner-glow-iqamah,
     .critical-hero-pulse {
@@ -862,19 +905,19 @@ button {
 
 /* Fluid clock font sizing (Phase 1): scales between small and TV */
 .font-clock-display {
-    font-size: clamp(4rem, 8vw, 12.5rem) !important; /* ~64px → 200px */
+    font-size: clamp(3.5rem, 8vw, 12.5rem) !important; /* ~56px → 200px */
     line-height: 1 !important;
 }
 
 /* Fluid time sizing for prayer times: scales smoothly between small and large displays */
 .time-large {
-    font-size: clamp(1.25rem, 3.5vw, 3.25rem);
+    font-size: clamp(1.375rem, 3.75vw, 3.5rem);
     line-height: 1;
 }
 
 @media (min-width: 1280px) {
     .time-large {
-        font-size: clamp(1.5rem, 2.5vw, 4rem);
+        font-size: clamp(1.75rem, 3vw, 4.5rem);
     }
 }
 

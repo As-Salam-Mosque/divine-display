@@ -38,8 +38,7 @@ export function PasswordField({
       </label>
       <div className="relative flex items-center">
         <span
-          className="absolute left-3 text-text-muted material-symbols-outlined pointer-events-none"
-          style={{ fontSize: 20 }}
+          className="absolute left-3 text-text-muted material-symbols-outlined text-xl pointer-events-none"
           aria-hidden="true"
         >
           lock
@@ -66,8 +65,7 @@ export function PasswordField({
           className="absolute inset-y-0 right-3 my-auto h-6 w-6 inline-flex items-center justify-center text-text-muted hover:text-primary transition-colors focus-ring rounded"
         >
           <span
-            className="material-symbols-outlined leading-none"
-            style={{ fontSize: 20 }}
+            className="material-symbols-outlined text-xl leading-none"
             aria-hidden="true"
           >
             {isVisible ? "visibility_off" : "visibility"}

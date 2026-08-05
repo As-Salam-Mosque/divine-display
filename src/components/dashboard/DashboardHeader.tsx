@@ -41,8 +41,7 @@ export function DashboardHeader({
             className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg font-label-caps text-xs uppercase tracking-widest text-text-muted hover:text-primary hover:bg-primary/5 transition-colors focus-ring bg-none border-none cursor-pointer"
           >
             <span
-              className="material-symbols-outlined"
-              style={{ fontSize: 16 }}
+              className="material-symbols-outlined text-base"
               aria-hidden="true"
             >
               open_in_new
@@ -55,8 +54,7 @@ export function DashboardHeader({
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-label-caps text-xs uppercase tracking-widest text-text-muted hover:text-primary hover:bg-primary/5 transition-colors focus-ring"
           >
             <span
-              className="material-symbols-outlined"
-              style={{ fontSize: 16 }}
+              className="material-symbols-outlined text-base"
               aria-hidden="true"
             >
               logout
