@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { MosqueConfig } from "../types";
 import fallbackConfig from "../../mosque.config";
 
-const DEFAULT_CONFIG_URL = import.meta.env.VITE_MOSQUE_CONFIG_URL || "";
 const DEFAULT_API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "";
 
 interface InternalConfigState {
@@ -33,16 +32,15 @@ export function useMosqueConfig(
   options?: UseMosqueConfigOptions,
 ): MosqueConfigState {
   const opts = options || {};
-  const resolvedUrl = opts.url?.trim() || DEFAULT_CONFIG_URL || undefined;
   const resolvedApiBase =
     opts.apiBase?.trim() || DEFAULT_API_BASE_URL || undefined;
   const resolvedSlug = opts.slug?.trim() || undefined;
 
   // Determine which URL to use: explicit URL takes precedence over API-based fetching
-  const useApi = Boolean(resolvedApiBase && resolvedSlug && !resolvedUrl);
+  const useApi = Boolean(resolvedApiBase && resolvedSlug);
   const fetchUrl = useApi
     ? `${resolvedApiBase}/api/v1/mosques?name=${encodeURIComponent(resolvedSlug as string)}`
-    : resolvedUrl;
+    : opts.url?.trim() || undefined;
 
   const [state, setState] = useState<InternalConfigState>(() => ({
     config: null,
@@ -104,8 +102,8 @@ export function useMosqueConfig(
     // initial fetch
     fetchConfig();
 
-    // poll every 30 minutes
-    const intervalId = window.setInterval(fetchConfig, 30 * 60 * 1000);
+    // poll every 5 minutes
+    const intervalId = window.setInterval(fetchConfig, 5 * 60 * 1000);
 
     return () => {
       isUnmounted = true;
