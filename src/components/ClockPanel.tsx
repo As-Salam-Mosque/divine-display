@@ -43,7 +43,7 @@ interface ClockDisplayProps {
 const ClockDisplay = memo(
   ({ clock, is24h }: ClockDisplayProps) => (
     <div
-      className="clock-panel__time flex min-w-0 min-h-0 max-w-full flex-wrap items-baseline justify-center gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
+      className="clock-panel__time flex w-full min-w-0 min-h-0 max-w-full flex-wrap items-baseline justify-start gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
       aria-label={`${is24h ? clock.hours24 : clock.hours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
       role="timer"
     >

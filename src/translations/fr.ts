@@ -32,9 +32,9 @@ const fr = {
   statusIqamahNow: (name: string) => `Iqama de ${name} — venez à la prière`,
   statusTimeNow: (name: string) => `${name} maintenant — venez à la prière`,
   criticalSubtitle: "Venez à la prière",
-  statusIqamah: (name: string, remaining: string) =>
-    `Iqama de ${name} dans ${remaining}`,
-  statusNext: (name: string, remaining: string) => `${name} dans ${remaining}`,
+  statusIqamah: (_name: string, remaining: string) =>
+    `Iqama ${remaining}`,
+  statusNext: (name: string, remaining: string) => `${name} ${remaining}`,
   communitySponsors: "SPONSORS COMMUNAUTAIRES",
   available: "Disponible",
   masjidAnnouncements: "ANNONCES",
