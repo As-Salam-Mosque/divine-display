@@ -141,7 +141,7 @@ const CalendarRow = memo(
             promoActive && "md:items-start",
           )}
         >
-          <span className="font-body-md text-base md:text-xl lg:text-2xl xl:text-3xl tv:text-4xl text-on-surface font-medium">
+          <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
             {clock.gregorianDate}
           </span>
           <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
@@ -158,7 +158,7 @@ const CalendarRow = memo(
             promoActive && "md:items-start",
           )}
         >
-          <span className="font-body-md text-base md:text-xl lg:text-2xl xl:text-3xl tv:text-4xl text-on-surface font-medium">
+          <span className="font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
             {hijriDate || "—"}
           </span>
           <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
@@ -282,14 +282,7 @@ export function ClockPanel({
                   <path d="M0 0h24v24H0z" fill="none" />
                   <path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z" />
                 </svg>
-                <span
-                  className={cn(
-                    "font-body-md text-2xl md:text-5xl lg:text-5xl text-on-surface text-center font-semibold",
-                    promoActive
-                      ? "xl:text-6xl tv:text-9xl promo-status-text-expanded"
-                      : "xl:text-7xl tv:text-[10rem]",
-                  )}
-                >
+                <span className="font-body-md text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl text-on-surface text-center font-semibold">
                   {statusMessage}
                 </span>
               </div>
