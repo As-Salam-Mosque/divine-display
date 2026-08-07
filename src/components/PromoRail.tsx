@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useSettings } from "../context/SettingsContext";
+import { useDebugPromo } from "../hooks/useDebugPromo";
 import { useDominantColor } from "../hooks/useDominantColor";
 import { usePromoTimer } from "../hooks/usePromoTimer";
 import { cn } from "../utils/cn";
@@ -15,17 +16,22 @@ export function PromoRail({
 }: PromoRailProps) {
   const { settings } = useSettings();
 
+  const debugPromo = useDebugPromo();
   const { phase, currentSlot } = usePromoTimer({
     slots: settings.mosque?.sponsors ?? [],
     promoConfig: settings.mosque?.promo,
     enabled: settings.showSponsors,
+    forceVisible: debugPromo,
   });
 
   const promoImage = currentSlot?.image ?? null;
   const promoAlt = currentSlot?.label ?? "";
   // Only "active" once the promo is actually transitioning into view.
   const isActive =
-    !isCriticalSignal && settings.showSponsors && phase === "visible";
+    !isCriticalSignal &&
+    settings.showSponsors &&
+    !!promoImage &&
+    (debugPromo || phase === "visible");
 
   // Notify parent when promo active state changes so layout can adapt
   useEffect(() => {
