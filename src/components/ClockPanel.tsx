@@ -3,6 +3,7 @@ import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
 import { isCriticalStatusType } from "../utils/prayerStatus";
+import { splitStatusMessage } from "../utils/time";
 import type {
   ClockState,
   CriticalSignalData,
@@ -42,7 +43,7 @@ interface ClockDisplayProps {
 const ClockDisplay = memo(
   ({ clock, is24h }: ClockDisplayProps) => (
     <div
-      className="clock-panel__time flex items-baseline gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
+      className="clock-panel__time flex min-w-0 min-h-0 max-w-full flex-wrap items-baseline justify-center gap-2 md:gap-5 lg:gap-7 xl:gap-10 text-on-surface z-10"
       aria-label={`${is24h ? clock.hours24 : clock.hours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
       role="timer"
     >
@@ -50,11 +51,11 @@ const ClockDisplay = memo(
         {is24h ? clock.hours24 : clock.hours}:{clock.minutes}
       </span>
       <div className="relative flex items-start leading-none">
-        <span className="text-xl sm:text-2xl md:text-5xl lg:text-6xl xl:text-7xl tv:text-8xl text-primary font-bold leading-tight">
+        <span className="clock-panel__seconds text-primary font-bold leading-tight">
           :{clock.seconds}
         </span>
         {!is24h && (
-          <span className="absolute top-[-0.9em] right-0 whitespace-nowrap text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-primary font-semibold leading-none">
+          <span className="clock-panel__ampm absolute top-[-0.9em] right-0 whitespace-nowrap text-primary font-semibold leading-none">
             {clock.ampm}
           </span>
         )}
@@ -85,13 +86,13 @@ const MosqueInfo = memo(({ promoActive }: MosqueInfoProps) => {
   return (
     <div
       className={cn(
-        "flex flex-col items-center mb-1 md:mb-2 lg:mb-3",
+        "clock-panel__branding flex w-full max-w-full flex-col items-center mb-1 md:mb-2 lg:mb-3",
         promoActive && "md:items-start",
       )}
     >
       <div
         className={cn(
-          "flex flex-col items-center mb-1 md:mb-2",
+          "flex w-full max-w-full flex-col items-center mb-1 md:mb-2",
           promoActive && "md:items-start",
         )}
       >
@@ -109,10 +110,10 @@ const MosqueInfo = memo(({ promoActive }: MosqueInfoProps) => {
             mosque
           </span>
         )}
-        <h1 className="font-headline-md text-base md:text-2xl lg:text-4xl xl:text-5xl tv:text-6xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
+        <h1 className="clock-panel__mosque-name font-headline-md max-w-full text-center text-base md:text-2xl lg:text-4xl xl:text-5xl tv:text-6xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
           {settings.mosque?.name}
         </h1>
-        <p className="font-label-caps text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-text-muted">
+        <p className="clock-panel__city max-w-full text-center font-label-caps text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-text-muted">
           {settings.mosque?.city}
         </p>
       </div>
@@ -134,14 +135,14 @@ const CalendarRow = memo(
   ({ clock, hijriDate, language, promoActive }: CalendarRowProps) => {
     const t = useT(language);
     return (
-      <div className="clock-panel__dates flex items-center gap-2 md:gap-4 lg:gap-5">
+      <div className="clock-panel__dates flex min-w-0 max-w-full items-center gap-2 md:gap-4 lg:gap-5">
         <div
           className={cn(
-            "flex flex-col items-center",
+            "flex min-w-0 max-w-full flex-col items-center",
             promoActive && "md:items-start",
           )}
         >
-          <span className="font-body-md text-base md:text-xl lg:text-2xl xl:text-3xl tv:text-4xl text-on-surface font-medium">
+          <span className="max-w-full font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
             {clock.gregorianDate}
           </span>
           <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
@@ -154,11 +155,11 @@ const CalendarRow = memo(
         />
         <div
           className={cn(
-            "flex flex-col items-center",
+            "flex min-w-0 max-w-full flex-col items-center",
             promoActive && "md:items-start",
           )}
         >
-          <span className="font-body-md text-base md:text-xl lg:text-2xl xl:text-3xl tv:text-4xl text-on-surface font-medium">
+          <span className="max-w-full font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
             {hijriDate || "—"}
           </span>
           <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
@@ -197,7 +198,7 @@ export function ClockPanel({
   return (
     <div
       className={cn(
-        "clock-panel rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 tv:p-12 h-full w-full flex flex-col items-center justify-center relative overflow-hidden",
+        "clock-panel box-border rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 tv:p-12 h-full w-full min-w-0 min-h-0 max-w-full max-h-full flex flex-col items-center justify-center relative overflow-hidden",
         isCriticalSignal
           ? "bg-background-deep border-2 border-primary critical-enter"
           : "bg-surface-panel ghost-border active-glow",
@@ -234,14 +235,14 @@ export function ClockPanel({
       ) : (
         <div
           className={cn(
-            "z-10 w-full max-h-full flex flex-col items-center justify-center gap-2 md:gap-3 lg:gap-4",
+            "clock-panel__content z-10 min-w-0 min-h-0 w-full max-w-full max-h-full flex flex-col items-center justify-center gap-2 md:gap-3 lg:gap-4",
             promoActive && "md:flex-row md:items-stretch md:justify-between",
           )}
         >
           {/* Main Display / Left Column */}
           <div
             className={cn(
-              "flex flex-col min-w-0",
+              "flex flex-col min-w-0 min-h-0 max-w-full",
               promoActive
                 ? "promo-compact md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
                 : "items-center w-full",
@@ -258,42 +259,54 @@ export function ClockPanel({
               promoActive={promoActive}
             />
 
-            {/* Time Display */}
+            {/* Time Display and Status */}
             <h2 className="font-label-caps font-bold text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-primary tracking-wide md:tracking-wider z-10 mb-0.5 md:mb-1 lg:mb-1.5">
               {t.currentTime}
             </h2>
-            <ClockDisplay clock={clock} is24h={is24h} />
+            <div
+              className={cn(
+                "clock-panel__time-row flex w-full min-w-0 min-h-0 max-w-full flex-col items-center",
+                !promoActive &&
+                  "lg:flex-row lg:justify-center lg:items-center lg:gap-8",
+                promoActive && "clock-panel__time-row--compact",
+              )}
+            >
+              <ClockDisplay clock={clock} is24h={is24h} />
 
-            {/* Status Pill */}
-            {statusMessage && (
-              <div
-                className="clock-panel__status mt-1 md:mt-2 lg:mt-3 flex items-center gap-3 md:gap-4 status-pill rounded-full px-3 md:px-5 lg:px-6 py-1.5 md:py-2 lg:py-2.5 z-10 max-w-full"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="text-primary w-6 h-6 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 tv:w-20 tv:h-20 shrink-0"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z" />
-                </svg>
-                <span
-                  className={cn(
-                    "font-body-md text-2xl md:text-5xl lg:text-5xl text-on-surface text-center font-semibold",
-                    promoActive
-                      ? "xl:text-6xl tv:text-9xl promo-status-text-expanded"
-                      : "xl:text-7xl tv:text-[10rem]",
-                  )}
-                >
-                  {statusMessage}
-                </span>
-              </div>
-            )}
+              {/* Status */}
+              {statusMessage &&
+                (() => {
+                  const { label, countdown } = splitStatusMessage(statusMessage);
+                  return (
+                    <div
+                      className={cn(
+                        "clock-panel__status mt-1 md:mt-2 lg:mt-3 flex min-w-0 items-center gap-3 md:gap-4 z-10 max-w-full rounded-2xl bg-prayer-card-active active-border px-3 md:px-4 py-1.5 md:py-2",
+                        !promoActive && "lg:mt-0",
+                      )}
+                      role="status"
+                      aria-live="polite"
+                      aria-atomic="true"
+                    >
+                      <span className="clock-panel__status-text flex items-center gap-1.5 md:gap-2.5 min-w-0">
+                        <span
+                          className="material-symbols-outlined text-primary shrink-0"
+                          aria-hidden="true"
+                        >
+                          campaign
+                        </span>
+                        <span className="clock-panel__status-label font-body-md text-text-muted font-medium">
+                          {label}
+                        </span>
+                      </span>
+                      {countdown && (
+                        <span className="clock-panel__countdown font-tabular-nums text-on-surface font-normal leading-none">
+                          {countdown}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })()}
+            </div>
           </div>
         </div>
       )}

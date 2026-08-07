@@ -32,7 +32,7 @@ export function CriticalSignalPanel({
 
   return (
     <div
-      className="critical-signal-panel z-20 w-full h-full flex flex-col items-center justify-center text-center relative"
+      className="critical-signal-panel z-20 w-full h-full min-w-0 min-h-0 max-w-full max-h-full overflow-hidden flex flex-col items-center justify-center text-center relative"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
@@ -51,7 +51,7 @@ export function CriticalSignalPanel({
 
       {/* Typography stack — kept clear of the absolute clock block on mobile */}
       <div
-        className="critical-signal-content z-30 w-full flex flex-col items-center justify-center"
+        className="critical-signal-content z-30 w-full min-w-0 min-h-0 max-w-full max-h-full overflow-hidden flex flex-col items-center justify-center"
         aria-hidden="true"
       >
         <div className="critical-signal-heading flex flex-col items-center">

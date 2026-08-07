@@ -97,4 +97,31 @@ describe("ClockPanel critical signal", () => {
     expect(alert).toHaveTextContent("خطبة 1");
     expect(screen.queryByRole("timer")).not.toBeInTheDocument();
   });
+
+  it("keeps critical content inside the bounded clock panel", () => {
+    renderCritical("adhan-now", translations.en.statusAdhanNow("Fajr"), {
+      prayerName: "Fajr",
+      arabicName: "الفجر",
+      urgency: "low",
+      subtitle: "Come to prayer",
+    });
+
+    const alert = screen.getByRole("alert");
+    const panel = alert.closest(".clock-panel");
+
+    expect(panel).toHaveClass(
+      "min-w-0",
+      "min-h-0",
+      "max-w-full",
+      "max-h-full",
+      "overflow-hidden",
+    );
+    expect(alert).toHaveClass(
+      "min-w-0",
+      "min-h-0",
+      "max-w-full",
+      "max-h-full",
+      "overflow-hidden",
+    );
+  });
 });

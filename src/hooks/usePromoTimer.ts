@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { AdSlot, PromoConfig } from "../types";
 
 type PromoPhase = "hidden" | "enter" | "visible" | "exit";
@@ -12,6 +12,7 @@ interface PromoTimerOptions {
   slots: AdSlot[];
   promoConfig?: PromoConfig;
   enabled: boolean;
+  forceVisible?: boolean;
 }
 
 const EXIT_DURATION_MS = 2000;
@@ -40,6 +41,7 @@ export function usePromoTimer({
   slots,
   promoConfig,
   enabled,
+  forceVisible = false,
 }: PromoTimerOptions): PromoTimerState {
   const [phase, setPhase] = useState<PromoPhase>("hidden");
   const [currentSlot, setCurrentSlot] = useState<AdSlot | null>(null);
@@ -50,6 +52,16 @@ export function usePromoTimer({
     exit?: number;
     enterFrame?: number;
   }>({});
+  const candidates = useMemo(
+    () => slots.filter((s) => !!s.image && (s.weight ?? 0) > 0),
+    [slots],
+  );
+  const forcedSlot =
+    forceVisible &&
+    enabled &&
+    (typeof window === "undefined" || window.innerWidth >= 768)
+      ? (candidates[0] ?? null)
+      : null;
 
   useEffect(() => {
     const timers = timersRef.current;
@@ -79,11 +91,12 @@ export function usePromoTimer({
       return;
     }
 
-    const candidates = slots.filter((s) => !!s.image && (s.weight ?? 0) > 0);
     if (candidates.length === 0) {
       reset();
       return;
     }
+
+    if (forceVisible) return clearAllTimers;
 
     const displayDuration = promoConfig?.displayDurationMs ?? 10_000;
     const cycleInterval = promoConfig?.cycleMs ?? 120_000;
@@ -122,7 +135,9 @@ export function usePromoTimer({
     timers.initial = window.setTimeout(runCycle, initialDelay);
 
     return clearAllTimers;
-  }, [slots, promoConfig, enabled]);
+  }, [candidates, promoConfig, enabled, forceVisible]);
 
-  return { phase, currentSlot };
+  return forcedSlot
+    ? { phase: "visible", currentSlot: forcedSlot }
+    : { phase, currentSlot };
 }

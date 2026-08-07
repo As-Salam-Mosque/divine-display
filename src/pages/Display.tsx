@@ -111,23 +111,23 @@ export function Display() {
       <SkipLink href="#prayer-times" label={t.skipToPrayerTimes} />
 
       <main
-        className="flex-1 grid grid-cols-1 gap-2 md:gap-3 tv:gap-stage-gap p-2 md:p-3 lg:p-5 tv:p-panel-padding lg:overflow-hidden lg:grid-cols-[minmax(0,1fr)_var(--adrail-width)]"
+        className="flex-1 min-h-0 grid grid-cols-1 gap-2 md:gap-3 tv:gap-stage-gap p-2 md:p-3 lg:p-5 tv:p-panel-padding lg:overflow-hidden lg:grid-cols-[minmax(0,1fr)_var(--adrail-width)]"
         style={
           {
             "--adrail-width": showAdRail ? "20vw" : "0px",
           } as CSSProperties
         }
       >
-        <div className="col-span-1 flex-1 min-h-0 flex flex-col gap-2 md:gap-3 tv:gap-stage-gap lg:h-full">
-          <div className="lg:basis-[65%] basis-auto min-h-0 flex items-stretch justify-center">
+        <div className="col-span-1 flex-1 min-w-0 min-h-0 flex flex-col gap-2 md:gap-3 tv:gap-stage-gap lg:h-full">
+          <div className="lg:flex-[0_1_65%] basis-auto min-w-0 min-h-0 flex items-stretch justify-center lg:overflow-hidden">
             <div
               className={cn(
-                "relative w-full h-auto max-h-full [--promo-rail-width:50%] md:flex md:items-stretch",
+                "relative w-full min-w-0 min-h-0 h-auto lg:h-full max-h-full overflow-hidden [--promo-rail-width:50%] md:flex md:items-stretch",
                 promoActive &&
                   "md:transition-all md:duration-1000 md:flex-row md:justify-between",
               )}
             >
-              <div className="flex-1 flex items-center justify-center w-full h-auto">
+              <div className="flex-1 min-w-0 min-h-0 flex items-center justify-center w-full h-auto lg:h-full overflow-hidden">
                 <ClockPanel
                   clock={clock}
                   hijriDate={renderedPrayerStatus.hijriDate}
@@ -147,7 +147,7 @@ export function Display() {
 
           {renderedPrayerStatus.loading ? (
             <div
-              className="basis-[35%] min-h-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3"
+              className="lg:flex-[0_1_35%] basis-auto min-h-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3"
               aria-busy="true"
               aria-label={t.loadingPrayerTimes}
             >
@@ -160,7 +160,7 @@ export function Display() {
             </div>
           ) : (
             <div
-              className="lg:basis-[35%] basis-auto min-h-0"
+              className="lg:flex-[0_1_35%] basis-auto min-h-0 min-w-0 overflow-hidden"
               id="prayer-times"
             >
               <PrayerTable

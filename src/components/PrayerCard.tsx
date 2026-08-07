@@ -23,7 +23,7 @@ function TimeCellContent({
     <div className="flex flex-col items-center justify-center gap-1">
       <span
         className={cn(
-          "text-[0.6875rem] sm:text-sm md:text-base lg:text-lg tv:text-xl font-label-caps font-bold leading-none",
+          "text-xs sm:text-base md:text-lg lg:text-xl tv:text-2xl font-label-caps font-bold leading-none",
           isActive ? "text-primary" : "text-text-muted",
         )}
       >
@@ -41,7 +41,7 @@ function TimeCellContent({
         {time.ampm && (
           <span
             className={cn(
-              "text-[0.6875rem] sm:text-sm md:text-base lg:text-lg tv:text-xl font-tabular-nums leading-none",
+              "text-xs sm:text-base md:text-lg lg:text-xl tv:text-2xl font-tabular-nums leading-none",
               isActive ? "text-primary" : "text-text-muted",
             )}
           >
@@ -121,7 +121,7 @@ export function PrayerCard({
         <div className="flex flex-col items-center gap-0.5">
           <span
             className={cn(
-              "font-label-caps text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl tv:text-5xl font-bold",
+              "font-label-caps text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl tv:text-4xl font-bold",
               isActive ? "text-primary" : "text-on-surface",
             )}
           >
