@@ -243,7 +243,7 @@ button {
         font-size: clamp(0.85rem, min(3cqw, 5cqh), 2rem) !important;
     }
     .clock-panel__countdown {
-        font-size: clamp(3.5rem, min(20cqw, 34cqh), 16rem) !important;
+        font-size: clamp(3.25rem, min(18cqw, 31cqh), 15rem) !important;
     }
     .clock-panel__status .material-symbols-outlined {
         font-size: clamp(1.5rem, min(6cqw, 10cqh), 5.5rem) !important;
@@ -349,7 +349,7 @@ button {
         }
 
         .clock-panel__countdown {
-            font-size: clamp(1.5rem, min(10cqw, 20cqh), 4rem) !important;
+            font-size: clamp(1.4rem, min(9cqw, 18cqh), 3.75rem) !important;
         }
 
         .clock-panel__status {
@@ -443,7 +443,7 @@ button {
         }
 
         .clock-panel__countdown {
-            font-size: clamp(2rem, 8cqw, 3rem) !important;
+            font-size: clamp(1.8rem, 7.2cqw, 2.75rem) !important;
         }
     }
 
@@ -473,7 +473,7 @@ button {
         }
 
         .clock-panel__countdown {
-            font-size: clamp(1.75rem, 8cqw, 3rem) !important;
+            font-size: clamp(1.6rem, 7.2cqw, 2.75rem) !important;
         }
 
         .clock-panel__status {
@@ -515,6 +515,16 @@ button {
     .promo-compact {
         container-type: inline-size;
     }
+    .promo-compact .clock-panel__time-row {
+        align-items: flex-start;
+    }
+    .promo-compact .clock-panel__time {
+        justify-content: flex-start;
+    }
+    .promo-compact .clock-panel__status {
+        align-self: flex-start;
+        justify-content: flex-start;
+    }
     .promo-compact .font-clock-display {
         font-size: clamp(2.5rem, 14cqw, 9rem) !important;
     }
@@ -545,7 +555,7 @@ button {
     }
     .promo-compact .clock-panel__status .clock-panel__countdown {
         flex-shrink: 0;
-        font-size: clamp(1rem, 10cqw, 5rem) !important;
+        font-size: clamp(0.9rem, 9cqw, 4.5rem) !important;
     }
     .promo-compact .clock-panel__status .material-symbols-outlined {
         font-size: clamp(1.5rem, 10cqw, 6rem) !important;
