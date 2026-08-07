@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "check:translations": "ts-node --project tsconfig.scripts.json scripts/check-translations.ts",
     "sync:legal-docs": "ts-node --project tsconfig.scripts.json scripts/sync-legal-docs.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "test:layout": "ts-node --project tsconfig.scripts.json scripts/verify-clock-panel-layout.ts"
   },
   "dependencies": {
     "react": "^19.2.6",

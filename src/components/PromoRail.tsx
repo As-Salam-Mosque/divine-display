@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSettings } from "../context/SettingsContext";
 import { useDebugPromo } from "../hooks/useDebugPromo";
 import { useDominantColor } from "../hooks/useDominantColor";
@@ -15,12 +15,23 @@ export function PromoRail({
   onActiveChange,
 }: PromoRailProps) {
   const { settings } = useSettings();
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window === "undefined" || window.innerWidth >= 1024,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const debugPromo = useDebugPromo();
   const { phase, currentSlot } = usePromoTimer({
     slots: settings.mosque?.sponsors ?? [],
     promoConfig: settings.mosque?.promo,
-    enabled: settings.showSponsors,
+    enabled: settings.showSponsors && isDesktop,
     forceVisible: debugPromo,
   });
 
@@ -28,6 +39,7 @@ export function PromoRail({
   const promoAlt = currentSlot?.label ?? "";
   // Only "active" once the promo is actually transitioning into view.
   const isActive =
+    isDesktop &&
     !isCriticalSignal &&
     settings.showSponsors &&
     !!promoImage &&
@@ -42,7 +54,8 @@ export function PromoRail({
     ? "translate-x-0 opacity-100"
     : "translate-x-full opacity-0";
 
-  const showRail = !isCriticalSignal && settings.showSponsors && promoImage;
+  const showRail =
+    isDesktop && !isCriticalSignal && settings.showSponsors && promoImage;
 
   const {
     imgRef: promoImgRef,
@@ -55,7 +68,7 @@ export function PromoRail({
   return (
     <aside
       className={cn(
-        "hidden md:block md:absolute md:top-0 md:right-0 md:w-(--promo-rail-width) pl-1 md:pl-2 md:h-full z-10 transform transition-all duration-500 ease-out",
+        "hidden lg:block lg:absolute lg:top-0 lg:right-0 lg:w-(--promo-rail-width) pl-1 lg:pl-2 lg:h-full z-10 transform transition-all duration-500 ease-out",
         slideState,
       )}
       aria-label={promoAlt || undefined}
