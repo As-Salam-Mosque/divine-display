@@ -68,3 +68,28 @@ export function formatRemaining(targetDate: Date, now: Date): string {
 
   return hours === 0 ? `${mm}:${ss}` : `${hours}:${mm}:${ss}`;
 }
+
+/**
+ * Splits a composed status message (e.g. "Dhuhr in 04:32" or
+ * "Iqama de Dhuhr dans 1:04:32") into a descriptive label and the
+ * trailing live countdown produced by `formatRemaining`, so the UI can
+ * render the countdown on its own — larger and in tabular numerals —
+ * without depending on locale-specific sentence structure.
+ *
+ * Falls back to treating the whole message as the label (no countdown)
+ * when no trailing "MM:SS" / "H:MM:SS" pattern is found.
+ */
+export function splitStatusMessage(message: string): {
+  label: string;
+  countdown: string | null;
+} {
+  const match = message.match(/(\d{1,2}(?::\d{2}){1,2})\s*$/);
+  if (!match || match.index === undefined) {
+    return { label: message, countdown: null };
+  }
+
+  return {
+    label: message.slice(0, match.index).trim(),
+    countdown: match[1],
+  };
+}

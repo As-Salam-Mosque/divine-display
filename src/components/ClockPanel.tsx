@@ -3,6 +3,7 @@ import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import { cn } from "../utils/cn";
 import { isCriticalStatusType } from "../utils/prayerStatus";
+import { splitStatusMessage } from "../utils/time";
 import type {
   ClockState,
   CriticalSignalData,
@@ -50,11 +51,11 @@ const ClockDisplay = memo(
         {is24h ? clock.hours24 : clock.hours}:{clock.minutes}
       </span>
       <div className="relative flex items-start leading-none">
-        <span className="text-xl sm:text-2xl md:text-5xl lg:text-6xl xl:text-7xl tv:text-8xl text-primary font-bold leading-tight">
+        <span className="clock-panel__seconds text-primary font-bold leading-tight">
           :{clock.seconds}
         </span>
         {!is24h && (
-          <span className="absolute top-[-0.9em] right-0 whitespace-nowrap text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-primary font-semibold leading-none">
+          <span className="clock-panel__ampm absolute top-[-0.9em] right-0 whitespace-nowrap text-primary font-semibold leading-none">
             {clock.ampm}
           </span>
         )}
@@ -265,28 +266,39 @@ export function ClockPanel({
             <ClockDisplay clock={clock} is24h={is24h} />
 
             {/* Status Pill */}
-            {statusMessage && (
-              <div
-                className="clock-panel__status mt-1 md:mt-2 lg:mt-3 flex items-center gap-3 md:gap-4 status-pill rounded-full px-3 md:px-5 lg:px-6 py-1.5 md:py-2 lg:py-2.5 z-10 max-w-full"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="text-primary w-6 h-6 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 tv:w-20 tv:h-20 shrink-0"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z" />
-                </svg>
-                <span className="font-body-md text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl text-on-surface text-center font-semibold">
-                  {statusMessage}
-                </span>
-              </div>
-            )}
+            {statusMessage &&
+              (() => {
+                const { label, countdown } = splitStatusMessage(statusMessage);
+                return (
+                  <div
+                    className="clock-panel__status mt-1 md:mt-2 lg:mt-3 flex items-center gap-3 md:gap-4 status-pill rounded-full px-3 md:px-5 lg:px-6 py-1.5 md:py-2 lg:py-2.5 z-10 max-w-full"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                      className="text-primary shrink-0"
+                    >
+                      <path d="M0 0h24v24H0z" fill="none" />
+                      <path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z" />
+                    </svg>
+                    <span className="clock-panel__status-text flex items-center gap-1.5 md:gap-2.5 min-w-0">
+                      <span className="clock-panel__status-label font-body-md text-text-muted font-medium">
+                        {label}
+                      </span>
+                      {countdown && (
+                        <span className="clock-panel__countdown font-tabular-nums text-on-surface font-bold leading-none">
+                          {countdown}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })()}
           </div>
         </div>
       )}

@@ -216,6 +216,55 @@ button {
             border-color 0.4s ease;
     }
 
+    /* Maximize the primary clock time and the status pill's countdown
+       against the clock panel's actual rendered size instead of the page
+       viewport, so sizing stays correct whether or not the ad rail is
+       shown. Declared before .promo-compact below so the (equally
+       specific) promo-compact overrides continue to win once the promo
+       rail activates — at that point .promo-compact itself becomes the
+       nearest query container, so these same rules would otherwise size
+       against a container that's about to shrink.
+
+       Sizing uses min(cqw, cqh) rather than cqw alone: the panel's height
+       is fixed by the page layout at the lg breakpoint (see Display.tsx),
+       so on shorter/wider viewports width-only sizing can grow the clock
+       and countdown tall enough to be clipped by the panel's overflow.
+       cqh only resolves against a real block-size container, which is
+       enabled below at the same breakpoint the page gives the panel a
+       definite height; before that it's simply ignored by clamp(). */
+    .clock-panel__time .font-clock-display {
+        font-size: clamp(3.5rem, min(20cqw, 34cqh), 16rem) !important;
+    }
+    .clock-panel__time .clock-panel__seconds {
+        font-size: clamp(1.25rem, min(9cqw, 15cqh), 7.5rem) !important;
+    }
+    .clock-panel__time .clock-panel__ampm {
+        font-size: clamp(0.75rem, min(3cqw, 5cqh), 2.75rem) !important;
+    }
+    .status-pill .clock-panel__status-label {
+        font-size: clamp(0.85rem, min(3cqw, 5cqh), 2rem) !important;
+    }
+    .status-pill .clock-panel__countdown {
+        font-size: clamp(1.75rem, min(9cqw, 12cqh), 6.5rem) !important;
+    }
+    .status-pill svg {
+        width: clamp(1.5rem, min(6cqw, 10cqh), 5.5rem) !important;
+        height: clamp(1.5rem, min(6cqw, 10cqh), 5.5rem) !important;
+    }
+
+    @media (min-width: 1024px) {
+        /* At the lg breakpoint the page layout (Display.tsx) gives the
+           clock panel a definite height via flex-basis against an
+           h-screen ancestor, so it's safe to also containment its block
+           size here — letting cqh above reflect the panel's real height
+           instead of being ignored. Below lg the panel's height is
+           content-driven (the page scrolls instead), so block-size
+           containment is skipped to avoid collapsing it. */
+        .clock-panel {
+            container-type: size;
+        }
+    }
+
     /* When PromoRail is active, scale down text to fit the narrower content column */
     .promo-compact {
         container-type: inline-size;
@@ -223,15 +272,19 @@ button {
     .promo-compact .font-clock-display {
         font-size: clamp(2.5rem, 14cqw, 9rem) !important;
     }
-    .promo-compact .text-xl.sm\:text-2xl.md\:text-5xl,
-    .promo-compact
-        [class*="text-primary"][class*="font-bold"][class*="leading-tight"] {
+    .promo-compact .clock-panel__seconds {
         font-size: clamp(1rem, 6cqw, 4.5rem) !important;
+    }
+    .promo-compact .clock-panel__ampm {
+        font-size: clamp(0.6rem, 2cqw, 1.5rem) !important;
     }
     .promo-compact .status-pill {
         max-width: 100%;
     }
-    .promo-compact .status-pill span.font-body-md {
+    .promo-compact .status-pill .clock-panel__status-label {
+        font-size: clamp(0.7rem, 3cqw, 1.5rem) !important;
+    }
+    .promo-compact .status-pill .clock-panel__countdown {
         font-size: clamp(0.875rem, 4cqw, 2.5rem) !important;
     }
     .promo-compact h1.font-headline-md {
@@ -739,6 +792,11 @@ button {
         flex-wrap: wrap;
         justify-content: center;
         text-align: center;
+    }
+
+    .clock-panel .clock-panel__status-text {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }
 
