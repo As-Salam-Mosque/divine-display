@@ -20,7 +20,6 @@ const fr = {
   openingHours: "Heures d'ouverture",
   email: "Adresse courriel",
   phone: "Numéro de téléphone",
-  currentTime: "HEURE ACTUELLE",
   hijri: "HÉGIRE",
   skipToPrayerTimes: "Aller aux horaires de prière",
   loadingPrayerTimes: "Chargement des horaires de prière",

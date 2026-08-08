@@ -254,9 +254,6 @@ export function ClockPanel({
             />
 
             {/* Time Display and Status */}
-            <h2 className="clock-panel__current-time-label font-label-caps">
-              {t.currentTime}
-            </h2>
             <div
               className={cn(
                 "clock-panel__time-row",

@@ -482,16 +482,7 @@ button {
         );
     }
 
-    .clock-panel__current-time-label {
-        z-index: 10;
-        display: none;
-        color: var(--primary);
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-        font-weight: 700;
-        letter-spacing: 0.025em;
-        margin-bottom: 0.125rem;
-    }
+
 
     .clock-panel__time {
         z-index: 10;
@@ -810,13 +801,7 @@ button {
             height: 3rem;
         }
 
-        .clock-panel__current-time-label {
-            display: block;
-            font-size: 1.125rem;
-            line-height: 1.75rem;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.375rem;
-        }
+
 
         .clock-panel__time {
             display: flex;
@@ -870,10 +855,7 @@ button {
             line-height: 1.75rem;
         }
 
-        .clock-panel__current-time-label {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-        }
+
 
         .clock-panel__time {
             gap: 2.5rem;
@@ -996,11 +978,7 @@ button {
             height: 1.5rem;
         }
 
-        .clock-panel__current-time-label {
-            font-size: clamp(0.55rem, 2cqw, 0.8rem) !important;
-            line-height: 1;
-            margin-block: 0 !important;
-        }
+
 
         .clock-panel__time {
             gap: 0.5rem;
@@ -1037,12 +1015,9 @@ button {
         }
     }
 
-    /* Below this height there is not enough room for a city line and a
-       section label as well as the clock. Keep the identity, but remove
-       those secondary lines rather than allowing them to be cropped. */
+    /* Below this height, hide the secondary city line to avoid clipping. */
     @container clock-panel (max-height: 180px) {
-        .clock-panel__city,
-        .clock-panel__current-time-label {
+        .clock-panel__city {
             display: none;
         }
 

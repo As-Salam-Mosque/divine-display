@@ -25,7 +25,6 @@ const en = {
   email: "Email address",
   phone: "Contact number",
   // clock panel
-  currentTime: "CURRENT TIME",
   hijri: "HIJRI",
   skipToPrayerTimes: "Skip to prayer times",
   loadingPrayerTimes: "Loading prayer times",
