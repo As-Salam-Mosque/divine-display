@@ -28,7 +28,7 @@ html:has(.light) {
 }
 
 html:has(.classic) {
-    background-color: #8f0000;
+    background-color: #5c0b17;
 }
 
 body {
@@ -78,6 +78,7 @@ button {
     /* Default palette — dark, matching the default app setting. */
     --primary: #e9c176;
     --primary-rgb: 233, 193, 118;
+    --on-primary: #060a1a;
 
     --background-deep: #060a1a;
     --surface-panel: #111a35;
@@ -105,6 +106,7 @@ button {
 .dark {
     --primary: #e9c176;
     --primary-rgb: 233, 193, 118;
+    --on-primary: #060a1a;
 
     --background-deep: #060a1a;
     --surface-panel: #111a35;
@@ -134,6 +136,7 @@ button {
 .light {
     --primary: #b87a00;
     --primary-rgb: 184, 122, 0;
+    --on-primary: #0f1724;
 
     --background-deep: #d5dce4;
     --surface-panel: #ebeff4;
@@ -160,57 +163,84 @@ button {
     --prayer-card-bg-active: #fef3d6; /* warm amber cream */
 }
 
-/* Classic mosque-display palette: maroon frame, pale clock panel, and teal
-   prayer cards with a warm active-prayer highlight. */
+/* Modern classic palette: a deep wine frame, warm ivory surfaces, restrained
+   teal cards, and a high-contrast gold active-prayer treatment. */
 .classic {
-    --primary: #8f0000;
-    --primary-rgb: 143, 0, 0;
+    --primary: #821b2a;
+    --primary-rgb: 130, 27, 42;
+    --on-primary: #f7f2ea;
 
-    --background-deep: #8f0000;
-    --surface-panel: #dedee1;
-    --surface: #dedee1;
-    --surface-container: #d1d2d5;
-    --surface-container-low: #c6c8cc;
-    --on-surface: #151515;
-    --on-surface-variant: #ffffff;
-    --text-muted: rgba(21, 21, 21, 0.72);
-    --outline-variant: rgba(143, 0, 0, 0.55);
+    --background-deep: #5c0b17;
+    --surface-panel: #f7f2ea;
+    --surface: #f2ebe2;
+    --surface-container: #ebe2d8;
+    --surface-container-low: #e2d7cb;
+    --on-surface: #211a1b;
+    --on-surface-variant: #3a3032;
+    --text-muted: rgba(33, 26, 27, 0.74);
+    --outline-variant: rgba(130, 27, 42, 0.48);
 
-    --ghost-border-color: rgba(143, 0, 0, 0.82);
-    --panel-separation-shadow: none;
-    --primary-alpha-10: 0.12;
-    --primary-alpha-20: 0.22;
-    --primary-alpha-25: 0.3;
+    --ghost-border-color: rgba(130, 27, 42, 0.68);
+    --panel-separation-shadow:
+        0 0.5rem 1.5rem rgba(31, 7, 12, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    --primary-alpha-10: 0.1;
+    --primary-alpha-20: 0.2;
+    --primary-alpha-25: 0.28;
 
-    --prayer-card-bg-a: #43869a;
-    --prayer-card-bg-b: #43869a;
-    --prayer-card-bg-active: #d2b619;
+    --prayer-card-bg-a: #175e68;
+    --prayer-card-bg-b: #1c6871;
+    --prayer-card-bg-active: #e8c44f;
+
+    background-image:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(255, 255, 255, 0.09),
+            transparent 42%
+        ),
+        linear-gradient(180deg, #68121f 0%, var(--background-deep) 72%);
 }
 
-/* Clock content remains dark on the reference's pale clock surface. */
+/* Clock and ticker content use near-black text on the warm ivory surface. */
 .classic .clock-panel {
-    --on-surface: #151515;
-    --on-surface-variant: #252525;
-    --text-muted: rgba(21, 21, 21, 0.72);
+    --on-surface: #211a1b;
+    --on-surface-variant: #3a3032;
+    --text-muted: rgba(33, 26, 27, 0.74);
 }
 
-/* Prayer cards use the reference's white-on-teal treatment. */
+.ad-rail-heading {
+    color: var(--primary);
+}
+
+.classic .ad-rail-heading {
+    color: #f7f2ea;
+}
+
+/* White text and a light keyline keep prayer cards readable at TV distance. */
 .classic .prayer-card {
     --on-surface: #ffffff;
     --on-surface-variant: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.78);
+    --text-muted: rgba(255, 255, 255, 0.82);
+    --ghost-border-color: rgba(247, 242, 234, 0.66);
+    --panel-separation-shadow:
+        0 0.35rem 1rem rgba(31, 7, 12, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.classic .prayer-card.bg-prayer-card-active,
+.classic .clock-panel__status {
+    --on-surface: #3f2a05;
+    --on-surface-variant: #3f2a05;
+    --text-muted: rgba(63, 42, 5, 0.84);
 }
 
 .classic .prayer-card.bg-prayer-card-active {
-    --on-surface: #3f3100;
-    --on-surface-variant: #3f3100;
-    --text-muted: rgba(63, 49, 0, 0.72);
+    border-color:  #821b2a;
 }
 
-/* The critical panel uses the punchy burgundy background, with a pale
-   foreground to preserve the inverted critical-signal contrast. */
+/* Critical alerts invert the wine signal color against the same warm ivory. */
 .classic .critical-signal-panel {
-    --background-deep: #dedee1;
+    --background-deep: #f7f2ea;
 }
 
 @layer components {
@@ -1454,6 +1484,9 @@ button {
         color: var(--background-deep) !important;
     }
 
+    .text-on-primary {
+        color: var(--on-primary) !important;
+    }
     .text-on-surface {
         color: var(--on-surface) !important;
     }
