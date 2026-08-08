@@ -288,22 +288,22 @@ button {
        enabled below at the same breakpoint the page gives the panel a
        definite height; before that it's simply ignored by clamp(). */
     .clock-panel__time .font-clock-display {
-        font-size: clamp(3.5rem, min(20cqw, 34cqh), 16rem) !important;
+        font-size: clamp(2.5rem, min(14cqw, 24cqh), 9rem) !important;
     }
     .clock-panel__time .clock-panel__seconds {
-        font-size: clamp(1.25rem, min(9cqw, 15cqh), 7.5rem) !important;
+        font-size: clamp(1rem, min(6cqw, 10cqh), 4.5rem) !important;
     }
     .clock-panel__time .clock-panel__ampm {
-        font-size: clamp(0.75rem, min(3cqw, 5cqh), 2.75rem) !important;
+        font-size: clamp(0.6rem, min(2cqw, 4cqh), 1.5rem) !important;
     }
     .clock-panel__status-label {
         font-size: clamp(0.85rem, min(3cqw, 5cqh), 2rem) !important;
     }
     .clock-panel__countdown {
-        font-size: clamp(3.25rem, min(18cqw, 31cqh), 15rem) !important;
+        font-size: clamp(2rem, min(9cqw, 16cqh), 6rem) !important;
     }
     .clock-panel__status .material-symbols-outlined {
-        font-size: clamp(1.5rem, min(6cqw, 10cqh), 5.5rem) !important;
+        font-size: clamp(1.25rem, min(5cqw, 7cqh), 3rem) !important;
     }
 
     @media (min-width: 1024px) {
@@ -345,7 +345,7 @@ button {
         align-items: center;
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: 1023px) {
         .clock-panel .clock-panel__status {
             background-color: transparent !important;
             border-color: transparent !important;
