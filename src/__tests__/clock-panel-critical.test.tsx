@@ -109,13 +109,7 @@ describe("ClockPanel critical signal", () => {
     const alert = screen.getByRole("alert");
     const panel = alert.closest(".clock-panel");
 
-    expect(panel).toHaveClass(
-      "min-w-0",
-      "min-h-0",
-      "max-w-full",
-      "max-h-full",
-      "overflow-hidden",
-    );
+    expect(panel).toHaveClass("clock-panel", "clock-panel--critical");
     expect(alert).toHaveClass(
       "min-w-0",
       "min-h-0",

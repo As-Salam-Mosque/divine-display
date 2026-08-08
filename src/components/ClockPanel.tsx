@@ -23,15 +23,7 @@ interface ClockPanelProps {
 }
 
 function MosqueSilhouette() {
-  return (
-    <div
-      className="absolute bottom-0 w-full h-20 md:h-36 lg:h-44 opacity-10 bg-no-repeat bg-bottom bg-contain pointer-events-none"
-      style={{
-        backgroundImage: `url("data:image/svg+xml;utf8,<svg viewBox='0 0 1000 300' xmlns='http://www.w3.org/2000/svg' fill='%23c5a059'><path d='M500 50 C450 150 400 200 400 300 L600 300 C600 200 550 150 500 50 Z M200 150 C180 200 150 250 150 300 L250 300 C250 250 220 200 200 150 Z M800 150 C780 200 750 250 750 300 L850 300 C850 250 820 200 800 150 Z M50 200 L70 300 L30 300 Z M950 200 L970 300 L930 300 Z'/></svg>")`,
-      }}
-      aria-hidden="true"
-    />
-  );
+  return <div className="clock-panel__silhouette" aria-hidden="true" />;
 }
 
 interface ClockDisplayProps {
@@ -43,19 +35,19 @@ interface ClockDisplayProps {
 const ClockDisplay = memo(
   ({ clock, is24h }: ClockDisplayProps) => (
     <div
-      className="clock-panel__time hidden w-full min-w-0 min-h-0 max-w-full flex-wrap items-baseline justify-start gap-2 lg:flex lg:gap-7 xl:gap-10 text-on-surface z-10"
+      className="clock-panel__time"
       aria-label={`${is24h ? clock.hours24 : clock.hours}:${clock.minutes}${is24h ? "" : " " + clock.ampm}`}
       role="timer"
     >
-      <span className="font-clock-display leading-none">
+      <span className="font-clock-display">
         {is24h ? clock.hours24 : clock.hours}:{clock.minutes}
       </span>
-      <div className="relative flex items-start leading-none">
-        <span className="clock-panel__seconds text-primary font-bold leading-tight">
+      <div className="clock-panel__seconds-group">
+        <span className="clock-panel__seconds">
           :{clock.seconds}
         </span>
         {!is24h && (
-          <span className="clock-panel__ampm absolute top-[-0.9em] right-0 whitespace-nowrap text-primary font-semibold leading-none">
+          <span className="clock-panel__ampm">
             {clock.ampm}
           </span>
         )}
@@ -73,47 +65,33 @@ const ClockDisplay = memo(
 
 ClockDisplay.displayName = "ClockDisplay";
 
-interface MosqueInfoProps {
-  promoActive: boolean;
-}
-
 // Static mosque branding — only re-renders when settings change
-const MosqueInfo = memo(({ promoActive }: MosqueInfoProps) => {
+const MosqueInfo = memo(() => {
   const { settings } = useSettings();
   const logo = settings.mosque?.logo?.trim() || "";
   const hasLogo = logo.length > 0;
 
   return (
-    <div
-      className={cn(
-        "clock-panel__branding flex w-full max-w-full flex-col items-center mb-1 md:mb-2 lg:mb-3",
-        promoActive && "md:items-start",
-      )}
-    >
-      <div
-        className={cn(
-          "flex w-full max-w-full flex-col items-center mb-1 md:mb-2",
-          promoActive && "md:items-start",
-        )}
-      >
+    <div className="clock-panel__branding">
+      <div className="clock-panel__branding-inner">
         {hasLogo ? (
           <img
             src={logo}
             alt={`${settings.mosque?.name || "Mosque"} logo`}
-            className="h-8 md:h-12 lg:h-16 xl:h-20 tv:h-24 w-auto max-w-55 md:max-w-65 lg:max-w-[320px] xl:max-w-95 tv:max-w-[440px] object-contain mb-1 md:mb-2"
+            className="clock-panel__logo"
           />
         ) : (
           <span
-            className="material-symbols-outlined filled text-primary text-xl md:text-3xl lg:text-4xl xl:text-5xl tv:text-6xl mb-1 md:mb-2"
+            className="clock-panel__mosque-icon material-symbols-outlined filled"
             aria-hidden="true"
           >
             mosque
           </span>
         )}
-        <h1 className="clock-panel__mosque-name font-headline-md max-w-full text-center text-base md:text-2xl lg:text-4xl xl:text-5xl tv:text-6xl font-semibold tracking-[0.18em] md:tracking-[0.28em] lg:tracking-[0.35em] text-primary">
+        <h1 className="clock-panel__mosque-name font-headline-md">
           {settings.mosque?.name}
         </h1>
-        <p className="clock-panel__city max-w-full text-center font-label-caps text-sm md:text-base lg:text-lg xl:text-xl tv:text-2xl text-text-muted">
+        <p className="clock-panel__city font-label-caps">
           {settings.mosque?.city}
         </p>
       </div>
@@ -127,42 +105,28 @@ interface CalendarRowProps {
   clock: ClockState;
   hijriDate: string;
   language: Language;
-  promoActive: boolean;
 }
 
 // Calendar dates — only re-renders when date changes (once per day)
 const CalendarRow = memo(
-  ({ clock, hijriDate, language, promoActive }: CalendarRowProps) => {
+  ({ clock, hijriDate, language }: CalendarRowProps) => {
     const t = useT(language);
     return (
-      <div className="clock-panel__dates flex min-w-0 max-w-full items-center gap-2 md:gap-4 lg:gap-5">
-        <div
-          className={cn(
-            "flex min-w-0 max-w-full flex-col items-center",
-            promoActive && "md:items-start",
-          )}
-        >
-          <span className="max-w-full font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
+      <div className="clock-panel__dates">
+        <div className="clock-panel__date">
+          <span className="clock-panel__date-value font-body-md">
             {clock.gregorianDate}
           </span>
-          <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
+          <span className="clock-panel__date-label font-label-caps">
             {clock.dayName}
           </span>
         </div>
-        <div
-          className="w-px h-5 md:h-8 lg:h-12 bg-primary-20"
-          aria-hidden="true"
-        />
-        <div
-          className={cn(
-            "flex min-w-0 max-w-full flex-col items-center",
-            promoActive && "md:items-start",
-          )}
-        >
-          <span className="max-w-full font-body-md text-base md:text-lg lg:text-xl xl:text-2xl tv:text-3xl text-on-surface font-medium">
+        <div className="clock-panel__date-divider" aria-hidden="true" />
+        <div className="clock-panel__date">
+          <span className="clock-panel__date-value font-body-md">
             {hijriDate || "—"}
           </span>
-          <span className="font-label-caps text-sm md:text-base lg:text-base xl:text-lg tv:text-xl text-text-muted">
+          <span className="clock-panel__date-label font-label-caps">
             {t.hijri}
           </span>
         </div>
@@ -173,11 +137,44 @@ const CalendarRow = memo(
     prev.clock.gregorianDate === next.clock.gregorianDate &&
     prev.clock.dayName === next.clock.dayName &&
     prev.hijriDate === next.hijriDate &&
-    prev.language === next.language &&
-    prev.promoActive === next.promoActive,
+    prev.language === next.language,
 );
 
 CalendarRow.displayName = "CalendarRow";
+
+interface StatusDisplayProps {
+  message: string;
+}
+
+function StatusDisplay({ message }: StatusDisplayProps) {
+  if (!message) return null;
+
+  const { label, countdown } = splitStatusMessage(message);
+
+  return (
+    <div
+      className="clock-panel__status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <span className="clock-panel__status-text">
+        <span
+          className="clock-panel__status-icon material-symbols-outlined"
+          aria-hidden="true"
+        >
+          campaign
+        </span>
+        <span className="clock-panel__status-label font-body-md">{label}</span>
+      </span>
+      {countdown && (
+        <span className="clock-panel__countdown font-tabular-nums">
+          {countdown}
+        </span>
+      )}
+    </div>
+  );
+}
 
 export function ClockPanel({
   clock,
@@ -198,10 +195,10 @@ export function ClockPanel({
   return (
     <div
       className={cn(
-        "clock-panel box-border rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 tv:p-12 h-full w-full min-w-0 min-h-0 max-w-full max-h-full flex flex-col items-center justify-center relative overflow-hidden",
+        "clock-panel",
         isCriticalSignal
-          ? "bg-background-deep border-2 border-primary critical-enter"
-          : "bg-surface-panel ghost-border active-glow",
+          ? "clock-panel--critical critical-enter"
+          : "clock-panel--default",
       )}
     >
       {!isCriticalSignal && <MosqueSilhouette />}
@@ -212,10 +209,10 @@ export function ClockPanel({
           type="button"
           onClick={onOpenSettings}
           aria-label={t.settings}
-          className="absolute top-2 md:top-3 lg:top-4 right-2 md:right-3 lg:right-4 z-30 w-7 md:w-10 lg:w-12 h-7 md:h-10 lg:h-12 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-[rgba(var(--primary-rgb),0.18)] focus-visible:text-primary focus-visible:bg-[rgba(var(--primary-rgb),0.18)] transition-colors focus-ring"
+          className="clock-panel__settings focus-ring"
         >
           <span
-            className="material-symbols-outlined text-base md:text-xl lg:text-2xl"
+            className="clock-panel__settings-icon material-symbols-outlined"
             aria-hidden="true"
           >
             settings
@@ -235,77 +232,40 @@ export function ClockPanel({
       ) : (
         <div
           className={cn(
-            "clock-panel__content z-10 min-w-0 min-h-0 w-full max-w-full max-h-full flex flex-col items-center justify-center gap-2 md:gap-3 lg:gap-4",
-            promoActive && "md:flex-row md:items-stretch md:justify-between",
+            "clock-panel__content",
+            promoActive && "clock-panel__content--promo",
           )}
         >
           {/* Main Display / Left Column */}
           <div
             className={cn(
-              "flex flex-col min-w-0 min-h-0 max-w-full",
-              promoActive
-                ? "promo-compact md:w-[calc(100%-var(--promo-rail-width))] md:items-start pl-1 md:pl-2 max-md:items-center w-full"
-                : "items-center w-full",
+              "clock-panel__main",
+              promoActive && "promo-compact",
             )}
           >
             {/* Mosque Branding */}
-            <MosqueInfo promoActive={promoActive} />
+            <MosqueInfo />
 
             {/* Calendar Row */}
             <CalendarRow
               clock={clock}
               hijriDate={hijriDate}
               language={settings.language}
-              promoActive={promoActive}
             />
 
             {/* Time Display and Status */}
-            <h2 className="hidden font-label-caps font-bold text-sm lg:block lg:text-lg xl:text-xl tv:text-2xl text-primary tracking-wide lg:tracking-wider z-10 mb-0.5 lg:mb-1.5">
+            <h2 className="clock-panel__current-time-label font-label-caps">
               {t.currentTime}
             </h2>
             <div
               className={cn(
-                "clock-panel__time-row flex w-full min-w-0 min-h-0 max-w-full flex-col items-center",
-                !promoActive &&
-                  "lg:flex-row lg:justify-center lg:items-center lg:gap-8",
+                "clock-panel__time-row",
                 promoActive && "clock-panel__time-row--compact",
               )}
             >
               <ClockDisplay clock={clock} is24h={is24h} />
 
-              {/* Status */}
-              {statusMessage &&
-                (() => {
-                  const { label, countdown } = splitStatusMessage(statusMessage);
-                  return (
-                    <div
-                      className={cn(
-                        "clock-panel__status mt-1 md:mt-2 lg:mt-3 flex min-w-0 items-center gap-3 md:gap-4 z-10 max-w-full rounded-2xl bg-prayer-card-active active-border px-3 md:px-4 py-1.5 md:py-2",
-                        !promoActive && "lg:mt-0",
-                      )}
-                      role="status"
-                      aria-live="polite"
-                      aria-atomic="true"
-                    >
-                      <span className="clock-panel__status-text flex items-center gap-1.5 md:gap-2.5 min-w-0">
-                        <span
-                          className="material-symbols-outlined text-primary shrink-0"
-                          aria-hidden="true"
-                        >
-                          campaign
-                        </span>
-                        <span className="clock-panel__status-label font-body-md text-text-muted font-medium">
-                          {label}
-                        </span>
-                      </span>
-                      {countdown && (
-                        <span className="clock-panel__countdown font-tabular-nums text-on-surface font-normal leading-none">
-                          {countdown}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })()}
+              <StatusDisplay message={statusMessage} />
             </div>
           </div>
         </div>
