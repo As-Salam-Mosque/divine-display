@@ -28,7 +28,7 @@ html:has(.light) {
 }
 
 html:has(.classic) {
-    background-color: #8f0000;
+    background-color: #5c0b17;
 }
 
 body {
@@ -78,6 +78,7 @@ button {
     /* Default palette — dark, matching the default app setting. */
     --primary: #e9c176;
     --primary-rgb: 233, 193, 118;
+    --on-primary: #060a1a;
 
     --background-deep: #060a1a;
     --surface-panel: #111a35;
@@ -105,6 +106,7 @@ button {
 .dark {
     --primary: #e9c176;
     --primary-rgb: 233, 193, 118;
+    --on-primary: #060a1a;
 
     --background-deep: #060a1a;
     --surface-panel: #111a35;
@@ -134,6 +136,7 @@ button {
 .light {
     --primary: #b87a00;
     --primary-rgb: 184, 122, 0;
+    --on-primary: #0f1724;
 
     --background-deep: #d5dce4;
     --surface-panel: #ebeff4;
@@ -160,57 +163,84 @@ button {
     --prayer-card-bg-active: #fef3d6; /* warm amber cream */
 }
 
-/* Classic mosque-display palette: maroon frame, pale clock panel, and teal
-   prayer cards with a warm active-prayer highlight. */
+/* Modern classic palette: a deep wine frame, warm ivory surfaces, restrained
+   teal cards, and a high-contrast gold active-prayer treatment. */
 .classic {
-    --primary: #8f0000;
-    --primary-rgb: 143, 0, 0;
+    --primary: #821b2a;
+    --primary-rgb: 130, 27, 42;
+    --on-primary: #f7f2ea;
 
-    --background-deep: #8f0000;
-    --surface-panel: #dedee1;
-    --surface: #dedee1;
-    --surface-container: #d1d2d5;
-    --surface-container-low: #c6c8cc;
-    --on-surface: #151515;
-    --on-surface-variant: #ffffff;
-    --text-muted: rgba(21, 21, 21, 0.72);
-    --outline-variant: rgba(143, 0, 0, 0.55);
+    --background-deep: #5c0b17;
+    --surface-panel: #f7f2ea;
+    --surface: #f2ebe2;
+    --surface-container: #ebe2d8;
+    --surface-container-low: #e2d7cb;
+    --on-surface: #211a1b;
+    --on-surface-variant: #3a3032;
+    --text-muted: rgba(33, 26, 27, 0.74);
+    --outline-variant: rgba(130, 27, 42, 0.48);
 
-    --ghost-border-color: rgba(143, 0, 0, 0.82);
-    --panel-separation-shadow: none;
-    --primary-alpha-10: 0.12;
-    --primary-alpha-20: 0.22;
-    --primary-alpha-25: 0.3;
+    --ghost-border-color: rgba(130, 27, 42, 0.68);
+    --panel-separation-shadow:
+        0 0.5rem 1.5rem rgba(31, 7, 12, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    --primary-alpha-10: 0.1;
+    --primary-alpha-20: 0.2;
+    --primary-alpha-25: 0.28;
 
-    --prayer-card-bg-a: #43869a;
-    --prayer-card-bg-b: #43869a;
-    --prayer-card-bg-active: #d2b619;
+    --prayer-card-bg-a: #175e68;
+    --prayer-card-bg-b: #1c6871;
+    --prayer-card-bg-active: #e8c44f;
+
+    background-image:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(255, 255, 255, 0.09),
+            transparent 42%
+        ),
+        linear-gradient(180deg, #68121f 0%, var(--background-deep) 72%);
 }
 
-/* Clock content remains dark on the reference's pale clock surface. */
+/* Clock and ticker content use near-black text on the warm ivory surface. */
 .classic .clock-panel {
-    --on-surface: #151515;
-    --on-surface-variant: #252525;
-    --text-muted: rgba(21, 21, 21, 0.72);
+    --on-surface: #211a1b;
+    --on-surface-variant: #3a3032;
+    --text-muted: rgba(33, 26, 27, 0.74);
 }
 
-/* Prayer cards use the reference's white-on-teal treatment. */
+.ad-rail-heading {
+    color: var(--primary);
+}
+
+.classic .ad-rail-heading {
+    color: #f7f2ea;
+}
+
+/* White text and a light keyline keep prayer cards readable at TV distance. */
 .classic .prayer-card {
     --on-surface: #ffffff;
     --on-surface-variant: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.78);
+    --text-muted: rgba(255, 255, 255, 0.82);
+    --ghost-border-color: rgba(247, 242, 234, 0.66);
+    --panel-separation-shadow:
+        0 0.35rem 1rem rgba(31, 7, 12, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.classic .prayer-card.bg-prayer-card-active,
+.classic .clock-panel__status {
+    --on-surface: #3f2a05;
+    --on-surface-variant: #3f2a05;
+    --text-muted: rgba(63, 42, 5, 0.84);
 }
 
 .classic .prayer-card.bg-prayer-card-active {
-    --on-surface: #3f3100;
-    --on-surface-variant: #3f3100;
-    --text-muted: rgba(63, 49, 0, 0.72);
+    border-color:  #821b2a;
 }
 
-/* The critical panel uses the punchy burgundy background, with a pale
-   foreground to preserve the inverted critical-signal contrast. */
+/* Critical alerts invert the wine signal color against the same warm ivory. */
 .classic .critical-signal-panel {
-    --background-deep: #dedee1;
+    --background-deep: #f7f2ea;
 }
 
 @layer components {
@@ -259,16 +289,419 @@ button {
     }
 
     .clock-panel {
+        position: relative;
         container: clock-panel / inline-size;
         box-sizing: border-box;
+        display: flex;
+        width: 100%;
+        height: 100%;
         min-width: 0;
         min-height: 0;
         max-width: 100%;
         max-height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        padding: 1rem;
         transition:
             background-color 0.5s ease,
             box-shadow 0.5s ease,
             border-color 0.4s ease;
+    }
+
+    .clock-panel--default {
+        border: 1px solid var(--ghost-border-color);
+        background-color: var(--surface-panel);
+        box-shadow: var(--panel-separation-shadow);
+    }
+
+    .clock-panel--critical {
+        border: 2px solid var(--primary);
+        background-color: var(--primary);
+    }
+
+    .clock-panel__silhouette {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 5rem;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 1000 300' xmlns='http://www.w3.org/2000/svg' fill='%23c5a059'><path d='M500 50 C450 150 400 200 400 300 L600 300 C600 200 550 150 500 50 Z M200 150 C180 200 150 250 150 300 L250 300 C250 250 220 200 200 150 Z M800 150 C780 200 750 250 750 300 L850 300 C850 250 820 200 800 150 Z M50 200 L70 300 L30 300 Z M950 200 L970 300 L930 300 Z'/></svg>");
+        background-repeat: no-repeat;
+        background-position: bottom;
+        background-size: contain;
+        opacity: 0.1;
+    }
+
+    .clock-panel__settings {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 30;
+        display: flex;
+        width: 1.75rem;
+        height: 1.75rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: calc(infinity * 1px);
+        color: var(--text-muted);
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease;
+    }
+
+    .clock-panel__settings:hover,
+    .clock-panel__settings:focus-visible {
+        color: var(--primary);
+        background-color: rgba(var(--primary-rgb), 0.18);
+    }
+
+    .clock-panel__settings-icon {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    .clock-panel__content {
+        z-index: 10;
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100%;
+        max-height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .clock-panel__main,
+    .promo-compact {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .promo-compact {
+        padding-left: 0.25rem;
+    }
+
+    .clock-panel__branding {
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0.25rem;
+    }
+
+    .clock-panel__branding-inner {
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0.25rem;
+    }
+
+    .clock-panel__logo {
+        width: auto;
+        max-width: 13.75rem;
+        height: 2rem;
+        object-fit: contain;
+        margin-bottom: 0.25rem;
+    }
+
+    .clock-panel__mosque-icon {
+        margin-bottom: 0.25rem;
+        color: var(--primary);
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+    }
+
+    .clock-panel__mosque-name {
+        max-width: 100%;
+        color: var(--primary);
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-align: center;
+    }
+
+    .clock-panel__city {
+        max-width: 100%;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        text-align: center;
+    }
+
+    .clock-panel__dates {
+        display: flex;
+        min-width: 0;
+        max-width: 100%;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .clock-panel__date {
+        display: flex;
+        min-width: 0;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .clock-panel__date-value {
+        max-width: 100%;
+        color: var(--on-surface);
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 500;
+    }
+
+    .clock-panel__date-label {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+
+    .clock-panel__date-divider {
+        width: 1px;
+        height: 1.25rem;
+        background-color: rgba(
+            var(--primary-rgb),
+            var(--primary-alpha-20)
+        );
+    }
+
+    .clock-panel__current-time-label {
+        z-index: 10;
+        display: none;
+        color: var(--primary);
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 0.025em;
+        margin-bottom: 0.125rem;
+    }
+
+    .clock-panel__time {
+        z-index: 10;
+        display: none;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100%;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        color: var(--on-surface);
+    }
+
+    .clock-panel__time .font-clock-display {
+        line-height: 1;
+    }
+
+    .clock-panel__seconds-group {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        line-height: 1;
+    }
+
+    .clock-panel__seconds {
+        color: var(--primary);
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    .clock-panel__ampm {
+        position: absolute;
+        top: -0.9em;
+        right: 0;
+        color: var(--primary);
+        font-weight: 600;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .clock-panel__time-row {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .clock-panel__status {
+        z-index: 10;
+        box-sizing: border-box;
+        display: flex;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.25rem;
+        border: 3px solid var(--primary);
+        border-radius: 1rem;
+        background-color: var(--prayer-card-bg-active);
+        padding: 0.375rem 0.75rem;
+    }
+
+    .clock-panel__status-text {
+        display: flex;
+        min-width: 0;
+        max-width: 100%;
+        flex: 0 1 auto;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.375rem;
+        white-space: nowrap;
+    }
+
+    .clock-panel__status-icon {
+        flex-shrink: 0;
+        color: var(--primary);
+    }
+
+    .clock-panel__status-label {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--text-muted);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .clock-panel__countdown {
+        flex-shrink: 0;
+        color: var(--on-surface);
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    @media (min-width: 640px) {
+        .clock-panel {
+            padding: 1.25rem;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .clock-panel {
+            padding: 1.5rem;
+        }
+
+        .clock-panel__silhouette {
+            height: 9rem;
+        }
+
+        .clock-panel__settings {
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .clock-panel__settings-icon {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        .clock-panel__content {
+            gap: 0.75rem;
+        }
+
+        .clock-panel__content--promo {
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: space-between;
+        }
+
+        .promo-compact {
+            width: calc(100% - var(--promo-rail-width));
+            align-items: flex-start;
+            padding-left: 0.5rem;
+        }
+
+        .promo-compact .clock-panel__branding,
+        .promo-compact .clock-panel__branding-inner,
+        .promo-compact .clock-panel__date {
+            align-items: flex-start;
+        }
+
+        .clock-panel__branding {
+            margin-bottom: 0.5rem;
+        }
+
+        .clock-panel__branding-inner {
+            margin-bottom: 0.5rem;
+        }
+
+        .clock-panel__logo {
+            max-width: 16.25rem;
+            height: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .clock-panel__mosque-icon {
+            margin-bottom: 0.5rem;
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+        }
+
+        .clock-panel__mosque-name {
+            font-size: 1.5rem;
+            line-height: 2rem;
+            letter-spacing: 0.28em;
+        }
+
+        .clock-panel__city {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+
+        .clock-panel__dates {
+            gap: 1rem;
+        }
+
+        .clock-panel__date-value {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+
+        .clock-panel__date-label {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+
+        .clock-panel__date-divider {
+            height: 2rem;
+        }
+
+        .clock-panel__status {
+            gap: 1rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .clock-panel__status-text {
+            gap: 0.625rem;
+        }
     }
 
     /* Maximize the primary clock time and the status pill's countdown
@@ -302,7 +735,7 @@ button {
     .clock-panel__countdown {
         font-size: clamp(2rem, min(9cqw, 16cqh), 6rem) !important;
     }
-    .clock-panel__status .material-symbols-outlined {
+    .clock-panel__status-icon {
         font-size: clamp(1.25rem, min(5cqw, 7cqh), 3rem) !important;
     }
 
@@ -316,16 +749,140 @@ button {
            containment is skipped to avoid collapsing it. */
         .clock-panel {
             container: clock-panel / size;
+            padding: 2rem;
+        }
+
+        .clock-panel__silhouette {
+            height: 11rem;
+        }
+
+        .clock-panel__settings {
+            top: 1rem;
+            right: 1rem;
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .clock-panel__settings-icon {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+
+        .clock-panel__content {
+            gap: 1rem;
+        }
+
+        .clock-panel__branding {
+            margin-bottom: 0.75rem;
+        }
+
+        .clock-panel__logo {
+            max-width: 20rem;
+            height: 4rem;
+        }
+
+        .clock-panel__mosque-icon {
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+        }
+
+        .clock-panel__mosque-name {
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            letter-spacing: 0.35em;
+        }
+
+        .clock-panel__city {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+
+        .clock-panel__dates {
+            gap: 1.25rem;
+        }
+
+        .clock-panel__date-value {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        .clock-panel__date-divider {
+            height: 3rem;
+        }
+
+        .clock-panel__current-time-label {
+            display: block;
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.375rem;
+        }
+
+        .clock-panel__time {
+            display: flex;
+            gap: 1.75rem;
+        }
+
+        .clock-panel__status {
+            margin-top: 0.75rem;
+        }
+
+        .clock-panel__time-row:not(.clock-panel__time-row--compact) {
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
         }
     }
 
-    /* Keep every text-bearing region inside the panel's available inline size. */
-    .clock-panel__content,
-    .clock-panel__time-row,
+    @media (min-width: 1280px) {
+        .clock-panel {
+            padding: 2.5rem;
+        }
+
+        .clock-panel__logo {
+            max-width: 23.75rem;
+            height: 5rem;
+        }
+
+        .clock-panel__mosque-icon {
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .clock-panel__mosque-name {
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .clock-panel__city {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        .clock-panel__date-value {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+
+        .clock-panel__date-label {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+
+        .clock-panel__current-time-label {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        .clock-panel__time {
+            gap: 2.5rem;
+        }
+    }
+
+    /* Keep text-bearing regions inside the panel's available inline size. */
     .clock-panel__branding,
-    .clock-panel__dates,
-    .clock-panel__time,
-    .clock-panel__status {
+    .clock-panel__dates {
         min-width: 0;
         min-height: 0;
         max-width: 100%;
@@ -333,48 +890,19 @@ button {
 
     .clock-panel__mosque-name,
     .clock-panel__city,
-    .clock-panel__dates span,
+    .clock-panel__date-value,
+    .clock-panel__date-label,
     .clock-panel__status-label {
         overflow-wrap: anywhere;
     }
 
-    .clock-panel__status {
-        box-sizing: border-box;
-        max-width: 100%;
-        flex-direction: column;
-        align-items: center;
-    }
-
     @media (max-width: 1023px) {
-        .clock-panel .clock-panel__status {
+        .clock-panel__status {
             background-color: transparent !important;
             border-color: transparent !important;
             border-style: none !important;
             border-width: 0 !important;
         }
-    }
-
-    .clock-panel__status-text {
-        display: flex;
-        min-width: 0;
-        max-width: 100%;
-        flex: 0 1 auto;
-        flex-wrap: nowrap;
-        align-items: center;
-        white-space: nowrap;
-    }
-
-    .clock-panel__status-label {
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        letter-spacing: 0.02em;
-    }
-
-    .clock-panel__countdown {
-        flex-shrink: 0;
-        white-space: nowrap;
     }
 
     .clock-panel__time-row--compact .clock-panel__status {
@@ -383,10 +911,6 @@ button {
         flex-direction: row;
         justify-content: center;
         padding-top: clamp(0.35rem, 1.5cqw, 0.75rem);
-    }
-
-    .clock-panel__time-row--compact .clock-panel__status-text {
-        flex: 0 1 auto;
     }
 
     /* A short landscape viewport still reserves space for the prayer table.
@@ -434,12 +958,12 @@ button {
         }
 
         .clock-panel__branding,
-        .clock-panel__branding > div {
+        .clock-panel__branding-inner {
             margin-bottom: 0 !important;
         }
 
-        .clock-panel__branding img,
-        .clock-panel__branding > div > .material-symbols-outlined {
+        .clock-panel__logo,
+        .clock-panel__mosque-icon {
             display: none;
         }
 
@@ -458,21 +982,21 @@ button {
             gap: 0.5rem !important;
         }
 
-        .clock-panel__dates > div span:first-child {
+        .clock-panel__date-value {
             font-size: clamp(0.65rem, 2.5cqw, 1rem) !important;
             line-height: 1.1 !important;
         }
 
-        .clock-panel__dates > div span:last-child {
+        .clock-panel__date-label {
             font-size: clamp(0.55rem, 2cqw, 0.8rem) !important;
             line-height: 1.1 !important;
         }
 
-        .clock-panel__dates > div[aria-hidden="true"] {
+        .clock-panel__date-divider {
             height: 1.5rem;
         }
 
-        .clock-panel__content h2 {
+        .clock-panel__current-time-label {
             font-size: clamp(0.55rem, 2cqw, 0.8rem) !important;
             line-height: 1;
             margin-block: 0 !important;
@@ -500,7 +1024,7 @@ button {
             padding-top: 0.25rem !important;
         }
 
-        .clock-panel__status .material-symbols-outlined {
+        .clock-panel__status-icon {
             font-size: 1rem !important;
         }
 
@@ -518,7 +1042,7 @@ button {
        those secondary lines rather than allowing them to be cropped. */
     @container clock-panel (max-height: 180px) {
         .clock-panel__city,
-        .clock-panel__content h2 {
+        .clock-panel__current-time-label {
             display: none;
         }
 
@@ -526,11 +1050,11 @@ button {
             font-size: clamp(0.7rem, 3cqw, 1.1rem) !important;
         }
 
-        .clock-panel__dates > div span:first-child {
+        .clock-panel__date-value {
             font-size: clamp(0.6rem, 2cqw, 0.8rem) !important;
         }
 
-        .clock-panel__dates > div span:last-child {
+        .clock-panel__date-label {
             font-size: 0.5rem !important;
         }
 
@@ -552,29 +1076,21 @@ button {
     @media (min-width: 1024px) {
         .clock-panel__time-row:not(.clock-panel__time-row--compact) {
             flex-wrap: nowrap;
-            min-width: 0;
-            max-width: 100%;
-        }
-
-        .clock-panel__time-row:not(.clock-panel__time-row--compact)
-            .clock-panel__time {
-            flex-wrap: nowrap;
-            white-space: nowrap;
         }
 
         .clock-panel__time-row:not(.clock-panel__time-row--compact)
             .clock-panel__time {
             flex: 1 1 0%;
+            flex-wrap: wrap;
+            white-space: nowrap;
         }
 
         .clock-panel__time-row:not(.clock-panel__time-row--compact)
             .clock-panel__status {
             flex: 0 1 auto;
-            min-width: 0;
-            max-width: 45%;
             overflow: hidden;
-            padding-left: clamp(1rem, 2cqw, 2rem);
-            gap: clamp(0.5rem, 1cqw, 1rem);
+            gap: 1rem;
+            padding-left: 1rem;
         }
 
         /* Give the normal status label more visual weight while keeping it
@@ -615,7 +1131,7 @@ button {
         }
 
         .clock-panel__time-row:not(.clock-panel__time-row--compact)
-            .clock-panel__status .material-symbols-outlined {
+            .clock-panel__status-icon {
             font-size: clamp(1.5rem, min(6cqw, 10cqh), 5.5rem) !important;
         }
     }
@@ -630,10 +1146,7 @@ button {
     .promo-compact .clock-panel__time {
         justify-content: flex-start;
     }
-    .promo-compact .clock-panel__status {
-        align-self: flex-start;
-        justify-content: flex-start;
-    }
+
     .promo-compact .font-clock-display {
         font-size: clamp(2.5rem, 14cqw, 9rem) !important;
     }
@@ -650,50 +1163,49 @@ button {
     .promo-compact .clock-panel__status {
         width: fit-content;
         max-width: 100%;
+        align-self: flex-start;
+        justify-content: flex-start;
         white-space: nowrap;
     }
-    .promo-compact .clock-panel__status .clock-panel__status-text {
-        min-width: 0;
-        flex: 0 1 auto;
+    .promo-compact .clock-panel__status-text {
         justify-content: center;
     }
-    .promo-compact .clock-panel__status .clock-panel__status-label {
-        min-width: 0;
+    .promo-compact .clock-panel__status-label {
         flex: 0 1 auto;
         font-size: clamp(0.75rem, 6cqw, 2.75rem) !important;
     }
-    .promo-compact .clock-panel__status .clock-panel__countdown {
-        flex-shrink: 0;
+    .promo-compact .clock-panel__countdown {
         font-size: clamp(0.85rem, 8cqw, 4rem) !important;
     }
-    .promo-compact .clock-panel__status .material-symbols-outlined {
+    .promo-compact .clock-panel__status-icon {
         font-size: clamp(1.35rem, 9cqw, 5.5rem) !important;
     }
-    .promo-compact h1.font-headline-md {
+    .promo-compact .clock-panel__mosque-name {
         font-size: clamp(0.875rem, 5cqw, 3rem) !important;
     }
 
     /* At narrower compact widths the normal xl/lg branding and calendar
        scales consume the vertical space needed by the clock and status pill. */
     @container (max-width: 30rem) {
-        .promo-compact img {
+        .promo-compact .clock-panel__logo {
             height: clamp(2.5rem, 11cqw, 4rem) !important;
         }
-        .promo-compact > div:first-child,
-        .promo-compact > div:first-child > div {
+        .promo-compact .clock-panel__branding,
+        .promo-compact .clock-panel__branding-inner {
             margin-bottom: 0.25rem !important;
         }
-        .promo-compact > div:first-child p {
+        .promo-compact .clock-panel__city {
             font-size: clamp(0.75rem, 3.5cqw, 1rem) !important;
             line-height: 1.1;
         }
-        .promo-compact .clock-panel__dates span {
+        .promo-compact .clock-panel__date-value,
+        .promo-compact .clock-panel__date-label {
             line-height: 1.1;
         }
-        .promo-compact .clock-panel__dates > div span:first-child {
+        .promo-compact .clock-panel__date-value {
             font-size: clamp(0.75rem, 4cqw, 1.25rem) !important;
         }
-        .promo-compact .clock-panel__dates > div span:last-child {
+        .promo-compact .clock-panel__date-label {
             font-size: clamp(0.65rem, 3cqw, 1rem) !important;
         }
     }
@@ -972,6 +1484,9 @@ button {
         color: var(--background-deep) !important;
     }
 
+    .text-on-primary {
+        color: var(--on-primary) !important;
+    }
     .text-on-surface {
         color: var(--on-surface) !important;
     }

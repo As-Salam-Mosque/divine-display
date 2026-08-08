@@ -59,23 +59,35 @@ function PillGroup<T extends string>({
       role="radiogroup"
       aria-label={groupLabel}
     >
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          role="radio"
-          aria-checked={value === opt.value}
-          onClick={() => onChange(opt.value)}
-          className={cn(
-            "px-4 py-1.5 rounded-full text-sm font-medium transition-all focus-ring",
-            value === opt.value
-              ? "bg-primary text-black shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]"
-              : "bg-surface-container-low text-text-muted hover:text-on-surface border border-outline-variant",
-          )}
-        >
-          {opt.label}
-        </button>
-      ))}
+      {options.map((opt) => {
+        const isSelected = value === opt.value;
+
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="radio"
+            aria-checked={isSelected}
+            onClick={() => onChange(opt.value)}
+            className={cn(
+              "inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-sm font-medium transition-all focus-ring",
+              isSelected
+                ? "bg-primary text-on-primary border-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]"
+                : "bg-surface-container-low text-text-muted hover:text-on-surface border-outline-variant",
+            )}
+          >
+            {isSelected && (
+              <span
+                className="material-symbols-outlined text-base leading-none"
+                aria-hidden="true"
+              >
+                check
+              </span>
+            )}
+            <span>{opt.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -115,7 +115,7 @@ export function AdRail({
       aria-label={t.communitySponsors}
     >
       <div className="flex justify-between items-center px-3 lg:px-4 shrink-0">
-        <span className="font-label-caps font-bold text-[10px] lg:text-xs xl:text-sm tv:text-base tracking-widest text-primary">
+        <span className="ad-rail-heading font-label-caps font-bold text-[10px] lg:text-xs xl:text-sm tv:text-base tracking-widest">
           {t.communitySponsors}
         </span>
       </div>
