@@ -585,6 +585,41 @@ button {
         }
     }
 
+    /* Restore the original large regular-display treatment on TV-sized
+       screens. Compact promo mode and short-panel mobile mode keep their
+       specialized sizing below. */
+    @media (min-width: 1920px) {
+        .clock-panel__time-row:not(.clock-panel__time-row--compact)
+            .clock-panel__time .font-clock-display {
+            font-size: clamp(3.5rem, min(20cqw, 34cqh), 16rem) !important;
+        }
+
+        .clock-panel__time-row:not(.clock-panel__time-row--compact)
+            .clock-panel__time .clock-panel__seconds {
+            font-size: clamp(1.25rem, min(9cqw, 15cqh), 7.5rem) !important;
+        }
+
+        .clock-panel__time-row:not(.clock-panel__time-row--compact)
+            .clock-panel__time .clock-panel__ampm {
+            font-size: clamp(0.75rem, min(3cqw, 5cqh), 2.75rem) !important;
+        }
+
+        .clock-panel__time-row:not(.clock-panel__time-row--compact)
+            .clock-panel__status-label {
+            font-size: clamp(0.85rem, min(3cqw, 5cqh), 2rem) !important;
+        }
+
+        .clock-panel__time-row:not(.clock-panel__time-row--compact)
+            .clock-panel__countdown {
+            font-size: clamp(3.25rem, min(18cqw, 31cqh), 15rem) !important;
+        }
+
+        .clock-panel__time-row:not(.clock-panel__time-row--compact)
+            .clock-panel__status .material-symbols-outlined {
+            font-size: clamp(1.5rem, min(6cqw, 10cqh), 5.5rem) !important;
+        }
+    }
+
     /* When PromoRail is active, scale down text to fit the narrower content column. */
     .promo-compact {
         container-type: inline-size;
