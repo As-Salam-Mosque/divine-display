@@ -105,7 +105,9 @@ export function Display() {
         "min-h-screen lg:h-screen flex flex-col font-body-md overflow-y-auto lg:overflow-hidden",
         settings.theme === "dark"
           ? "dark bg-background-deep text-on-surface"
-          : "light bg-background-deep text-on-surface",
+          : settings.theme === "classic"
+            ? "classic bg-background-deep text-on-surface"
+            : "light bg-background-deep text-on-surface",
       )}
     >
       <SkipLink href="#prayer-times" label={t.skipToPrayerTimes} />

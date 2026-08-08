@@ -3,7 +3,7 @@ import { useSettings } from "../context/SettingsContext";
 import { useT } from "../i18n";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { cn } from "../utils/cn";
-import type { Language, TimeFormat } from "../types";
+import type { Language, Theme, TimeFormat } from "../types";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -245,13 +245,18 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   groupLabel={t.timeFormat}
                 />
               </Field>
-              <Toggle
-                checked={settings.theme === "light"}
-                onChange={(v) =>
-                  updateSettings({ theme: v ? "light" : "dark" })
-                }
-                label={t.lightTheme}
-              />
+              <Field label={t.theme}>
+                <PillGroup<Theme>
+                  value={settings.theme}
+                  onChange={(v) => updateSettings({ theme: v })}
+                  options={[
+                    { value: "light", label: t.themeLight },
+                    { value: "dark", label: t.themeDark },
+                    { value: "classic", label: t.themeClassic },
+                  ]}
+                  groupLabel={t.theme}
+                />
+              </Field>
             </div>
           </section>
 

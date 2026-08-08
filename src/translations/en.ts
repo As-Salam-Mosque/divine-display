@@ -52,7 +52,10 @@ const en = {
   iqamah: "IQAMAH",
   now: "NOW",
   // theme
-  lightTheme: "Use light theme",
+  theme: "Theme",
+  themeLight: "Light",
+  themeDark: "Dark",
+  themeClassic: "Classic",
   // accessibility
   sectionAccessibility: "Accessibility",
   alternatePrayerCardColors: "Use alternating backgrounds for prayer cards",

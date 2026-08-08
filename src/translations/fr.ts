@@ -34,7 +34,7 @@ const fr = {
   criticalSubtitle: "Venez à la prière",
   statusIqamah: (_name: string, remaining: string) =>
     `Iqama ${remaining}`,
-  statusNext: (name: string, remaining: string) => `${name} ${remaining}`,
+  statusNext: (name: string, remaining: string) => `${name} dans ${remaining}`,
   communitySponsors: "SPONSORS COMMUNAUTAIRES",
   available: "Disponible",
   masjidAnnouncements: "ANNONCES",
@@ -45,8 +45,11 @@ const fr = {
   adhan: "ADHAN",
   iqamah: "IQAMAH",
   now: "MAINTENANT",
-  // theme
-  lightTheme: "Activer le thème clair",
+  // thème
+  theme: "Thème",
+  themeLight: "Clair",
+  themeDark: "Sombre",
+  themeClassic: "Classique",
   // accessibility
   sectionAccessibility: "Accessibilité",
   alternatePrayerCardColors:

@@ -32,7 +32,7 @@ export function CriticalSignalPanel({
 
   return (
     <div
-      className="critical-signal-panel z-20 w-full h-full min-w-0 min-h-0 max-w-full max-h-full overflow-hidden flex flex-col items-center justify-center text-center relative"
+      className="critical-signal-panel bg-primary text-background-deep z-20 w-full h-full min-w-0 min-h-0 max-w-full max-h-full overflow-hidden flex flex-col items-center justify-center text-center relative"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
@@ -57,10 +57,10 @@ export function CriticalSignalPanel({
         <div className="critical-signal-heading flex flex-col items-center">
           {/* Action label and localized urgency badge */}
           <div className="critical-action-row flex items-center justify-center">
-            <span className="critical-action-label font-label-caps text-on-surface font-semibold uppercase">
+            <span className="critical-action-label font-label-caps text-background-deep font-semibold uppercase">
               {actionLabel}
             </span>
-            <span className="critical-now-badge rounded-full border border-primary/60 bg-primary/15 font-label-caps text-primary font-semibold uppercase">
+            <span className="critical-now-badge rounded-full border border-background-deep bg-transparent font-label-caps text-background-deep font-semibold uppercase">
               {t.now}
             </span>
           </div>
@@ -70,7 +70,7 @@ export function CriticalSignalPanel({
             <div className="critical-hero-pulse critical-hero-row grid w-full items-center">
               <div className="critical-hero-name-cell min-w-0">
                 <h2
-                  className="critical-hero-name max-w-full font-clock-display text-on-surface leading-none text-right"
+                  className="critical-hero-name max-w-full font-clock-display text-background-deep leading-none text-right"
                 >
                   {criticalSignal.prayerName}
                 </h2>
@@ -81,7 +81,7 @@ export function CriticalSignalPanel({
               />
               <div className="critical-hero-arabic-cell min-w-0">
                 <span
-                  className="critical-hero-arabic max-w-full font-body-lg text-on-surface-variant font-medium leading-none"
+                  className="critical-hero-arabic max-w-full font-body-lg text-background-deep font-medium leading-none"
                   lang="ar"
                   dir="rtl"
                 >
@@ -96,7 +96,7 @@ export function CriticalSignalPanel({
 
       {/* Retained current time and dates — centered */}
       <div
-        className="critical-meta absolute text-text-muted opacity-70 z-30"
+        className="critical-meta absolute text-background-deep opacity-70 z-30"
         aria-hidden="true"
       >
         <span className="critical-meta-time font-tabular-nums">

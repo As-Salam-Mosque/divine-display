@@ -24,7 +24,11 @@ html {
 }
 
 html:has(.light) {
-    background-color: var(--background-deep);
+    background-color: #d5dce4;
+}
+
+html:has(.classic) {
+    background-color: #8f0000;
 }
 
 body {
@@ -71,30 +75,30 @@ button {
 
 /* Theme variables and light/dark palettes */
 :root {
-    /* Default (light) palette - high contrast with soft grey surfaces */
-    --primary: #b87a00;
-    --primary-rgb: 184, 122, 0;
+    /* Default palette — dark, matching the default app setting. */
+    --primary: #e9c176;
+    --primary-rgb: 233, 193, 118;
 
-    --background-deep: #d5dce4;
-    --surface-panel: #ebeff4;
-    --surface: #f5f7fa;
-    --surface-container: #edf1f5;
-    --surface-container-low: #f3f6f9;
-    --on-surface: #0f1724; /* strong text contrast on light */
-    --on-surface-variant: #1f2b3d;
-    --text-muted: rgba(15, 23, 36, 0.82);
-    --outline-variant: rgba(15, 23, 36, 0.3);
+    --background-deep: #060a1a;
+    --surface-panel: #111a35;
+    --surface: #0b1220;
+    --surface-container: #081028;
+    --surface-container-low: #071022;
+    --on-surface: #ffffff;
+    --on-surface-variant: #dfe6ff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --outline-variant: rgba(233, 193, 118, 0.08);
 
-    --ghost-border-color: rgba(15, 23, 36, 0.34);
-    --panel-separation-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
-    --primary-alpha-10: 0.2;
-    --primary-alpha-20: 0.44;
-    --primary-alpha-25: 0.56;
+    --ghost-border-color: rgba(233, 193, 118, 0.2);
+    --panel-separation-shadow: none;
+    --primary-alpha-10: 0.1;
+    --primary-alpha-20: 0.2;
+    --primary-alpha-25: 0.25;
 
     /* PrayerCard alternating backgrounds: analogous hues, equal visual weight */
-    --prayer-card-bg-a: #e9f0f8; /* cool blue */
-    --prayer-card-bg-b: #e8f3f2; /* blue-teal */
-    --prayer-card-bg-active: #fef3d6; /* warm amber cream */
+    --prayer-card-bg-a: #182846; /* deep blue */
+    --prayer-card-bg-b: #182e42; /* deep blue-teal */
+    --prayer-card-bg-active: #14110a; /* very dark warm amber */
 }
 
 /* Dark theme overrides */
@@ -154,6 +158,59 @@ button {
     --prayer-card-bg-a: #e9f0f8; /* cool blue */
     --prayer-card-bg-b: #e8f3f2; /* blue-teal */
     --prayer-card-bg-active: #fef3d6; /* warm amber cream */
+}
+
+/* Classic mosque-display palette: maroon frame, pale clock panel, and teal
+   prayer cards with a warm active-prayer highlight. */
+.classic {
+    --primary: #8f0000;
+    --primary-rgb: 143, 0, 0;
+
+    --background-deep: #8f0000;
+    --surface-panel: #dedee1;
+    --surface: #dedee1;
+    --surface-container: #d1d2d5;
+    --surface-container-low: #c6c8cc;
+    --on-surface: #151515;
+    --on-surface-variant: #ffffff;
+    --text-muted: rgba(21, 21, 21, 0.72);
+    --outline-variant: rgba(143, 0, 0, 0.55);
+
+    --ghost-border-color: rgba(143, 0, 0, 0.82);
+    --panel-separation-shadow: none;
+    --primary-alpha-10: 0.12;
+    --primary-alpha-20: 0.22;
+    --primary-alpha-25: 0.3;
+
+    --prayer-card-bg-a: #43869a;
+    --prayer-card-bg-b: #43869a;
+    --prayer-card-bg-active: #d2b619;
+}
+
+/* Clock content remains dark on the reference's pale clock surface. */
+.classic .clock-panel {
+    --on-surface: #151515;
+    --on-surface-variant: #252525;
+    --text-muted: rgba(21, 21, 21, 0.72);
+}
+
+/* Prayer cards use the reference's white-on-teal treatment. */
+.classic .prayer-card {
+    --on-surface: #ffffff;
+    --on-surface-variant: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.78);
+}
+
+.classic .prayer-card.bg-prayer-card-active {
+    --on-surface: #3f3100;
+    --on-surface-variant: #3f3100;
+    --text-muted: rgba(63, 49, 0, 0.72);
+}
+
+/* The critical panel uses the punchy burgundy background, with a pale
+   foreground to preserve the inverted critical-signal contrast. */
+.classic .critical-signal-panel {
+    --background-deep: #dedee1;
 }
 
 @layer components {
@@ -286,6 +343,15 @@ button {
         max-width: 100%;
         flex-direction: column;
         align-items: center;
+    }
+
+    @media (max-width: 767px) {
+        .clock-panel .clock-panel__status {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            border-style: none !important;
+            border-width: 0 !important;
+        }
     }
 
     .clock-panel__status-text {
@@ -508,6 +574,14 @@ button {
             max-width: 45%;
             overflow: hidden;
             padding-left: clamp(1rem, 2cqw, 2rem);
+            gap: clamp(0.5rem, 1cqw, 1rem);
+        }
+
+        /* Give the normal status label more visual weight while keeping it
+           close to the countdown. Compact promo mode keeps its own sizing. */
+        .clock-panel__time-row:not(.clock-panel__time-row--compact)
+            .clock-panel__status-label {
+            font-size: clamp(1rem, min(4cqw, 6cqh), 2.5rem) !important;
         }
     }
 
@@ -551,14 +625,14 @@ button {
     .promo-compact .clock-panel__status .clock-panel__status-label {
         min-width: 0;
         flex: 0 1 auto;
-        font-size: clamp(0.8rem, 7cqw, 3rem) !important;
+        font-size: clamp(0.75rem, 6cqw, 2.75rem) !important;
     }
     .promo-compact .clock-panel__status .clock-panel__countdown {
         flex-shrink: 0;
-        font-size: clamp(0.9rem, 9cqw, 4.5rem) !important;
+        font-size: clamp(0.85rem, 8cqw, 4rem) !important;
     }
     .promo-compact .clock-panel__status .material-symbols-outlined {
-        font-size: clamp(1.5rem, 10cqw, 6rem) !important;
+        font-size: clamp(1.35rem, 9cqw, 5.5rem) !important;
     }
     .promo-compact h1.font-headline-md {
         font-size: clamp(0.875rem, 5cqw, 3rem) !important;
@@ -683,7 +757,7 @@ button {
         flex-shrink: 0;
         align-self: center;
         border-radius: 9999px;
-        background-color: var(--on-surface-variant);
+        background-color: var(--background-deep);
         opacity: 0.25;
     }
 
@@ -704,13 +778,13 @@ button {
 
     .critical-meta-time {
         flex-shrink: 0;
-        color: var(--primary);
+        color: var(--background-deep);
         font-weight: 700;
         padding: 0.2em 0.55em;
-        border: 1px solid rgba(var(--primary-rgb), 0.45);
+        border: 1px solid var(--background-deep);
         border-radius: 9999px;
-        background-color: rgba(var(--primary-rgb), 0.1);
-        box-shadow: 0 0 0.75rem rgba(var(--primary-rgb), 0.2);
+        background-color: transparent;
+        box-shadow: 0 0 0.75rem var(--background-deep);
     }
 
     .critical-meta-dates {
@@ -727,6 +801,7 @@ button {
 
     .critical-meta-separator {
         line-height: 1;
+        opacity: 0.4;
     }
 
     @media (min-width: 1024px) {
@@ -858,6 +933,10 @@ button {
         background-color: var(--surface-container-low) !important;
     }
 
+    .text-background-deep {
+        color: var(--background-deep) !important;
+    }
+
     .text-on-surface {
         color: var(--on-surface) !important;
     }
@@ -878,6 +957,10 @@ button {
     .bg-primary {
         background-color: var(--primary) !important;
     }
+    .border-background-deep {
+        border-color: var(--background-deep) !important;
+    }
+
     .border-primary {
         border-color: var(--primary) !important;
     }
@@ -1172,7 +1255,7 @@ button {
 .critical-inner-glow-adhan {
     background: radial-gradient(
         ellipse at center,
-        rgba(var(--primary-rgb), 0.2) 0%,
+        color-mix(in srgb, var(--background-deep) 20%, transparent) 0%,
         transparent 70%
     );
     animation: inner-glow-pulse 3.5s ease-in-out infinite;
@@ -1182,7 +1265,7 @@ button {
 .critical-inner-glow-iqamah {
     background: radial-gradient(
         ellipse at center,
-        rgba(var(--primary-rgb), 0.32) 0%,
+        color-mix(in srgb, var(--background-deep) 32%, transparent) 0%,
         transparent 65%
     );
     animation: inner-glow-pulse 2s ease-in-out infinite;

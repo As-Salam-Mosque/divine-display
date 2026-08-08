@@ -125,7 +125,7 @@ export interface PrayerTimesState {
 
 export type Language = "en" | "fr";
 export type TimeFormat = "12h" | "24h";
-export type Theme = "dark" | "light";
+export type Theme = "dark" | "light" | "classic";
 
 export interface AppSettings {
   language: Language;

@@ -129,4 +129,21 @@ describe("SettingsPanel automatic language rotation control", () => {
       }),
     ).toHaveAttribute("aria-checked", "false");
   });
+
+  it("lets users select the classic display theme", () => {
+    render(
+      <SettingsProvider defaults={DEFAULT_APP_SETTINGS}>
+        <SettingsPanel isOpen onClose={() => undefined} />
+      </SettingsProvider>,
+    );
+
+    const classicTheme = screen.getByRole("radio", { name: "Classic" });
+    expect(classicTheme).toHaveAttribute("aria-checked", "false");
+
+    fireEvent.click(classicTheme);
+
+    expect(classicTheme).toHaveAttribute("aria-checked", "true");
+    expect(JSON.parse(localStorage.getItem("divine-display-settings") ?? "{}"))
+      .toMatchObject({ theme: "classic" });
+  });
 });
